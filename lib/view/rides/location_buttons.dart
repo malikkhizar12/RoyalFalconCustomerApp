@@ -5,7 +5,7 @@ class LocationButton extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const LocationButton({
+  const LocationButton({super.key,
     required this.text,
     required this.isSelected,
     required this.onTap,
