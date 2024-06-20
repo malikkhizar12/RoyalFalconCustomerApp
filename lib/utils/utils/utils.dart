@@ -29,7 +29,7 @@ class Utils {
     );
   }
 
-  void successMessage(String message, BuildContext context) {
+  static successMessage(String message, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         message,
@@ -46,7 +46,7 @@ class Utils {
     ));
   }
 
-  void errorMessage(String message, BuildContext context) {
+  static errorMessage(String message, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         message,

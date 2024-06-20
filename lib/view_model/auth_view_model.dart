@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:royal_falcon/repository/auth_repository.dart';
+import 'package:royal_falcon/utils/utils/utils.dart';
 import '../utils/routes/routes_names.dart';
 
 class AuthViewModel with ChangeNotifier {
@@ -25,6 +26,8 @@ class AuthViewModel with ChangeNotifier {
       }
     } catch (e) {
       setLoading(false);
+      print(e.toString().contains('message'));
+      Utils.errorMessage(e.toString(), context);
       String errorMessage = 'Login failed: $e';
 
       // Check for specific error messages
