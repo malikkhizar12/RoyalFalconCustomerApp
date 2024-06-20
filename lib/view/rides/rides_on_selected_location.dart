@@ -21,7 +21,7 @@ class _YourRidesState extends State<YourRides> {
 
     return SafeArea(
         child: Scaffold(
-          backgroundColor: backgroundColor,
+          backgroundColor: ColorConstants.backgroundColor,
           body:  Column(
             children: [
               const AppbarCustom(title: 'Your Rides'),

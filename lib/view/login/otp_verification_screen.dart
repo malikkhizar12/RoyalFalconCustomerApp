@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/colors.dart';
@@ -10,12 +9,14 @@ class OtpVerification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: ColorConstants.backgroundColor,
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 10.w,horizontal: 20.h),
+        margin: EdgeInsets.symmetric(vertical: 10.w, horizontal: 20.h),
         child: Column(
           children: [
-            SizedBox(height: 40.h,),
+            SizedBox(
+              height: 40.h,
+            ),
             // const ElevatedSearchBar(hintText: "Type your country name",)
           ],
         ),

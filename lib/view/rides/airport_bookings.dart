@@ -40,7 +40,7 @@ class _AirportBookingsState extends State<AirportBookings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  backgroundColor,
+      backgroundColor:  ColorConstants.backgroundColor,
       body: Column(
         children: [
           const AppbarCustom(title: 'Choose your ride'),
