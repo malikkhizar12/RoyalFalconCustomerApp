@@ -1,249 +1,132 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-import '../../utils/api_functions.dart';
+import '../../view_model/auth_view_model.dart';
 import '../home_screen/profile.dart';
 
 class CustomEndDrawer extends StatelessWidget {
-  final GetApiFunctions getApiFunctions=GetApiFunctions();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   CustomEndDrawer({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
     return SafeArea(
       child: Drawer(
-        backgroundColor:  const Color(0xFF3A3E41),
+        backgroundColor: const Color(0xFF3A3E41),
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-
             Image.asset('images/home_icon.png'),
-
             Container(
-              padding: EdgeInsets.only(left: 10.w,right: 10.w,top: 10.h,bottom: 10.h),
-              margin: EdgeInsets.only(left: 10.w,right: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
-                color: Color(0xFF333639),
+                color: const Color(0xFF333639),
               ),
               child: Column(
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      Get.to(const ProfileScreen());
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Profile',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-
-                        ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Add your onPressed callback here
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('My Booking',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-
-                          ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Add your onPressed callback here
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Favaurite',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-
-                          ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Add your onPressed callback here
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('RFL wallet',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-
-                          ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
+                  buildMenuItem('Profile', () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                  }),
+                  buildMenuItem('My Booking', () {
+                    // Handle My Booking action
+                  }),
+                  buildMenuItem('Favorite', () {
+                    // Handle Favorite action
+                  }),
+                  buildMenuItem('RFL wallet', () {
+                    // Handle RFL wallet action
+                  }),
                 ],
               ),
             ),
-            SizedBox(height: 50.h,),
+            SizedBox(height: 35.h),
             Container(
-              padding: EdgeInsets.only(left: 10.w,right: 10.w,top: 10.h,bottom: 10.h),
-              margin: EdgeInsets.only(left: 10.w,right: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
-                color: Color(0xFF333639),
+                color: const Color(0xFF333639),
               ),
               child: Column(
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      // Add your onPressed callback here
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Region',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-
-                          ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Add your onPressed callback here
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Currency',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-
-                          ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Add your onPressed callback here
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Language',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-
-                          ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
+                  buildMenuItem('Region', () {
+                    // Handle Region action
+                  }),
+                  buildMenuItem('Currency', () {
+                    // Handle Currency action
+                  }),
+                  buildMenuItem('Language', () {
+                    // Handle Language action
+                  }),
                 ],
               ),
             ),
-            SizedBox(height: 50.h,),
+            SizedBox(height: 35.h),
             Container(
-              padding: EdgeInsets.only(left: 10.w,right: 10.w,top: 10.h,bottom: 10.h),
-              margin: EdgeInsets.only(left: 10.w,right: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
-                color: Color(0xFF333639),
+                color: const Color(0xFF333639),
               ),
               child: Column(
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      // Add your onPressed callback here
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Help & Support',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-
-                          ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Add your onPressed callback here
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Terms & Conditions',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-
-                          ),
-                        ), // Button text
-                        Image.asset('images/nav_arrow_right.png')
-                      ],
-                    ),
-                  ),
+                  buildMenuItem('Help & Support', () {
+                    // Handle Help & Support action
+                  }),
+                  buildMenuItem('Terms & Conditions', () {
+                    // Handle Terms & Conditions action
+                  }),
                 ],
               ),
             ),
-            SizedBox(height: 40.h,),
+            SizedBox(height: 35.h),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 40.w),
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor:MaterialStateProperty.all<Color?>(Color(0xFFFFBC07))
+                  backgroundColor: MaterialStateProperty.all<Color?>(const Color(0xFFFFBC07)),
                 ),
-                  onPressed: (){
-                  getApiFunctions.logout();
-                  },
-                  child: Text("Logout",style: TextStyle(
+                onPressed: () {
+                  authViewModel.logout(context);
+                },
+                child: Text(
+                  "Logout",
+                  style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15.sp
-                  ),)
-
+                    fontSize: 15.sp,
+                  ),
+                ),
               ),
-            )
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildMenuItem(String title, VoidCallback onTap) {
+    return TextButton(
+      onPressed: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.sp,
+            ),
+          ),
+          Image.asset('images/nav_arrow_right.png'),
+        ],
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/routes/routes.dart';
-import 'package:royal_falcon/utils/routes/routes_names.dart';
 import 'package:royal_falcon/view/login/login.dart';
 import 'package:royal_falcon/view_model/auth_view_model.dart';
 
@@ -14,7 +13,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
 
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
 
-            title: 'Flutter Demo',
+            title: 'RFL',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,

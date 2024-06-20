@@ -1,4 +1,5 @@
 
+
 import '../data/network/base_api_services.dart';
 import '../data/network/network_api_services.dart';
 import '../resources/app_url.dart';
@@ -12,7 +13,9 @@ class AuthRepository{
       return response;
     } catch (e) {
       print('Login error in repository: $e');
-      throw e; // Rethrow the exception for handling in ViewModel or UI
+
+
+        throw e; // Rethrow the exception for handling in ViewModel or UI
     }
   }
   Future<dynamic> signupApi(dynamic data) async {

@@ -25,7 +25,7 @@ class NetworkApiServices extends BaseApiServices{
     try{
       final response = await  http.post(
           Uri.parse(url),body: data).timeout(
-          Duration(seconds: 10));
+          const Duration(seconds: 15));
       responseJson= returnResponse(response);
 
     }on SocketException{
@@ -45,7 +45,7 @@ class NetworkApiServices extends BaseApiServices{
       case 201:
         throw UnAuthorizedException(response.body.toString());
       default:
-        throw FetchDataException('Error occured during communication with server' + 'with status'+response.statusCode.toString());
+        throw FetchDataException('Error occured during communication with server' + ' with status'+response.statusCode.toString());
     }
   }
 
