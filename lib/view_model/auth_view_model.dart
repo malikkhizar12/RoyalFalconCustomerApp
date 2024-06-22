@@ -1,8 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:royal_falcon/model/user_model.dart';
 import 'package:royal_falcon/repository/auth_repository.dart';
+import 'package:royal_falcon/view_model/user_view_model.dart';
 import '../utils/routes/routes_names.dart';
 
 class AuthViewModel with ChangeNotifier {
+  final UserViewModel userViewModel = UserViewModel();
   final AuthRepository _authRepository = AuthRepository();
   bool _loading = false;
   bool get loading => _loading;
@@ -18,8 +22,21 @@ class AuthViewModel with ChangeNotifier {
       dynamic response = await _authRepository.loginApi(data);
 
       if (response != null) {
+        // Assuming your response contains token and user data
+        String token = response['token'];
+        Map<String, dynamic> userData = response['user'];
+
+        // Create a UserModel instance
+        UserModel userModel = UserModel(
+          token: token,
+          user: User.fromJson(userData),
+        );
+
+        // Save the user data using UserViewModel
+        await userViewModel.saveUser(userModel);
+
         setLoading(false);
-        Navigator.pushReplacementNamed(context, RoutesNames.home);
+        Navigator.pushReplacementNamed(context, RoutesNames.home,arguments: userModel);
       } else {
         throw Exception('Login failed');
       }
@@ -81,10 +98,7 @@ class AuthViewModel with ChangeNotifier {
 
   Future<void> logout(BuildContext context) async {
     try {
-      // Perform logout actions here, such as clearing tokens, resetting state, etc.
-      // Example: Clear authentication tokens or session information
-
-      // After clearing, navigate to the login page
+      userViewModel.removeUser();
       Navigator.pushReplacementNamed(context, RoutesNames.login);
     } catch (e) {
       print('Logout error: $e'); // Handle any logout errors

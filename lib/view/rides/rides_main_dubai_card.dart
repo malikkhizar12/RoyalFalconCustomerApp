@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_falcon/utils/routes/routes_names.dart';
 
 import '../widgets/starRating.dart';
 
@@ -115,7 +116,7 @@ class RidesMainDubaiCard extends StatelessWidget {
                         width: MediaQuery.of(context).size.width*0.88,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Add your booking action here
+                            Navigator.pushNamed(context, RoutesNames.ridesBookingForm);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFFBC07),

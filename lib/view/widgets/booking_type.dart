@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:royal_falcon/utils/routes/routes_names.dart';
 
 import '../rides/airport_bookings.dart';
 import '../rides/normal_bookings.dart';
@@ -34,9 +35,7 @@ class BookingType extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFCF9D2C))
               ),
                 onPressed: (){
-                  Get.to(
-                          ()=>const NormalBookings()
-                  );
+                  Navigator.pushNamed(context, RoutesNames.normalBookings);
                 },
                 child: const Text("Normal Booking",
                 style: TextStyle(
@@ -55,9 +54,8 @@ class BookingType extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFC9C9C9))
               ),
                 onPressed: (){
-                  Get.to(
-                      ()=> AirportBookings()
-                  );
+                  Navigator.pushNamed(context, RoutesNames.airportBookings);
+
                 },
                 child: const Text("Airport Transport",
                 style: TextStyle(

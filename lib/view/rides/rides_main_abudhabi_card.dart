@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:royal_falcon/view/rides/rides_booking_form.dart';
+import 'package:royal_falcon/utils/routes/routes_names.dart';
 
 import '../widgets/starRating.dart';
 
@@ -118,7 +117,7 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
                         width: MediaQuery.of(context).size.width*0.88,
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(()=>const RidesBookingForm());
+                            Navigator.pushNamed(context, RoutesNames.ridesBookingForm);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFFBC07),

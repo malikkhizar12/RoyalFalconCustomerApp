@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/rides/rides_main_abudhabi_card.dart';
 import 'package:royal_falcon/view/rides/rides_main_dubai_card.dart';
 import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
@@ -21,20 +21,14 @@ class Rides extends StatefulWidget {
 class _RidesState extends State<Rides> {
   String selectedLocation = 'Dubai';
   final scaffoldkey = GlobalKey<ScaffoldState>();
-  final RidesAnimationViewModel ridesAnimationViewModel = Get.put(RidesAnimationViewModel());
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ridesAnimationViewModel.startAnimation();
+      // Access the viewModel using Provider and start animation
+      Provider.of<RidesAnimationViewModel>(context, listen: false).startAnimation();
     });
-  }
-
-  @override
-  void dispose() {
-    ridesAnimationViewModel.dispose(); // Dispose of the animation controller
-    super.dispose();
   }
 
   @override
@@ -112,42 +106,50 @@ class _RidesState extends State<Rides> {
                                   style: TextStyle(color: Colors.white, fontSize: 25.sp),
                                 ),
                                 SizedBox(height: 8.h),
-                                Obx(() {
-                                  final myAnimation = ridesAnimationViewModel.myAnimation;
-                                  return GridView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: width > 392 ? 0.60 : (width > 350 ? 0.57 : (width < 313 ? 0.45 : 0.53)),
-                                    ),
-                                    itemCount: 8,
-                                    itemBuilder: (context, index) {
-                                      return AnimatedContainer(
-                                        duration: Duration(milliseconds: 400 + (index * 250)),
-                                        curve: Curves.easeInCubic,
-                                        transform: Matrix4.translationValues(myAnimation ? 0 : width, 0, 0),
-                                        child: selectedLocation == 'Dubai'
-                                            ? const RidesMainDubaiCard(
-                                          imageUrl: 'images/Lexus_ES_300H.png',
-                                          name: 'Lexus ES 300H',
-                                          baggage: 3,
-                                          price: 250,
-                                          rating: 4.0,
-                                          persons: 4,
-                                        )
-                                            : const RidesMainAbuDhabiCard(
-                                          imageUrl: 'images/Lexus_ES_300H.png',
-                                          name: 'Audi ETron GT',
-                                          baggage: 3,
-                                          price: 350,
-                                          rating: 4.0,
-                                          persons: 4,
-                                        ),
-                                      );
-                                    },
-                                  );
-                                }),
+                                Consumer<RidesAnimationViewModel>(
+                                  builder: (context, ridesAnimationViewModel, child) {
+                                    final myAnimation = ridesAnimationViewModel.myAnimation;
+                                    return GridView.builder(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: width > 392
+                                            ? 0.60
+                                            : (width > 350
+                                            ? 0.57
+                                            : (width < 313
+                                            ? 0.45
+                                            : 0.53)), // Adjust aspect ratio as needed
+                                      ),
+                                      itemCount: 8,
+                                      itemBuilder: (context, index) {
+                                        return AnimatedContainer(
+                                          duration: Duration(milliseconds: 400 + (index * 250)),
+                                          curve: Curves.easeInCubic,
+                                          transform: Matrix4.translationValues(myAnimation ? 0 : width, 0, 0),
+                                          child: selectedLocation == 'Dubai'
+                                              ? const RidesMainDubaiCard(
+                                            imageUrl: 'images/Lexus_ES_300H.png',
+                                            name: 'Lexus ES 300H',
+                                            baggage: 3,
+                                            price: 250,
+                                            rating: 4.0,
+                                            persons: 4,
+                                          )
+                                              :const RidesMainAbuDhabiCard(
+                                            imageUrl: 'images/Lexus_ES_300H.png',
+                                            name: 'Audi ETron GT',
+                                            baggage: 3,
+                                            price: 350,
+                                            rating: 4.0,
+                                            persons: 4,
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),
