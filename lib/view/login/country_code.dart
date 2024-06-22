@@ -11,18 +11,24 @@ class CountryCodes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child:                       ElevatedButton(
+        child: ElevatedButton(
           onPressed: () {
             Get.to(const HomeScreen());
           },
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(buttonColor), // Set button background color
-            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero), // Set padding to zero
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Expand tap target to the size of the button
-            minimumSize: MaterialStateProperty.all<Size>(const Size(double.infinity, 48)), // Set minimum size to full width and 48 height
+            backgroundColor: MaterialStateProperty.all<Color>(
+                ColorConstants.buttonColor), // Set button background color
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                EdgeInsets.zero), // Set padding to zero
+            tapTargetSize: MaterialTapTargetSize
+                .shrinkWrap, // Expand tap target to the size of the button
+            minimumSize: MaterialStateProperty.all<Size>(const Size(
+                double.infinity,
+                48)), // Set minimum size to full width and 48 height
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(13), // Set corner radius to 13
+                borderRadius:
+                    BorderRadius.circular(13), // Set corner radius to 13
               ),
             ),
           ),
@@ -40,7 +46,6 @@ class CountryCodes extends StatelessWidget {
             ),
           ),
         ),
-
       ),
     );
   }

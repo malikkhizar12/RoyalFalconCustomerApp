@@ -39,7 +39,7 @@ class _NormalBookingsState extends State<NormalBookings> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: ColorConstants.backgroundColor,
         body: Consumer<CarViewModel>(
           builder: (context, carViewModel, child) {
             final cars = carViewModel.cars;

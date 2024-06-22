@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'models/main_page_cars_model.dart';
 
 class CarListWidget extends StatelessWidget {
+  const CarListWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     List<RidePageCar> cars = RidePageCar.getRidesCars();
@@ -11,7 +13,7 @@ class CarListWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding:  EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Text(
             'Explore More Popular Cars',
             style: TextStyle(
@@ -26,14 +28,16 @@ class CarListWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               final car = cars[index];
               return ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 leading: Image.asset(car.imageUrl, width: 64.0, height: 64.0),
                 title: Text(car.name),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: List.generate(car.rating, (index) => Icon(Icons.star, color: Colors.orange)),
+                      children: List.generate(car.rating,
+                          (index) => Icon(Icons.star, color: Colors.orange)),
                     ),
                     Text('${car.baggage} Baggage | ${car.persons} Persons'),
                   ],

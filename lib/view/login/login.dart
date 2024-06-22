@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view_model/auth_view_model.dart';
-import '../../utils/colors.dart';
 import '../../utils/utils/utils.dart';
 import '../signup/signup.dart';
 
@@ -40,7 +40,7 @@ class _LoginState extends State<Login> {
     final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: ColorConstants.backgroundColor,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -164,7 +164,7 @@ class _LoginState extends State<Login> {
                             authViewModel.loginApi(data, context);
                           },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(buttonColor),
+                            backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.buttonColor),
                             padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             minimumSize: MaterialStateProperty.all<Size>(const Size(double.infinity, 48)),
