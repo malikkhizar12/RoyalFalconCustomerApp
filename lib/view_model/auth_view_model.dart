@@ -37,7 +37,7 @@ class AuthViewModel with ChangeNotifier {
         await userViewModel.saveUser(userModel);
 
         setLoading(false);
-        Navigator.pushReplacementNamed(context, RoutesNames.home,arguments: userModel);
+        Navigator.pushReplacementNamed(context, RoutesNames.home, arguments: userModel);
       } else {
         throw Exception('Login failed');
       }
@@ -68,11 +68,12 @@ class AuthViewModel with ChangeNotifier {
     try {
       setLoading(true);
       dynamic response = await _authRepository.signupApi(data);
+      print('Signup response: $response'); // Debugging log
       setLoading(false);
       return response != null;
     } catch (e) {
       setLoading(false);
-      print('Signup error: $e'); // Print the error for debugging
+      print('Signup error: $e'); // Debugging log
       if (e.toString().contains('email already exists')) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

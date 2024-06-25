@@ -23,7 +23,8 @@ class AuthRepository {
       dynamic response = await _apiServices.getPostApiResponse(Appurl.signupUrl, data);
       return response;
     } catch (e) {
-      throw e;
+      print('Signup error in repository: $e');
+      throw e; // Rethrow the exception for handling in ViewModel or UI
     }
   }
 }
