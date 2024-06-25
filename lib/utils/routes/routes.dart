@@ -22,8 +22,7 @@ class Routes {
       case RoutesNames.splash:
         return MaterialPageRoute(builder: (BuildContext context)=> SplashScreen() );
 
-      case RoutesNames.ridesBookingForm:
-        return MaterialPageRoute(builder: (BuildContext context)=>const RidesBookingForm() );
+
 
       case RoutesNames.normalBookings:
         return MaterialPageRoute(builder: (BuildContext context)=>const NormalBookings() );

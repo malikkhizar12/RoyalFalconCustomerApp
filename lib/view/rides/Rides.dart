@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:royal_falcon/view/rides/rides_main_abudhabi_card.dart';
+import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import 'package:royal_falcon/view/rides/rides_main_dubai_card.dart';
-import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
 
 import '../../utils/colors.dart';
-
 import '../widgets/booking_type.dart';
 import '../widgets/custom_end_drawer.dart';
 import 'location_buttons.dart';
+import '../widgets/shimmer_effect.dart';
 
 class Rides extends StatefulWidget {
   Rides({super.key});
@@ -26,8 +25,13 @@ class _RidesState extends State<Rides> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Access the viewModel using Provider and start animation
-      Provider.of<RidesAnimationViewModel>(context, listen: false).startAnimation();
+      Provider.of<VehicleViewModel>(context, listen: false).fetchVehicleCategories(context);
+    });
+  }
+
+  void _onLocationChanged(String location) {
+    setState(() {
+      selectedLocation = location;
     });
   }
 
@@ -35,7 +39,6 @@ class _RidesState extends State<Rides> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isSmallScreen = screenHeight < 700;
 
     return SafeArea(
       child: Scaffold(
@@ -68,9 +71,7 @@ class _RidesState extends State<Rides> {
                                 text: 'Dubai',
                                 isSelected: selectedLocation == 'Dubai',
                                 onTap: () {
-                                  setState(() {
-                                    selectedLocation = 'Dubai';
-                                  });
+                                  _onLocationChanged('Dubai');
                                 },
                               ),
                             ),
@@ -80,9 +81,7 @@ class _RidesState extends State<Rides> {
                                 text: 'Abu Dhabi',
                                 isSelected: selectedLocation == 'Abu Dhabi',
                                 onTap: () {
-                                  setState(() {
-                                    selectedLocation = 'Abu Dhabi';
-                                  });
+                                  _onLocationChanged('Abu Dhabi');
                                 },
                               ),
                             ),
@@ -106,48 +105,44 @@ class _RidesState extends State<Rides> {
                                   style: TextStyle(color: Colors.white, fontSize: 25.sp),
                                 ),
                                 SizedBox(height: 8.h),
-                                Consumer<RidesAnimationViewModel>(
-                                  builder: (context, ridesAnimationViewModel, child) {
-                                    final myAnimation = ridesAnimationViewModel.myAnimation;
-                                    return GridView.builder(
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: width > 392
-                                            ? 0.60
-                                            : (width > 350
-                                            ? 0.57
-                                            : (width < 313
-                                            ? 0.45
-                                            : 0.53)), // Adjust aspect ratio as needed
-                                      ),
-                                      itemCount: 8,
-                                      itemBuilder: (context, index) {
-                                        return AnimatedContainer(
-                                          duration: Duration(milliseconds: 400 + (index * 250)),
-                                          curve: Curves.easeInCubic,
-                                          transform: Matrix4.translationValues(myAnimation ? 0 : width, 0, 0),
-                                          child: selectedLocation == 'Dubai'
-                                              ? const RidesMainDubaiCard(
-                                            imageUrl: 'images/Lexus_ES_300H.png',
-                                            name: 'Lexus ES 300H',
-                                            baggage: 3,
-                                            price: 250,
-                                            rating: 4.0,
-                                            persons: 4,
-                                          )
-                                              :const RidesMainAbuDhabiCard(
-                                            imageUrl: 'images/Lexus_ES_300H.png',
-                                            name: 'Audi ETron GT',
-                                            baggage: 3,
-                                            price: 350,
-                                            rating: 4.0,
-                                            persons: 4,
+                                Consumer<VehicleViewModel>(
+                                  builder: (context, vehicleViewModel, child) {
+                                    if (vehicleViewModel.loading) {
+                                      return FullScreenShimmerLoading();
+                                    } else {
+                                      var vehicles = vehicleViewModel.getVehiclesByLocation(selectedLocation);
+                                      if (vehicles.isEmpty) {
+                                        return Center(child: Text('No Vehicle for this Location', style: TextStyle(color: Colors.white)));
+                                      } else {
+                                        return GridView.builder(
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            childAspectRatio: width > 392
+                                                ? 0.60
+                                                : (width > 350
+                                                ? 0.57
+                                                : (width < 313
+                                                ? 0.45
+                                                : 0.53)), // Adjust aspect ratio as needed
                                           ),
+                                          itemCount: vehicles.length,
+                                          itemBuilder: (context, index) {
+                                            final category = vehicles[index];
+                                            print('Category Data: $category'); // Debug print
+                                            return RidesMainDubaiCard(
+                                              name: category['name'],
+                                              imageUrl: category['categoryVehicleImage'],
+                                              price: category['minimumAmount'].toDouble(),
+                                              baggage: category['noOfBaggage'],
+                                              persons: category['noOfPeople'],
+                                              rating: 4.0, // Assuming a default rating, adjust as needed
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
+                                      }
+                                    }
                                   },
                                 ),
                               ],

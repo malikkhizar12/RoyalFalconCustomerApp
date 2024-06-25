@@ -1,53 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
 
 import '../widgets/appbarcustom.dart';
+import '../widgets/map_view.dart';
 
-class RidesBookingForm extends StatelessWidget {
-  const RidesBookingForm({super.key});
+class RidesBookingForm extends StatefulWidget {
+  final double price;
+  final bool isFromAirportBooking;
+
+  const RidesBookingForm({Key? key, required this.price, this.isFromAirportBooking = false}) : super(key: key);
+
+  @override
+  _RidesBookingFormState createState() => _RidesBookingFormState();
+}
+
+class _RidesBookingFormState extends State<RidesBookingForm> {
+  TextEditingController _pickupLocationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1C1F23),
       resizeToAvoidBottomInset: true,
-      body: Padding(
-        padding: const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
-        child: Column(
-          children: [
-            const AppbarCustom(title: "Booking"),
-            SizedBox(height: 15.h),
-            Expanded(
-              child: SingleChildScrollView(
+      body: Column(
+        children: [
+          SizedBox(height: 15.h),
+          const AppbarCustom(title: "Booking"),
+          SizedBox(height: 15.h),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
                 child: Column(
                   children: [
                     Row(
                       children: [
-                        Expanded(child: buildTextField(context, "No. of Pax:", "03 Adult / 01 Child")),
+                        Expanded(child: FormTextField(label: "No. of Passengers:", hint: '02', mandatory: true)),
                         SizedBox(width: 8.w),
-                        Expanded(child: buildTextField(context, "No. of Bags", "03")),
+                        Expanded(child: FormTextField(label: "No. of Bags", hint: '03', mandatory: true)),
                       ],
                     ),
                     SizedBox(height: 16.h),
                     Row(
                       children: [
-                        Expanded(child: buildTextField(context, "Pickup time:", "03 Adult / 01 Child")),
+                        Expanded(child: FormTextField(label: "Pickup time:", hint: '3 June 10:30 AM', mandatory: true)),
                         SizedBox(width: 8.w),
-                        Expanded(child: buildTextField(context, "Pickup location :", "03")),
+                        Expanded(
+                          child: FormTextField(
+                            label: "Pickup location:",
+                            hint: 'Select location',
+                            mandatory: true,
+                            readOnly: true,
+                            onTap: () async {
+                              // Navigate to Google Maps screen
+                              final selectedLocation = await Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => MapsScreen()),
+                              );
+
+                              if (selectedLocation != null) {
+                                setState(() {
+                                  _pickupLocationController.text = selectedLocation;
+                                });
+                              }
+                            },
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: 16.h),
                     Row(
                       children: [
-                        Expanded(child: buildTextField(context, "Flight no:", "03 Adult / 01 Child")),
+                        Expanded(
+                          child: FormTextField(
+                            label: "Flight no:",
+                            hint: '1223432332',
+                            mandatory: widget.isFromAirportBooking,
+                          ),
+                        ),
                         SizedBox(width: 8.w),
-                        Expanded(child: buildTextField(context, "Drop off location:", "03")),
+                        Expanded(child: FormTextField(label: "Drop off location:", hint: 'Building 1..', mandatory: true)),
                       ],
                     ),
                     SizedBox(height: 16.h),
                     Row(
                       children: [
-                        Expanded(child: buildTextField(context, "Special Request :", "03 Adult / 01 Child")),
+                        Expanded(child: FormTextField(label: "Special Request:", hint: '03 Adult / 01 Child', mandatory: true)),
                       ],
                     ),
                     SizedBox(height: 20.h),
@@ -68,40 +107,9 @@ class RidesBookingForm extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget buildTextField(BuildContext context, String label, String hint) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
-        SizedBox(height: 8),
-        TextField(
-          style: TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(color: Colors.grey),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFFFBC07)),
-              borderRadius: BorderRadius.circular(15),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -153,7 +161,7 @@ class RidesBookingForm extends StatelessWidget {
               ),
             ),
             Text(
-              "100 AED",
+              "${widget.price} AED",
               style: TextStyle(
                 color: const Color(0xFFFFBC07),
                 fontSize: 18.sp,
@@ -169,7 +177,7 @@ class RidesBookingForm extends StatelessWidget {
               // Add your payment action here
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFFFBC07),
+              backgroundColor: const Color(0xFFFFBC07),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(13.0),
               ),
@@ -191,4 +199,3 @@ class RidesBookingForm extends StatelessWidget {
     );
   }
 }
-

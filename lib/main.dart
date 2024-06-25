@@ -10,8 +10,16 @@ import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/normal_booking_view_model.dart';
 import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
+import 'package:royal_falcon/view_model/vehicle_view_model.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  await Hive.openBox('vehicleCategories');
+
   runApp(const MyApp());
 }
 
@@ -28,7 +36,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RidesAnimationViewModel()),
         ChangeNotifierProvider(create: (_) => CarViewModel()),
         ChangeNotifierProvider(create: (_) => AirportAnimationViewModel()),
-
+        ChangeNotifierProvider(create: (_) => VehicleViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:royal_falcon/utils/routes/routes_names.dart';
+import 'package:royal_falcon/view/rides/rides_booking_form.dart';
 
 import '../widgets/starRating.dart';
-
 
 class RidesMainAbuDhabiCard extends StatelessWidget {
   final String name;
@@ -26,19 +25,15 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       width: 0.45.sw, // Adjusted for two columns in a row
       margin: EdgeInsets.all(8.0.w),
       child: Card(
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
-
         ),
         elevation: 5,
-
         child: Container(
-
           decoration: BoxDecoration(
             color: const Color(0xFF35383B),
             borderRadius: BorderRadius.circular(10.0),
@@ -87,7 +82,7 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height:6.h),
+                    SizedBox(height: 6.h),
                     StarRating(rating: rating),
                     SizedBox(height: 6.h),
                     Row(
@@ -95,7 +90,7 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             "Starting From",
-                            style:  TextStyle(
+                            style: TextStyle(
                               fontSize: 14.sp,
                               color: Colors.white,
                             ),
@@ -103,7 +98,7 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
                         ),
                         Text(
                           "$price AED",
-                          style:  TextStyle(
+                          style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -114,10 +109,15 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
                     SizedBox(height: 10.h),
                     Center(
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width*0.88,
+                        width: MediaQuery.of(context).size.width * 0.88,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, RoutesNames.ridesBookingForm);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RidesBookingForm(price: price),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFFBC07),
@@ -129,7 +129,7 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
                               vertical: 5.h,
                             ),
                           ),
-                          child:  Text(
+                          child: Text(
                             'Book Now',
                             style: TextStyle(
                               fontSize: 14.sp,

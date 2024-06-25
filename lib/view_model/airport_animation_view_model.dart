@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class AirportAnimationViewModel with ChangeNotifier {
   bool _myAnimation = false;
@@ -10,9 +10,8 @@ class AirportAnimationViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    // Any cleanup can be done here
-    super.dispose();
+  void stopAnimation() {
+    _myAnimation = false;
+    notifyListeners();
   }
 }
