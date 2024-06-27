@@ -19,7 +19,7 @@ class VehicleRepository {
     try {
       final String url = '${Appurl.vehicle}?city=$city';
       dynamic response = await _apiServices.getGetApiResponse(url);
-      print('Vehicle Repository Response: $response'); // Debug print
+      print('Vehicle Repository Response for $city: $response'); // Debug print
       return response;
     } catch (e) {
       print('Error fetching vehicle categories: $e');

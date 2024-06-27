@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_falcon/view/rides/rides_booking_form.dart';
-import '../widgets/starRating.dart';
 
 class RidesMainDubaiCard extends StatelessWidget {
   final String name;
@@ -41,7 +40,7 @@ class RidesMainDubaiCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 8.0,right: 8.0,top: 8.0),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: imageUrl != null && imageUrl!.isNotEmpty
@@ -63,7 +62,7 @@ class RidesMainDubaiCard extends StatelessWidget {
                     errorBuilder: (context, error, stackTrace) {
                       print('Error loading image: $error'); // Log the error
                       return Image.asset(
-                        'images/lexus300.png',
+                        'images/car_image.png',
                         width: double.infinity,
                         height: 90.h, // Fixed height
                         fit: BoxFit.cover, // Adjust the fit as needed
@@ -71,7 +70,7 @@ class RidesMainDubaiCard extends StatelessWidget {
                     },
                   )
                       : Image.asset(
-                    'images/lexus300.png',
+                    'images/car_image.png',
                     width: double.infinity,
                     height: 90.h, // Fixed height
                     fit: BoxFit.cover, // Adjust the fit as needed
@@ -107,7 +106,6 @@ class RidesMainDubaiCard extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-
                     SizedBox(height: 20.h),
                     Row(
                       children: [

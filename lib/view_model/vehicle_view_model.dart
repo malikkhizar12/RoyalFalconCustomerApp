@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../repository/vehicle_repo.dart';
-import '../resources/app_url.dart';
 
 class VehicleViewModel with ChangeNotifier {
   final VehicleRepository _vehicleRepository = VehicleRepository();
@@ -24,38 +23,24 @@ class VehicleViewModel with ChangeNotifier {
     try {
       setLoading(true);
 
+      // Ensure we are fetching fresh data
       var box = await Hive.openBox('vehicleCategories');
+      await box.clear();
 
       // Fetch Dubai vehicles
-      if (box.containsKey('dubai')) {
-        _dubaiVehicles = box.get('dubai');
-      } else {
-        var dubaiResponse = await _vehicleRepository.getVehicleCategories('Dubai');
-        if (dubaiResponse != null && dubaiResponse['vehicleCategories'] != null) {
-          _dubaiVehicles = dubaiResponse['vehicleCategories'].map((category) {
-            if (category['categoryVehicleImage'] != null) {
-              category['categoryVehicleImage'] = Appurl.vehicleImages + category['categoryVehicleImage'];
-            }
-            return category;
-          }).toList();
-          box.put('dubai', _dubaiVehicles);
-        }
+      var dubaiResponse = await _vehicleRepository.getVehicleCategories('Dubai');
+      print('Dubai Response: $dubaiResponse'); // Debug print
+      if (dubaiResponse != null && dubaiResponse['vehicleCategories'] != null) {
+        _dubaiVehicles = dubaiResponse['vehicleCategories'];
+        box.put('dubai', _dubaiVehicles);
       }
 
       // Fetch Abu Dhabi vehicles
-      if (box.containsKey('abuDhabi')) {
-        _abuDhabiVehicles = box.get('abuDhabi');
-      } else {
-        var abuDhabiResponse = await _vehicleRepository.getVehicleCategories('Abu Dhabi');
-        if (abuDhabiResponse != null && abuDhabiResponse['vehicleCategories'] != null) {
-          _abuDhabiVehicles = abuDhabiResponse['vehicleCategories'].map((category) {
-            if (category['categoryVehicleImage'] != null) {
-              category['categoryVehicleImage'] = Appurl.vehicleImages + category['categoryVehicleImage'];
-            }
-            return category;
-          }).toList();
-          box.put('abuDhabi', _abuDhabiVehicles);
-        }
+      var abuDhabiResponse = await _vehicleRepository.getVehicleCategories('Abu Dhabi');
+      print('Abu Dhabi Response: $abuDhabiResponse'); // Debug print
+      if (abuDhabiResponse != null && abuDhabiResponse['vehicleCategories'] != null) {
+        _abuDhabiVehicles = abuDhabiResponse['vehicleCategories'];
+        box.put('abuDhabi', _abuDhabiVehicles);
       }
 
       setLoading(false);
