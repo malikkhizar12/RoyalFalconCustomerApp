@@ -24,8 +24,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.royal_falcon"
-    compileSdk 34
-    ndkVersion flutter.ndkVersion
+    compileSdk flutter.compileSdkVersion
+    ndkVersion "25.1.8937393"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -64,4 +64,6 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation 'com.stripe:stripe-android:17.1.1'
+}
