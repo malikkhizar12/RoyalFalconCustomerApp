@@ -55,6 +55,7 @@ flutter:
     - images/profile_image.png
     - images/Explore_now.jpg
     - images/splashIcon.png
+    - .env
 
   # https://flutter.dev/assets-and-images/#resolution-aware
 
