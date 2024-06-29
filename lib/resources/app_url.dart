@@ -4,4 +4,5 @@ class Appurl {
  static var loginUrl = baseUrl + '/auth/login';
  static var signupUrl = baseUrl + '/auth/register';
  static var vehicle = baseUrl + '/admin/getVehicleCategory';
+ static var createBooking = baseUrl + '/user/createbooking';
 }

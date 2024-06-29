@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
-import 'package:royal_falcon/view_model/user_view_model.dart';
-import 'package:royal_falcon/model/user_model.dart';
+
 import '../widgets/custom_end_drawer.dart';
 import '../widgets/home_screen_categories.dart';
 import '../widgets/searchbar.dart';

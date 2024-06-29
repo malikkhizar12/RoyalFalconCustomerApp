@@ -31,7 +31,7 @@ class CustomEndDrawer extends StatelessWidget {
               child: Column(
                 children: [
                   buildMenuItem('Profile', () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  ProfileScreen()));
                   }),
                   buildMenuItem('My Booking', () {
                     // Handle My Booking action

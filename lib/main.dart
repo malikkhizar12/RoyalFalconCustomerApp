@@ -7,7 +7,9 @@ import 'package:royal_falcon/view/splash/splash_view.dart';
 import 'package:royal_falcon/view_model/airport_animation_view_model.dart';
 import 'package:royal_falcon/view_model/auth_view_model.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
+import 'package:royal_falcon/view_model/map_view_model.dart';
 import 'package:royal_falcon/view_model/normal_booking_view_model.dart';
+import 'package:royal_falcon/view_model/profile_screen_view_model.dart';
 import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
@@ -37,6 +39,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CarViewModel()),
         ChangeNotifierProvider(create: (_) => AirportAnimationViewModel()),
         ChangeNotifierProvider(create: (_) => VehicleViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfileScreenViewModel()),
+        ChangeNotifierProvider(create: (_) => MapsViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
