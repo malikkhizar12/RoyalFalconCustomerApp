@@ -46,10 +46,10 @@ class Utils {
     ));
   }
 
-  static errorMessage(ScaffoldMessengerState scaffoldMessenger, BuildContext context) {
+  static errorMessage(String title, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
-        scaffoldMessenger as String,
+        title,
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.bold,

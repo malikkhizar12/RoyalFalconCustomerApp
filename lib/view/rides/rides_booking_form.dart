@@ -31,7 +31,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   final TextEditingController pickupTimeController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController flightNoController = TextEditingController();
-  final TextEditingController specialRequestController = TextEditingController();
+  final TextEditingController specialRequestController =
+      TextEditingController();
 
   DateTime? selectedDateTime;
 
@@ -61,7 +62,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       context: context,
       initialDate: selectedDateTime ?? DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)), // Allow selection for one year from now
+      lastDate: DateTime.now()
+          .add(Duration(days: 365)), // Allow selection for one year from now
       // Customize date picker colors
       builder: (BuildContext context, Widget? child) {
         return Theme(
@@ -71,8 +73,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
               onPrimary: Colors.black, // Customize text color on primary color
             ),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-              ),
+              style: TextButton.styleFrom(),
             ),
           ),
           child: child!,
@@ -90,11 +91,11 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             data: ThemeData.light().copyWith(
               colorScheme: ColorScheme.light(
                 primary: const Color(0xFFFFBC07), // Customize primary color
-                onPrimary: Colors.black, // Customize text color on primary color
+                onPrimary:
+                    Colors.black, // Customize text color on primary color
               ),
               textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                ),
+                style: TextButton.styleFrom(),
               ),
             ),
             child: child!,
@@ -111,7 +112,9 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          pickupTimeController.text = DateFormat.yMd().add_jm().format(selectedDateTime!); // Format date and time
+          pickupTimeController.text = DateFormat.yMd()
+              .add_jm()
+              .format(selectedDateTime!); // Format date and time
         });
       }
     }
@@ -122,239 +125,253 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     return ChangeNotifierProvider(
       create: (BuildContext context) => RidesBookingFormViewModel(context),
       child: Consumer<RidesBookingFormViewModel>(
-        builder: (BuildContext context, model, Widget? child) =>  Scaffold(
-      backgroundColor: const Color(0xFF1C1F23),
-      resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          SizedBox(height: 15.h),
-          const AppbarCustom(title: "Booking"),
-          SizedBox(height: 15.h),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FormTextField(
-                      label: "Name",
-                      hint: 'XYZ',
-                      mandatory: true,
-                      controller: nameController,
-                    ),
-                    SizedBox(height: 16.h),
-                    FormTextField(
-                      label: "Email",
-                      hint: 'xyz@gmail.com',
-                      mandatory: true,
-                      controller: emailController,
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
+        builder: (BuildContext context, model, Widget? child) => Scaffold(
+          backgroundColor: const Color(0xFF1C1F23),
+          resizeToAvoidBottomInset: true,
+          body: Column(
+            children: [
+              SizedBox(height: 15.h),
+              const AppbarCustom(title: "Booking"),
+              SizedBox(height: 15.h),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Booking Type: ",
-                                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                        FormTextField(
+                          label: "Name",
+                          hint: 'XYZ',
+                          mandatory: true,
+                          controller: nameController,
+                        ),
+                        SizedBox(height: 16.h),
+                        FormTextField(
+                          label: "Email",
+                          hint: 'xyz@gmail.com',
+                          mandatory: true,
+                          controller: emailController,
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Booking Type: ",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16.sp),
+                                  ),
+                                  SizedBox(height: 8.w),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16.w),
+                                    height: 60.h,
+                                    width: 200.w,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<bool>(
+                                        value: isFromAirportBooking,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            isFromAirportBooking = newValue!;
+                                          });
+                                        },
+                                        dropdownColor: Color(0xFF1C1F23),
+                                        items: [
+                                          DropdownMenuItem<bool>(
+                                            value: false,
+                                            child: Text(
+                                              'Normal Booking',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            ),
+                                          ),
+                                          DropdownMenuItem<bool>(
+                                            value: true,
+                                            child: Text(
+                                              'Airport Booking',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 8.w),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                                height: 60.h,
-                                width: 200.w,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<bool>(
-                                    value: isFromAirportBooking,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        isFromAirportBooking = newValue!;
-                                      });
-                                    },
-                                    dropdownColor: Color(0xFF1C1F23),
-                                    items: [
-                                      DropdownMenuItem<bool>(
-                                        value: false,
-                                        child: Text(
-                                          'Normal Booking',
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ),
-                                      DropdownMenuItem<bool>(
-                                        value: true,
-                                        child: Text(
-                                          'Airport Booking',
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: FormTextField(
+                                label: "City",
+                                hint: 'Pickup City',
+                                mandatory: true,
+                                controller: TextEditingController(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormTextField(
+                                label: "No. of Passengers:",
+                                hint: '02',
+                                mandatory: true,
+                                controller: passengersController,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: FormTextField(
+                                label: "No. of Bags",
+                                hint: '03',
+                                mandatory: true,
+                                controller: bagsController,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  _selectDateAndTime(
+                                      context); // Call function to show combined date-time picker
+                                },
+                                child: AbsorbPointer(
+                                  child: FormTextField(
+                                    label: "Pickup time:",
+                                    hint: 'Select Date and Time',
+                                    mandatory: true,
+                                    controller: pickupTimeController,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: FormTextField(
-                            label: "City",
-                            hint: 'Pickup City',
-                            mandatory: true,
-                            controller: TextEditingController(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: FormTextField(
-                            label: "No. of Passengers:",
-                            hint: '02',
-                            mandatory: true,
-                            controller: passengersController,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: FormTextField(
-                            label: "No. of Bags",
-                            hint: '03',
-                            mandatory: true,
-                            controller: bagsController,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              _selectDateAndTime(context); // Call function to show combined date-time picker
-                            },
-                            child: AbsorbPointer(
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
                               child: FormTextField(
-                                label: "Pickup time:",
-                                hint: 'Select Date and Time',
+                                label: "Contact Number",
+                                hint: '+971********',
                                 mandatory: true,
-                                controller: pickupTimeController,
-                              ),
-                            ),),),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: FormTextField(
-                            label: "Contact Number",
-                            hint: '+971********',
-                            mandatory: true,
-                            controller: contactNumberController,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: LocationInput(
-                            mandatory: true,
-                            name: "pickupLocation",
-                            labelTitle: "Pickup location:",
-                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                            inputStyle: InputDecoration(
-                              hintText: 'Select location',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFFFFBC07)),
-                                borderRadius: BorderRadius.circular(15),
+                                controller: contactNumberController,
                               ),
                             ),
-                            containerStyle: BoxDecoration(),
-                            isPickup: true,
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: LocationInput(
-                            mandatory: true,
-                            name: "dropoffLocation",
-                            labelTitle: "Drop off location:",
-                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                            inputStyle: InputDecoration(
-                              hintText: 'Select location',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFFFFBC07)),
-                                borderRadius: BorderRadius.circular(15),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: LocationInput(
+                                mandatory: true,
+                                name: "pickupLocation",
+                                labelTitle: "Pickup location:",
+                                labelStyle: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                                inputStyle: InputDecoration(
+                                  hintText: 'Select location',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFFFFBC07)),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                containerStyle: BoxDecoration(),
+                                isPickup: true,
                               ),
                             ),
-                            containerStyle: BoxDecoration(),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: FormTextField(
-                            label: "Special Request:",
-                            hint: '03 Adult / 01 Child',
-                            mandatory: true,
-                            controller: specialRequestController,
-                          ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: LocationInput(
+                                mandatory: true,
+                                name: "dropoffLocation",
+                                labelTitle: "Drop off location:",
+                                labelStyle: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                                inputStyle: InputDecoration(
+                                  hintText: 'Select location',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFFFFBC07)),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                containerStyle: BoxDecoration(),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 8.w),
-                        Visibility(
-                          visible: isFromAirportBooking, // Show flight number field only for airport booking
-                          child: Expanded(
-                            child: FormTextField(
-                              label: "Flight No:",
-                              hint: '1223432332',
-                              mandatory: isFromAirportBooking,
-                              controller: flightNoController,
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormTextField(
+                                label: "Special Request:",
+                                hint: '03 Adult / 01 Child',
+                                mandatory: true,
+                                controller: specialRequestController,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Visibility(
+                              visible:
+                                  isFromAirportBooking, // Show flight number field only for airport booking
+                              child: Expanded(
+                                child: FormTextField(
+                                  label: "Flight No:",
+                                  hint: '1223432332',
+                                  mandatory: isFromAirportBooking,
+                                  controller: flightNoController,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.28,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(16.h),
+                          margin: EdgeInsets.only(top: 16.h),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF333639),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
                             ),
                           ),
+                          child: buildSummarySection(context, () {}),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20.h),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.28,
-                      width: double.infinity,
-                      padding: EdgeInsets.all(16.h),
-                      margin: EdgeInsets.only(top: 16.h),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF333639),
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20),
-                        ),
-                      ),
-                      child: buildSummarySection(context),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -364,7 +381,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     );
   }
 
-  Widget buildSummarySection(BuildContext context,onTap) {
+  Widget buildSummarySection(BuildContext context, onTap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -391,7 +408,6 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                 ),
               ],
             ),
-
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -414,7 +430,6 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             ),
           ],
         ),
-
         SizedBox(height: 20.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
