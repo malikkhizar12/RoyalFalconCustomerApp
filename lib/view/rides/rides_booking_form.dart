@@ -409,18 +409,11 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                     dropOffLocation.coordinates.longitude;
                                 if (pickUpLatitude != null ||
                                     pickUpLongitude != null) {
-                                  distanceInKm = model.(
-                                      pickUpLatitude,
-                                      pickUpLongitude,
-                                      dropOffLatitude,
-                                      dropOffLongitude);
-                                  print("$distanceInKm Km");
                                   model.getTravelTime(
                                       pickUpLatitude!,
                                       pickUpLongitude!,
                                       dropOffLatitude!,
                                       dropOffLongitude!);
-                                  model.updateValue();
                                 }
                               }),
                         ),
@@ -490,7 +483,9 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                             ),
                           ),
                           child: buildSummarySection(
-                              context, distanceInKm!.toStringAsFixed(2), () {
+                              context,
+                              model.distanceInKm.toString(),
+                              model.possibleTime.toString(), () {
                             model.makePayment();
                           }),
                         ),
@@ -507,7 +502,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   }
 
   Widget buildSummarySection(
-      BuildContext context, String distanceValue, onTap) {
+      BuildContext context, String distanceValue, String possibleTime, onTap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -546,7 +541,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                   ),
                 ),
                 Text(
-                  "10 minutes",
+                  "$possibleTime minutes",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
