@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/material/scaffold.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 import 'package:royal_falcon/utils/utils/utils.dart';
@@ -12,6 +11,8 @@ class RidesBookingFormViewModel extends ChangeNotifier {
 
   BuildContext context;
   Map<String, dynamic>? paymentIntent;
+  bool isLoading = false;
+
   // GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
   // TextEditingController _controller = TextEditingController();
   // String _selectedLocation = "";
@@ -34,9 +35,14 @@ class RidesBookingFormViewModel extends ChangeNotifier {
   //     notifyListeners();
   //   }
   // }
-
+  void setLoading(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
   Future<void> makePayment() async {
     try {
+      setLoading(true);
+
       // Create payment intent data
       paymentIntent = await createPaymentIntent('100', 'AED');
       // initialise the payment sheet setup
@@ -55,6 +61,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       );
       // Display payment sheet
       displayPaymentSheet();
+
     } catch (e) {
       print("exception $e");
 
@@ -63,6 +70,10 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       } else {
         print("exception $e");
       }
+
+    }
+    finally{
+      setLoading(false);
     }
   }
 

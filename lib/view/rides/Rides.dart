@@ -163,25 +163,18 @@ class _RidesState extends State<Rides> {
                   Positioned(
                     top: 20.h,
                     left: 20.w,
-                    child: SizedBox(
-                      height: 50.h,
-                      width: 50.w,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: const Color(0xFF2D343C),
-                        ),
-                        margin: const EdgeInsets.all(8.0),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: const Icon(Icons.arrow_back, color: Color(0xFFCF9D2C)),
-                          iconSize: 14.sp,
-                        ),
+                    child: CircleAvatar(
+                      radius: 20, // Adjust the radius to control the size of the circle
+                      backgroundColor: Color(0xFF2D343C), // Background color of the circle
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.arrow_back, color: Color(0xFFCF9D2C)),
+                        iconSize: 23,
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ],

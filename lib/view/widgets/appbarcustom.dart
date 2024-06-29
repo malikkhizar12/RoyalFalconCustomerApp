@@ -16,24 +16,18 @@ class AppbarCustom extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            height: 60,
-            width: 60,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-              ),
-              margin: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.arrow_back, color: Color(0xFFCF9D2C)),
-                iconSize: 23,
-              ),
+          CircleAvatar(
+            radius: 20, // Adjust the radius to control the size of the circle
+            backgroundColor: Color(0xFF2D343C), // Background color of the circle
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back, color: Color(0xFFCF9D2C)),
+              iconSize: 23,
             ),
           ),
-          const Spacer(flex: 3,),
+          const Spacer(flex: 4,),
 
           Text(
             title,

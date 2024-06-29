@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:royal_falcon/utils/routes/routes_names.dart';
 import 'package:royal_falcon/view/home_screen/homescreen.dart';
 import 'package:royal_falcon/view/login/login.dart';
+import 'package:royal_falcon/view/my_bookings/my_booking.dart';
 import 'package:royal_falcon/view/rides/airport_bookings.dart';
 import 'package:royal_falcon/view/rides/normal_bookings.dart';
 import 'package:royal_falcon/view/rides/rides_booking_form.dart';
@@ -29,6 +30,9 @@ class Routes {
 
       case RoutesNames.airportBookings:
         return MaterialPageRoute(builder: (BuildContext context)=> AirportBookings() );
+
+      case RoutesNames.myBookings:
+        return MaterialPageRoute(builder: (BuildContext context)=> MyBookings() );
 
         default:
         return MaterialPageRoute(builder: (_){
