@@ -44,7 +44,7 @@ class AuthViewModel with ChangeNotifier {
     } catch (e) {
       setLoading(false);
       print(e.toString().contains('message'));
-      Utils.errorMessage(e.toString(), context);
+      Utils.errorMessage(e.toString() as ScaffoldMessengerState, context);
       String errorMessage = 'Login failed: $e';
 
       // Check for specific error messages

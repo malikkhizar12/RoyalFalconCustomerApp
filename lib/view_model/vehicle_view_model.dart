@@ -23,13 +23,23 @@ class VehicleViewModel with ChangeNotifier {
     try {
       setLoading(true);
 
-      // Ensure we are fetching fresh data
+      // Open Hive box
       var box = await Hive.openBox('vehicleCategories');
-      await box.clear();
+
+      // Check if data exists in Hive
+      var cachedDubaiVehicles = box.get('dubai');
+      var cachedAbuDhabiVehicles = box.get('abuDhabi');
+
+      // If data exists, use it
+      if (cachedDubaiVehicles != null && cachedAbuDhabiVehicles != null) {
+        _dubaiVehicles = cachedDubaiVehicles;
+        _abuDhabiVehicles = cachedAbuDhabiVehicles;
+        setLoading(false);
+        return;
+      }
 
       // Fetch Dubai vehicles
       var dubaiResponse = await _vehicleRepository.getVehicleCategories('Dubai');
-      print('Dubai Response: $dubaiResponse'); // Debug print
       if (dubaiResponse != null && dubaiResponse['vehicleCategories'] != null) {
         _dubaiVehicles = dubaiResponse['vehicleCategories'];
         box.put('dubai', _dubaiVehicles);
@@ -37,7 +47,6 @@ class VehicleViewModel with ChangeNotifier {
 
       // Fetch Abu Dhabi vehicles
       var abuDhabiResponse = await _vehicleRepository.getVehicleCategories('Abu Dhabi');
-      print('Abu Dhabi Response: $abuDhabiResponse'); // Debug print
       if (abuDhabiResponse != null && abuDhabiResponse['vehicleCategories'] != null) {
         _abuDhabiVehicles = abuDhabiResponse['vehicleCategories'];
         box.put('abuDhabi', _abuDhabiVehicles);

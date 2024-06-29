@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart'; // Import for date formatting
 import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
 import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
 
 import '../widgets/appbarcustom.dart';
-import '../widgets/map_view.dart';
+import '../widgets/location_input.dart';
 
 class RidesBookingForm extends StatefulWidget {
   final double price;
@@ -20,124 +21,340 @@ class RidesBookingForm extends StatefulWidget {
 }
 
 class _RidesBookingFormState extends State<RidesBookingForm> {
-  TextEditingController _pickupLocationController = TextEditingController();
+  bool isFromAirportBooking = false; // Track the selected booking type
+
+  // Controllers for text input fields
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passengersController = TextEditingController();
+  final TextEditingController bagsController = TextEditingController();
+  final TextEditingController pickupTimeController = TextEditingController();
+  final TextEditingController contactNumberController = TextEditingController();
+  final TextEditingController flightNoController = TextEditingController();
+  final TextEditingController specialRequestController = TextEditingController();
+
+  DateTime? selectedDateTime;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize booking type based on widget's initial value
+    isFromAirportBooking = widget.isFromAirportBooking;
+  }
+
+  @override
+  void dispose() {
+    // Dispose all controllers when the widget is disposed
+    nameController.dispose();
+    emailController.dispose();
+    passengersController.dispose();
+    bagsController.dispose();
+    pickupTimeController.dispose();
+    contactNumberController.dispose();
+    flightNoController.dispose();
+    specialRequestController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _selectDateAndTime(BuildContext context) async {
+    final DateTime? pickedDateTime = await showDatePicker(
+      context: context,
+      initialDate: selectedDateTime ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)), // Allow selection for one year from now
+      // Customize date picker colors
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: const Color(0xFFFFBC07), // Customize primary color
+              onPrimary: Colors.black, // Customize text color on primary color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDateTime != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDateTime ?? DateTime.now()),
+        // Customize time picker colors
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: ColorScheme.light(
+                primary: const Color(0xFFFFBC07), // Customize primary color
+                onPrimary: Colors.black, // Customize text color on primary color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          selectedDateTime = DateTime(
+            pickedDateTime.year,
+            pickedDateTime.month,
+            pickedDateTime.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+          pickupTimeController.text = DateFormat.yMd().add_jm().format(selectedDateTime!); // Format date and time
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (BuildContext context) => RidesBookingFormViewModel(context),
       child: Consumer<RidesBookingFormViewModel>(
-        builder: (BuildContext context, model, Widget? child) => Scaffold(
-          backgroundColor: const Color(0xFF1C1F23),
-          resizeToAvoidBottomInset: true,
-          body: Column(
-            children: [
-              SizedBox(height: 15.h),
-              const AppbarCustom(title: "Booking"),
-              SizedBox(height: 15.h),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 16.0, right: 16.0, left: 16.0),
-                    child: Column(
+        builder: (BuildContext context, model, Widget? child) =>  Scaffold(
+      backgroundColor: const Color(0xFF1C1F23),
+      resizeToAvoidBottomInset: true,
+      body: Column(
+        children: [
+          SizedBox(height: 15.h),
+          const AppbarCustom(title: "Booking"),
+          SizedBox(height: 15.h),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FormTextField(
+                      label: "Name",
+                      hint: 'XYZ',
+                      mandatory: true,
+                      controller: nameController,
+                    ),
+                    SizedBox(height: 16.h),
+                    FormTextField(
+                      label: "Email",
+                      hint: 'xyz@gmail.com',
+                      mandatory: true,
+                      controller: emailController,
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                                child: FormTextField(
-                                    label: "No. of Passengers:",
-                                    hint: '02',
-                                    mandatory: true)),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                                child: FormTextField(
-                                    label: "No. of Bags",
-                                    hint: '03',
-                                    mandatory: true)),
-                          ],
-                        ),
-                        SizedBox(height: 16.h),
-                        Row(
-                          children: [
-                            Expanded(
-                                child: FormTextField(
-                                    label: "Pickup time:",
-                                    hint: '3 June 10:30 AM',
-                                    mandatory: true)),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                              child: FormTextField(
-                                label: "Pickup location:",
-                                hint: 'Select location',
-                                mandatory: true,
-                                readOnly: true,
-                                onTap: () async {
-                                  // Navigate to Google Maps screen
-                                  final selectedLocation = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MapsScreen()),
-                                  );
-
-                                  if (selectedLocation != null) {
-                                    setState(() {
-                                      _pickupLocationController.text =
-                                          selectedLocation;
-                                    });
-                                  }
-                                },
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Booking Type: ",
+                                style: TextStyle(color: Colors.white, fontSize: 16.sp),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: FormTextField(
-                                label: "Flight no:",
-                                hint: '1223432332',
-                                mandatory: widget.isFromAirportBooking,
+                              SizedBox(height: 8.w),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                height: 60.h,
+                                width: 200.w,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<bool>(
+                                    value: isFromAirportBooking,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        isFromAirportBooking = newValue!;
+                                      });
+                                    },
+                                    dropdownColor: Color(0xFF1C1F23),
+                                    items: [
+                                      DropdownMenuItem<bool>(
+                                        value: false,
+                                        child: Text(
+                                          'Normal Booking',
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ),
+                                      DropdownMenuItem<bool>(
+                                        value: true,
+                                        child: Text(
+                                          'Airport Booking',
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                                child: FormTextField(
-                                    label: "Drop off location:",
-                                    hint: 'Building 1..',
-                                    mandatory: true)),
-                          ],
-                        ),
-                        SizedBox(height: 16.h),
-                        Row(
-                          children: [
-                            Expanded(
-                                child: FormTextField(
-                                    label: "Special Request:",
-                                    hint: '03 Adult / 01 Child',
-                                    mandatory: true)),
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.35,
-                          width: double.infinity,
-                          padding: EdgeInsets.all(16.h),
-                          margin: EdgeInsets.only(top: 16.h),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF333639),
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20),
-                            ),
+                            ],
                           ),
-                          child: buildSummarySection(context,(){
-                            model.makePayment();
-                          }),
+                        ),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: FormTextField(
+                            label: "City",
+                            hint: 'Pickup City',
+                            mandatory: true,
+                            controller: TextEditingController(),
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: FormTextField(
+                            label: "No. of Passengers:",
+                            hint: '02',
+                            mandatory: true,
+                            controller: passengersController,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: FormTextField(
+                            label: "No. of Bags",
+                            hint: '03',
+                            mandatory: true,
+                            controller: bagsController,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _selectDateAndTime(context); // Call function to show combined date-time picker
+                            },
+                            child: AbsorbPointer(
+                              child: FormTextField(
+                                label: "Pickup time:",
+                                hint: 'Select Date and Time',
+                                mandatory: true,
+                                controller: pickupTimeController,
+                              ),
+                            ),),),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: FormTextField(
+                            label: "Contact Number",
+                            hint: '+971********',
+                            mandatory: true,
+                            controller: contactNumberController,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: LocationInput(
+                            mandatory: true,
+                            name: "pickupLocation",
+                            labelTitle: "Pickup location:",
+                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                            inputStyle: InputDecoration(
+                              hintText: 'Select location',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFFFFBC07)),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            containerStyle: BoxDecoration(),
+                            isPickup: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: LocationInput(
+                            mandatory: true,
+                            name: "dropoffLocation",
+                            labelTitle: "Drop off location:",
+                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                            inputStyle: InputDecoration(
+                              hintText: 'Select location',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFFFFBC07)),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            containerStyle: BoxDecoration(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: FormTextField(
+                            label: "Special Request:",
+                            hint: '03 Adult / 01 Child',
+                            mandatory: true,
+                            controller: specialRequestController,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Visibility(
+                          visible: isFromAirportBooking, // Show flight number field only for airport booking
+                          child: Expanded(
+                            child: FormTextField(
+                              label: "Flight No:",
+                              hint: '1223432332',
+                              mandatory: isFromAirportBooking,
+                              controller: flightNoController,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.28,
+                      width: double.infinity,
+                      padding: EdgeInsets.all(16.h),
+                      margin: EdgeInsets.only(top: 16.h),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF333639),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      child: buildSummarySection(context),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -151,38 +368,54 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Total Distance",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Total Distance",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "26.7km",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ],
+            ),
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Possible time",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "10 minutes",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        Text(
-          "26.7km",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14.sp,
-          ),
-        ),
-        SizedBox(height: 16.h),
-        Text(
-          "Possible time",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          "10 minutes",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14.sp,
-          ),
-        ),
-        SizedBox(height: 26.h),
+
+        SizedBox(height: 20.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
