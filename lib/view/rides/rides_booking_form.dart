@@ -127,7 +127,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => RidesBookingFormViewModel(context),
+      create: (BuildContext context) =>
+          RidesBookingFormViewModel(context, widget.price.toString()),
       child: Consumer<RidesBookingFormViewModel>(
         builder: (BuildContext context, model, Widget? child) => Scaffold(
           backgroundColor: const Color(0xFF1C1F23),
@@ -521,7 +522,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                   ),
                 ),
                 Text(
-                  "$distanceValue Km",
+                  "$distanceValue",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
@@ -541,7 +542,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                   ),
                 ),
                 Text(
-                  "$possibleTime minutes",
+                  "$possibleTime",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,

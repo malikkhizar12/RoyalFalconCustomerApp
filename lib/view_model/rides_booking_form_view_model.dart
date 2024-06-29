@@ -4,19 +4,18 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 import 'package:royal_falcon/utils/utils/utils.dart';
-import 'dart:math' show cos, sqrt, asin;
 
 class RidesBookingFormViewModel extends ChangeNotifier {
-  RidesBookingFormViewModel(this.context);
+  RidesBookingFormViewModel(this.context,this.amountToPay);
 
   BuildContext context;
   Map<String, dynamic>? paymentIntent;
-  double distanceInKm = 0.0, possibleTime = 0.0;
+  String possibleTime = "0", distanceInKm = "0",amountToPay = "0";
 
   Future<void> makePayment() async {
     try {
       // Create payment intent data
-      paymentIntent = await createPaymentIntent('100', 'AED');
+      paymentIntent = await createPaymentIntent(amountToPay, 'AED');
       // initialise the payment sheet setup
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
@@ -70,6 +69,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         'currency': currency,
         'payment_method_types[]': 'card',
       };
+      print(body);
       var secretKey = dotenv.env['STRIPE_SECRET_KEY'];
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/payment_intents'),
@@ -98,8 +98,8 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       if (data['routes'].isNotEmpty) {
         final leg = data['routes'][0]['legs'][0];
         print(data['routes']);
-        possibleTime = leg['duration']['text'];
-        distanceInKm = leg['distance']['text'];
+        possibleTime = leg['duration']['text'].toString();
+        distanceInKm = leg['distance']['text'].toString();
         print('Travel time: $possibleTime   distance $distanceInKm');
         notifyListeners();
       } else {
