@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
+import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
 
 import '../widgets/appbarcustom.dart';
 import '../widgets/map_view.dart';
@@ -9,7 +11,9 @@ class RidesBookingForm extends StatefulWidget {
   final double price;
   final bool isFromAirportBooking;
 
-  const RidesBookingForm({Key? key, required this.price, this.isFromAirportBooking = false}) : super(key: key);
+  const RidesBookingForm(
+      {Key? key, required this.price, this.isFromAirportBooking = false})
+      : super(key: key);
 
   @override
   _RidesBookingFormState createState() => _RidesBookingFormState();
@@ -20,100 +24,130 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1C1F23),
-      resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          SizedBox(height: 15.h),
-          const AppbarCustom(title: "Booking"),
-          SizedBox(height: 15.h),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
-                child: Column(
-                  children: [
-                    Row(
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => RidesBookingFormViewModel(context),
+      child: Consumer<RidesBookingFormViewModel>(
+        builder: (BuildContext context, model, Widget? child) => Scaffold(
+          backgroundColor: const Color(0xFF1C1F23),
+          resizeToAvoidBottomInset: true,
+          body: Column(
+            children: [
+              SizedBox(height: 15.h),
+              const AppbarCustom(title: "Booking"),
+              SizedBox(height: 15.h),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 16.0, right: 16.0, left: 16.0),
+                    child: Column(
                       children: [
-                        Expanded(child: FormTextField(label: "No. of Passengers:", hint: '02', mandatory: true)),
-                        SizedBox(width: 8.w),
-                        Expanded(child: FormTextField(label: "No. of Bags", hint: '03', mandatory: true)),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(child: FormTextField(label: "Pickup time:", hint: '3 June 10:30 AM', mandatory: true)),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: FormTextField(
-                            label: "Pickup location:",
-                            hint: 'Select location',
-                            mandatory: true,
-                            readOnly: true,
-                            onTap: () async {
-                              // Navigate to Google Maps screen
-                              final selectedLocation = await Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => MapsScreen()),
-                              );
+                        Row(
+                          children: [
+                            Expanded(
+                                child: FormTextField(
+                                    label: "No. of Passengers:",
+                                    hint: '02',
+                                    mandatory: true)),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                                child: FormTextField(
+                                    label: "No. of Bags",
+                                    hint: '03',
+                                    mandatory: true)),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: FormTextField(
+                                    label: "Pickup time:",
+                                    hint: '3 June 10:30 AM',
+                                    mandatory: true)),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: FormTextField(
+                                label: "Pickup location:",
+                                hint: 'Select location',
+                                mandatory: true,
+                                readOnly: true,
+                                onTap: () async {
+                                  // Navigate to Google Maps screen
+                                  final selectedLocation = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MapsScreen()),
+                                  );
 
-                              if (selectedLocation != null) {
-                                setState(() {
-                                  _pickupLocationController.text = selectedLocation;
-                                });
-                              }
-                            },
+                                  if (selectedLocation != null) {
+                                    setState(() {
+                                      _pickupLocationController.text =
+                                          selectedLocation;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormTextField(
+                                label: "Flight no:",
+                                hint: '1223432332',
+                                mandatory: widget.isFromAirportBooking,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                                child: FormTextField(
+                                    label: "Drop off location:",
+                                    hint: 'Building 1..',
+                                    mandatory: true)),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: FormTextField(
+                                    label: "Special Request:",
+                                    hint: '03 Adult / 01 Child',
+                                    mandatory: true)),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.35,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(16.h),
+                          margin: EdgeInsets.only(top: 16.h),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF333639),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
                           ),
+                          child: buildSummarySection(context,(){
+                            model.makePayment();
+                          }),
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: FormTextField(
-                            label: "Flight no:",
-                            hint: '1223432332',
-                            mandatory: widget.isFromAirportBooking,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(child: FormTextField(label: "Drop off location:", hint: 'Building 1..', mandatory: true)),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(child: FormTextField(label: "Special Request:", hint: '03 Adult / 01 Child', mandatory: true)),
-                      ],
-                    ),
-                    SizedBox(height: 20.h),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.35,
-                      width: double.infinity,
-                      padding: EdgeInsets.all(16.h),
-                      margin: EdgeInsets.only(top: 16.h),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF333639),
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20),
-                        ),
-                      ),
-                      child: buildSummarySection(context),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget buildSummarySection(BuildContext context) {
+  Widget buildSummarySection(BuildContext context,onTap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -173,9 +207,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
         SizedBox(height: 26.h),
         Center(
           child: ElevatedButton(
-            onPressed: () {
-              // Add your payment action here
-            },
+            onPressed: onTap,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFFBC07),
               shape: RoundedRectangleBorder(
