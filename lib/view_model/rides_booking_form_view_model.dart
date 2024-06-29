@@ -11,6 +11,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
 
   BuildContext context;
   Map<String, dynamic>? paymentIntent;
+  double distanceInKm = 0.0, possibleTime = 0.0;
 
   Future<void> makePayment() async {
     try {
@@ -85,15 +86,27 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  double calculateDistance(lat1, long1, lat2, long2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((long2 - long1) * p)) / 2;
-    return 12742 * asin(sqrt(a));
-  }
-  void updateValue(){
-    notifyListeners();
+  Future<void> getTravelTime(
+      double startLat, double startLng, double endLat, double endLng) async {
+    final apiKey = dotenv.env['GOOGLE_API_KEY'];
+    final url =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=$startLat,$startLng&destination=$endLat,$endLng&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['routes'].isNotEmpty) {
+        final leg = data['routes'][0]['legs'][0];
+        print(data['routes']);
+        possibleTime = leg['duration']['text'];
+        distanceInKm = leg['distance']['text'];
+        print('Travel time: $possibleTime   distance $distanceInKm');
+        notifyListeners();
+      } else {
+        print('No route found');
+      }
+    } else {
+      print('Failed to fetch directions');
+    }
   }
 }

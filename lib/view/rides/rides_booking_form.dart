@@ -37,11 +37,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       TextEditingController();
 
   DateTime? selectedDateTime;
-  double? pickUpLatitude,
-      pickUpLongitude,
-      dropOffLatitude,
-      dropOffLongitude,
-      distanceInKm = 0.0;
+  double? pickUpLatitude, pickUpLongitude, dropOffLatitude, dropOffLongitude;
   String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
 
   @override
@@ -357,14 +353,11 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                     pickUpLocation.coordinates.longitude;
                                 if (dropOffLatitude != null ||
                                     dropOffLongitude != null) {
-                                  distanceInKm = model.calculateDistance(
-                                      pickUpLatitude,
-                                      pickUpLongitude,
-                                      dropOffLatitude,
-                                      dropOffLongitude);
-                                  print("$distanceInKm Km");
-                                  print("dasdasdsadasd");
-                                  model.updateValue();
+                                  model.getTravelTime(
+                                      pickUpLatitude!,
+                                      pickUpLongitude!,
+                                      dropOffLatitude!,
+                                      dropOffLongitude!);
                                 }
                               }),
                         ),
@@ -416,12 +409,17 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                     dropOffLocation.coordinates.longitude;
                                 if (pickUpLatitude != null ||
                                     pickUpLongitude != null) {
-                                  distanceInKm = model.calculateDistance(
+                                  distanceInKm = model.(
                                       pickUpLatitude,
                                       pickUpLongitude,
                                       dropOffLatitude,
                                       dropOffLongitude);
                                   print("$distanceInKm Km");
+                                  model.getTravelTime(
+                                      pickUpLatitude!,
+                                      pickUpLongitude!,
+                                      dropOffLatitude!,
+                                      dropOffLongitude!);
                                   model.updateValue();
                                 }
                               }),
