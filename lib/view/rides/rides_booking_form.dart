@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart'; // Import for date formatting
 import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
 import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
+import 'package:search_map_place_updated/search_map_place_updated.dart';
 
 import '../widgets/appbarcustom.dart';
-import '../widgets/location_input.dart';
 
 class RidesBookingForm extends StatefulWidget {
   final double price;
@@ -35,6 +37,12 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       TextEditingController();
 
   DateTime? selectedDateTime;
+  double? pickUpLatitude,
+      pickUpLongitude,
+      dropOffLatitude,
+      dropOffLongitude,
+      distanceInKm = 0.0;
+  String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
 
   @override
   void initState() {
@@ -168,7 +176,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   SizedBox(height: 8.w),
                                   Container(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 16.w),
+                                        EdgeInsets.symmetric(horizontal: 14.w),
                                     height: 60.h,
                                     width: 200.w,
                                     decoration: BoxDecoration(
@@ -272,63 +280,179 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                             ),
                           ],
                         ),
+                        // SizedBox(height: 16.h),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: LocationInput(
+                        //         mandatory: true,
+                        //         name: "pickupLocation",
+                        //         labelTitle: "Pickup location:",
+                        //         labelStyle: TextStyle(
+                        //             color: Colors.white, fontSize: 16),
+                        //         inputStyle: InputDecoration(
+                        //           hintText: 'Select location',
+                        //           hintStyle: TextStyle(color: Colors.grey),
+                        //           enabledBorder: OutlineInputBorder(
+                        //             borderSide: BorderSide(color: Colors.grey),
+                        //             borderRadius: BorderRadius.circular(15),
+                        //           ),
+                        //           focusedBorder: OutlineInputBorder(
+                        //             borderSide:
+                        //                 BorderSide(color: Color(0xFFFFBC07)),
+                        //             borderRadius: BorderRadius.circular(15),
+                        //           ),
+                        //         ),
+                        //         containerStyle: BoxDecoration(),
+                        //         isPickup: true,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         SizedBox(height: 16.h),
                         Row(
                           children: [
-                            Expanded(
-                              child: LocationInput(
-                                mandatory: true,
-                                name: "pickupLocation",
-                                labelTitle: "Pickup location:",
-                                labelStyle: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                                inputStyle: InputDecoration(
-                                  hintText: 'Select location',
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFFFFBC07)),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                                containerStyle: BoxDecoration(),
-                                isPickup: true,
+                            Text(
+                              "Pickup location:",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                            Text(
+                              ' *',
+                              style: TextStyle(
+                                color: Color(0xFFFFBC07),
+                                fontSize: 16.sp,
                               ),
                             ),
                           ],
                         ),
+                        SizedBox(height: 8.h),
+                        Container(
+                          width: 1.sw,
+                          // height: 65.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.r),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                          ),
+                          child: SearchMapPlaceWidget(
+                              hasClearButton: true,
+                              iconColor: Colors.grey,
+                              placeType: PlaceType.address,
+                              bgColor: Color(0xFF1C1F23),
+                              textColor: Colors.grey,
+                              placeholder: "Search Location",
+                              apiKey: googleMapApiKey,
+                              onSelected: (Place place) async {
+                                Geolocation? pickUpLocation =
+                                    await place.geolocation;
+                                print(pickUpLocation!.coordinates);
+                                pickUpLatitude =
+                                    pickUpLocation.coordinates.latitude;
+                                pickUpLongitude =
+                                    pickUpLocation.coordinates.longitude;
+                                if (dropOffLatitude != null ||
+                                    dropOffLongitude != null) {
+                                  distanceInKm = model.calculateDistance(
+                                      pickUpLatitude,
+                                      pickUpLongitude,
+                                      dropOffLatitude,
+                                      dropOffLongitude);
+                                  print("$distanceInKm Km");
+                                  print("dasdasdsadasd");
+                                  model.updateValue();
+                                }
+                              }),
+                        ),
                         SizedBox(height: 16.h),
                         Row(
                           children: [
-                            Expanded(
-                              child: LocationInput(
-                                mandatory: true,
-                                name: "dropoffLocation",
-                                labelTitle: "Drop off location:",
-                                labelStyle: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                                inputStyle: InputDecoration(
-                                  hintText: 'Select location',
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFFFFBC07)),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                                containerStyle: BoxDecoration(),
+                            Text(
+                              "Drop off location:",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                            Text(
+                              ' *',
+                              style: TextStyle(
+                                color: Color(0xFFFFBC07),
+                                fontSize: 16.sp,
                               ),
                             ),
                           ],
                         ),
+                        SizedBox(height: 8.h),
+                        Container(
+                          width: 1.sw,
+                          // height: 65.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.r),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                          ),
+                          child: SearchMapPlaceWidget(
+                              hasClearButton: true,
+                              iconColor: Colors.grey,
+                              placeType: PlaceType.address,
+                              bgColor: Color(0xFF1C1F23),
+                              textColor: Colors.grey,
+                              placeholder: "Search Location",
+                              apiKey: googleMapApiKey,
+                              onSelected: (Place place) async {
+                                Geolocation? dropOffLocation =
+                                    await place.geolocation;
+                                print(dropOffLocation!.coordinates);
+                                dropOffLatitude =
+                                    dropOffLocation.coordinates.latitude;
+                                dropOffLongitude =
+                                    dropOffLocation.coordinates.longitude;
+                                if (pickUpLatitude != null ||
+                                    pickUpLongitude != null) {
+                                  distanceInKm = model.calculateDistance(
+                                      pickUpLatitude,
+                                      pickUpLongitude,
+                                      dropOffLatitude,
+                                      dropOffLongitude);
+                                  print("$distanceInKm Km");
+                                  model.updateValue();
+                                }
+                              }),
+                        ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: LocationInput(
+                        //         mandatory: true,
+                        //         name: "dropoffLocation",
+                        //         labelTitle: "Drop off location:",
+                        //         labelStyle: TextStyle(
+                        //             color: Colors.white, fontSize: 16),
+                        //         inputStyle: InputDecoration(
+                        //           hintText: 'Select location',
+                        //           hintStyle: TextStyle(color: Colors.grey),
+                        //           enabledBorder: OutlineInputBorder(
+                        //             borderSide: BorderSide(color: Colors.grey),
+                        //             borderRadius: BorderRadius.circular(15),
+                        //           ),
+                        //           focusedBorder: OutlineInputBorder(
+                        //             borderSide:
+                        //                 BorderSide(color: Color(0xFFFFBC07)),
+                        //             borderRadius: BorderRadius.circular(15),
+                        //           ),
+                        //         ),
+                        //         containerStyle: BoxDecoration(),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         SizedBox(height: 16.h),
                         Row(
                           children: [
@@ -367,7 +491,10 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                               top: Radius.circular(20),
                             ),
                           ),
-                          child: buildSummarySection(context, () {}),
+                          child: buildSummarySection(
+                              context, distanceInKm!.toStringAsFixed(2), () {
+                            model.makePayment();
+                          }),
                         ),
                       ],
                     ),
@@ -381,7 +508,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     );
   }
 
-  Widget buildSummarySection(BuildContext context, onTap) {
+  Widget buildSummarySection(
+      BuildContext context, String distanceValue, onTap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -400,7 +528,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                   ),
                 ),
                 Text(
-                  "26.7km",
+                  "$distanceValue Km",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,

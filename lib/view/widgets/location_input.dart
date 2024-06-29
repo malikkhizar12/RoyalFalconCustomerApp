@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
 
 import '../../view_model/map_view_model.dart';
@@ -66,41 +64,41 @@ class _LocationInputState extends State<LocationInput> {
           ],
         ),
         SizedBox(height: 8.0),
-        GestureDetector(
-          onTap: widget.readOnly ? null : () async {
-            Prediction? p = await PlacesAutocomplete.show(
-              context: context,
-              apiKey: mapsViewModel.googleMapsApiKey,
-              mode: Mode.overlay,
-              language: "en",
-              components: [
-                Component(Component.country, "ae"),
-                if (widget.selectedCity == 'Dubai')
-                  Component(Component.administrativeArea, "Dubai")
-                else if (widget.selectedCity == 'Abu Dhabi')
-                  Component(Component.administrativeArea, "Abu Dhabi"),
-              ],
-            );
-            if (p != null) {
-              GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: mapsViewModel.googleMapsApiKey);
-              PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
-              setState(() {
-                _locationController.text = detail.result.formattedAddress!;
-              });
-            }
-          },
-          child: AbsorbPointer(
-            child: SizedBox(height: 60.h,
-              child: TextField(
-                controller: _locationController,
-                decoration: widget.inputStyle.copyWith(
-                  hintText: 'Select location',
-                  suffixIcon: Icon(Icons.location_on),
-                ),
-              ),
-            ),
-          ),
-        ),
+        // GestureDetector(
+        //   onTap: widget.readOnly ? null : () async {
+        //     Prediction? p = await PlacesAutocomplete.show(
+        //       context: context,
+        //       apiKey: mapsViewModel.googleMapsApiKey,
+        //       mode: Mode.overlay,
+        //       language: "en",
+        //       components: [
+        //         Component(Component.country, "ae"),
+        //         if (widget.selectedCity == 'Dubai')
+        //           Component(Component.administrativeArea, "Dubai")
+        //         else if (widget.selectedCity == 'Abu Dhabi')
+        //           Component(Component.administrativeArea, "Abu Dhabi"),
+        //       ],
+        //     );
+        //     if (p != null) {
+        //       GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: mapsViewModel.googleMapsApiKey);
+        //       PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
+        //       setState(() {
+        //         _locationController.text = detail.result.formattedAddress!;
+        //       });
+        //     }
+        //   },
+        //   child: AbsorbPointer(
+        //     child: SizedBox(height: 60.h,
+        //       child: TextField(
+        //         controller: _locationController,
+        //         decoration: widget.inputStyle.copyWith(
+        //           hintText: 'Select location',
+        //           suffixIcon: Icon(Icons.location_on),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

@@ -1,38 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 import 'package:royal_falcon/utils/utils/utils.dart';
+import 'dart:math' show cos, sqrt, asin;
 
 class RidesBookingFormViewModel extends ChangeNotifier {
   RidesBookingFormViewModel(this.context);
 
   BuildContext context;
   Map<String, dynamic>? paymentIntent;
-  // GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
-  // TextEditingController _controller = TextEditingController();
-  // String _selectedLocation = "";
-  //
-  // Future<void> _handlePressButton() async {
-  //   String kGoogleApiKey = dotenv.env['GOOGLE_API_KEY']!;
-  //   Prediction p = await PlacesAutocomplete.show(
-  //     context: context,
-  //     apiKey: kGoogleApiKey,
-  //     mode: Mode.overlay, // Mode.fullscreen
-  //     language: "en",
-  //     components: [Component(Component.country, "us")],
-  //   );
-  //
-  //   if (p != null) {
-  //     PlacesDetailsResponse detail =
-  //         await _places.getDetailsByPlaceId(p.placeId);
-  //     _selectedLocation = p.description;
-  //     _controller.text = p.description
-  //     notifyListeners();
-  //   }
-  // }
 
   Future<void> makePayment() async {
     try {
@@ -105,5 +83,17 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     } catch (err) {
       print('Error charging user: ${err.toString()}');
     }
+  }
+
+  double calculateDistance(lat1, long1, lat2, long2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((long2 - long1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
+  void updateValue(){
+    notifyListeners();
   }
 }
