@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart'; // Import for date formatting
 import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
+import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
 
 import '../widgets/appbarcustom.dart';
 import '../widgets/location_input.dart';
@@ -10,7 +12,9 @@ class RidesBookingForm extends StatefulWidget {
   final double price;
   final bool isFromAirportBooking;
 
-  const RidesBookingForm({Key? key, required this.price, this.isFromAirportBooking = false}) : super(key: key);
+  const RidesBookingForm(
+      {Key? key, required this.price, this.isFromAirportBooking = false})
+      : super(key: key);
 
   @override
   _RidesBookingFormState createState() => _RidesBookingFormState();
@@ -115,7 +119,10 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => RidesBookingFormViewModel(context),
+      child: Consumer<RidesBookingFormViewModel>(
+        builder: (BuildContext context, model, Widget? child) =>  Scaffold(
       backgroundColor: const Color(0xFF1C1F23),
       resizeToAvoidBottomInset: true,
       body: Column(
@@ -243,9 +250,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 mandatory: true,
                                 controller: pickupTimeController,
                               ),
-                            ),
-                          ),
-                        ),
+                            ),),),
                         SizedBox(width: 8.w),
                         Expanded(
                           child: FormTextField(
@@ -352,14 +357,14 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget buildSummarySection(BuildContext context) {
+  Widget buildSummarySection(BuildContext context,onTap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -435,9 +440,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
         SizedBox(height: 26.h),
         Center(
           child: ElevatedButton(
-            onPressed: () {
-              // Add your payment action here
-            },
+            onPressed: onTap,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFFBC07),
               shape: RoundedRectangleBorder(
