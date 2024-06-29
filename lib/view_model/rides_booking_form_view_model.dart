@@ -29,7 +29,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
   //     PlacesDetailsResponse detail =
   //         await _places.getDetailsByPlaceId(p.placeId);
   //     _selectedLocation = p.description;
-  //     _controller.text = p.description;
+  //     _controller.text = p.description
   //     notifyListeners();
   //   }
   // }
