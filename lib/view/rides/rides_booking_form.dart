@@ -352,11 +352,15 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                           top: Radius.circular(20),
                         ),
                       ),
-                      child: buildSummarySection(context),
+                      child: buildSummarySection(context,(){
+                        model.makePayment();
+    }),
                     ),
                   ],
                 ),
               ),
+            ),
+          ),
             ],
           ),
         ),

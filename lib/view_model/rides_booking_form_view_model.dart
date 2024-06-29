@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/src/material/scaffold.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -77,7 +78,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       // If any error comes during payment
       // so payment will be cancelled
       print('Error: $e');
-      Utils.errorMessage("Payment Cancelled", context);
+      Utils.errorMessage("Payment Cancelled" as ScaffoldMessengerState, context);
     } catch (e) {
       print("Error in displaying");
       print('$e');
