@@ -6,16 +6,19 @@ import 'package:http/http.dart' as http;
 import 'package:royal_falcon/utils/utils/utils.dart';
 
 class RidesBookingFormViewModel extends ChangeNotifier {
-  RidesBookingFormViewModel(this.context,this.amountToPay);
+  RidesBookingFormViewModel(this.context, this.amountToPay);
 
   BuildContext context;
   Map<String, dynamic>? paymentIntent;
-  String possibleTime = "0", distanceInKm = "0",amountToPay = "0";
+  String possibleTime = "0", distanceInKm = "0";
+  double amountToPay = 0.0;
 
   Future<void> makePayment() async {
     try {
+      print(amountToPay);
       // Create payment intent data
-      paymentIntent = await createPaymentIntent(amountToPay, 'AED');
+      paymentIntent =
+          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED');
       // initialise the payment sheet setup
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(

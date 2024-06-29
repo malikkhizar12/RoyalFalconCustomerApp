@@ -128,7 +128,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (BuildContext context) =>
-          RidesBookingFormViewModel(context, widget.price.toString()),
+          RidesBookingFormViewModel(context, widget.price),
       child: Consumer<RidesBookingFormViewModel>(
         builder: (BuildContext context, model, Widget? child) => Scaffold(
           backgroundColor: const Color(0xFF1C1F23),
