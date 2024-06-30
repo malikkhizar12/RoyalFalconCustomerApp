@@ -37,14 +37,15 @@ class AuthViewModel with ChangeNotifier {
         await userViewModel.saveUser(userModel);
 
         setLoading(false);
-        Navigator.pushReplacementNamed(context, RoutesNames.home, arguments: userModel);
+        Navigator.pushReplacementNamed(context, RoutesNames.home,
+            arguments: userModel);
       } else {
         throw Exception('Login failed');
       }
     } catch (e) {
       setLoading(false);
       print(e.toString().contains('message'));
-      Utils.errorMessage(e.toString() as ScaffoldMessengerState, context);
+      Utils.errorMessage(e.toString(), context);
       String errorMessage = 'Login failed: $e';
 
       // Check for specific error messages
