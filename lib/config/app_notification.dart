@@ -6,12 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:logistic_driver_app/Single%20Vehicle/Order/order_details.dart';
-import 'package:logistic_driver_app/Single%20Vehicle/Order/track_order.dart';
-import 'package:logistic_driver_app/Single%20Vehicle/Ride/ride_details.dart';
 import 'dart:developer' as dev;
-
-import 'package:logistic_driver_app/Single%20Vehicle/Ride/track_ride.dart';
 
 class AppNotifications {
   ///instance of firebase messaging
