@@ -236,47 +236,5 @@ class AppNotifications {
       badge: true,
       sound: true,
     );
-
-    if (message.data['type'] == 'search_driver') {
-      var data = message.data['data'];
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => RideDetailScreen(
-                    data: data,
-                  )));
-    }
-    if (message.data['type'] == 'customer_request_order') {
-      var data = message.data['data'];
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => OrderDetailScreen(
-                    data: data,
-                  )));
-    }
-    if (message.data['type'] == 'customer_accept') {
-      var data = message.data['data'];
-      var val = jsonDecode(data.toString());
-      var bookingId = val['id'];
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TrackingRideScreen(
-                    bookingId: bookingId,
-                  )));
-    }
-    if (message.data['type'] == 'customer_accept_order') {
-      var data = message.data['data'];
-      var val = jsonDecode(data.toString());
-      var bookingId = val['id'];
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TrackingOrderScreen(
-                    bookingId: bookingId,
-                    isOrderList: false,
-                  )));
-    }
   }
 }
