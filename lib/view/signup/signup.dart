@@ -103,7 +103,7 @@ class _SignupPageState extends State<SignupPage> {
 
                         bool success = await authViewModel.signupApi(data, context);
                         if (success) {
-                          Navigator.pushReplacementNamed(context, RoutesNames.login);
+                          Navigator.pushNamedAndRemoveUntil(context, RoutesNames.login, (route) => false);
                           Utils.flushBarMessage("Account Created Successfully", context);
                         }
                       }
@@ -139,10 +139,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const Login()),
-                            );
+                            Navigator.pop(context);
                           },
                       ),
                     ],

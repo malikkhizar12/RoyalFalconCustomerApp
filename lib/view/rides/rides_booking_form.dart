@@ -208,28 +208,35 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Booking Type: ",
-                                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.sp),
                                       ),
                                       SizedBox(height: 8.w),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16.w),
                                         height: 60.h,
                                         width: 200.w,
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.grey),
+                                          border:
+                                              Border.all(color: Colors.grey),
                                           color: Colors.transparent,
-                                          borderRadius: BorderRadius.circular(15),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                         ),
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<bool>(
                                             value: isFromAirportBooking,
                                             onChanged: (newValue) {
                                               setState(() {
-                                                isFromAirportBooking = newValue!;
+                                                isFromAirportBooking =
+                                                    newValue!;
                                               });
                                             },
                                             dropdownColor: Color(0xFF1C1F23),
@@ -488,6 +495,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                   ),
                 ),
               ),
+            ),
           ],
         ),
       ),

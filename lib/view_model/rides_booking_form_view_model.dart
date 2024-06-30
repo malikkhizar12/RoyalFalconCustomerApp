@@ -67,12 +67,15 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> createPaymentIntent(String amount, String currency) async {
+
+  createPaymentIntent(String amount, String currency, String bookingId) async {
     try {
       Map<String, dynamic> body = {
         'amount': ((int.parse(amount)) * 100).toString(),
         'currency': currency,
         'payment_method_types[]': 'card',
+        'metadata[booking_id]': bookingId
+        // 'metadata': {"booking_id": bookingId}
       };
       print(body);
       var secretKey = dotenv.env['STRIPE_SECRET_KEY'];
