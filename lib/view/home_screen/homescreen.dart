@@ -18,15 +18,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late HomeScreenViewModel _homeScreenViewModel;
-  AppNotifications appNotifications = AppNotifications();
+  // AppNotifications appNotifications = AppNotifications();
 
   @override
   void initState() {
     super.initState();
     _homeScreenViewModel = Provider.of<HomeScreenViewModel>(context, listen: false);
     _homeScreenViewModel.initializeData(context);
-    appNotifications.firebaseNotificationsInitialization(context);
-    appNotifications.setUpInteractMessage(context);
+    // appNotifications.firebaseNotificationsInitialization(context);
+    // appNotifications.setUpInteractMessage(context);
   }
 
 

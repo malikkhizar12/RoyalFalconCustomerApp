@@ -38,7 +38,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController flightNoController = TextEditingController();
-  final TextEditingController specialRequestController = TextEditingController();
+  final TextEditingController specialRequestController =
+      TextEditingController();
 
   DateTime? selectedDateTime;
   double? pickUpLatitude, pickUpLongitude, dropOffLatitude, dropOffLongitude;
@@ -117,7 +118,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          pickupTimeController.text = DateFormat.yMd().add_jm().format(selectedDateTime!);
+          pickupTimeController.text =
+              DateFormat.yMd().add_jm().format(selectedDateTime!);
         });
       }
     }
@@ -143,7 +145,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       Utils.errorMessage("Invalid date format", context);
       return;
     }
-    String formattedPickupDateTime = DateFormat('yyyy-MM-ddTHH:mm').format(pickupDateTime);
+    String formattedPickupDateTime =
+        DateFormat('yyyy-MM-ddTHH:mm').format(pickupDateTime);
 
     final Map<String, dynamic> bookingData = {
       'city': city,
@@ -165,13 +168,15 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       'bookingAmount': widget.price
     };
 
-    Provider.of<RidesBookingFormViewModel>(context, listen: false).createBooking(bookingData);
+    Provider.of<RidesBookingFormViewModel>(context, listen: false)
+        .createBooking(bookingData);
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => RidesBookingFormViewModel(context, widget.price),
+      create: (BuildContext context) =>
+          RidesBookingFormViewModel(context, widget.price),
       child: Consumer<RidesBookingFormViewModel>(
         builder: (BuildContext context, model, Widget? child) => Stack(
           children: [
@@ -249,14 +254,16 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                                 value: false,
                                                 child: Text(
                                                   'Normal Booking',
-                                                  style: TextStyle(color: Colors.white),
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                               ),
                                               DropdownMenuItem<bool>(
                                                 value: true,
                                                 child: Text(
                                                   'Airport Booking',
-                                                  style: TextStyle(color: Colors.white),
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                               ),
                                             ],
@@ -305,7 +312,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      _selectDateAndTime(context); // Call function to show combined date-time picker
+                                      _selectDateAndTime(
+                                          context); // Call function to show combined date-time picker
                                     },
                                     child: AbsorbPointer(
                                       child: FormTextField(
@@ -366,13 +374,18 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   placeholder: "Search Location",
                                   apiKey: googleMapApiKey,
                                   onSelected: (Place place) async {
-                                    Geolocation? pickUpLocation = await place.geolocation;
+                                    Geolocation? pickUpLocation =
+                                        await place.geolocation;
                                     setState(() {
-                                      pickUpLatitude = pickUpLocation?.coordinates.latitude;
-                                      pickUpLongitude = pickUpLocation?.coordinates.longitude;
-                                      pickupLocationName = place.description ?? '';
+                                      pickUpLatitude =
+                                          pickUpLocation?.coordinates.latitude;
+                                      pickUpLongitude =
+                                          pickUpLocation?.coordinates.longitude;
+                                      pickupLocationName =
+                                          place.description ?? '';
                                     });
-                                    if (dropOffLatitude != null || dropOffLongitude != null) {
+                                    if (dropOffLatitude != null ||
+                                        dropOffLongitude != null) {
                                       model.getTravelTime(
                                           pickUpLatitude!,
                                           pickUpLongitude!,
@@ -419,13 +432,18 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   placeholder: "Search Location",
                                   apiKey: googleMapApiKey,
                                   onSelected: (Place place) async {
-                                    Geolocation? dropOffLocation = await place.geolocation;
+                                    Geolocation? dropOffLocation =
+                                        await place.geolocation;
                                     setState(() {
-                                      dropOffLatitude = dropOffLocation?.coordinates.latitude;
-                                      dropOffLongitude = dropOffLocation?.coordinates.longitude;
-                                      dropOffLocationName = place.description ?? '';
+                                      dropOffLatitude =
+                                          dropOffLocation?.coordinates.latitude;
+                                      dropOffLongitude = dropOffLocation
+                                          ?.coordinates.longitude;
+                                      dropOffLocationName =
+                                          place.description ?? '';
                                     });
-                                    if (pickUpLatitude != null || pickUpLongitude != null) {
+                                    if (pickUpLatitude != null ||
+                                        pickUpLongitude != null) {
                                       model.getTravelTime(
                                           pickUpLatitude!,
                                           pickUpLongitude!,
@@ -475,7 +493,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   context,
                                   model.distanceInKm.toString(),
                                   model.possibleTime.toString(), () {
-                                sendBookingData(context); // Updated to use sendBookingData method
+                                sendBookingData(
+                                    context); // Updated to use sendBookingData method
                               }),
                             ),
                           ],
@@ -486,16 +505,16 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                 ],
               ),
             ),
-            if (model.isLoading)
-              Container(
-                color: Colors.black54,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: Color(0xFFFFBC07),
-                  ),
-                ),
-              ),
-            ),
+            // if (model.isLoading)
+            //   Container(
+            //     color: Colors.black54,
+            //     child: Center(
+            //       child: CircularProgressIndicator(
+            //         color: Color(0xFFFFBC07),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

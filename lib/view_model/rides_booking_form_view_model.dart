@@ -24,12 +24,11 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Future<void> makePayment() async {
     try {
       print(amountToPay);
-      paymentIntent = await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED');
+      paymentIntent =
+          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', "1");
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent!['client_secret'],
@@ -67,7 +66,6 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-
   createPaymentIntent(String amount, String currency, String bookingId) async {
     try {
       Map<String, dynamic> body = {
@@ -96,7 +94,8 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> createBooking(Map<String, dynamic> bookingData) async {
+  Future<Map<String, dynamic>> createBooking(
+      Map<String, dynamic> bookingData) async {
     try {
       setLoading(true);
       UserModel? userModel = await userViewModel.getUser();
@@ -132,7 +131,11 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         return jsonDecode(response.body);
       } else {
         print('Error creating booking: HTTP ${response.statusCode}');
-        return {'status': 'error', 'message': 'HTTP ${response.statusCode}', 'response': response.body};
+        return {
+          'status': 'error',
+          'message': 'HTTP ${response.statusCode}',
+          'response': response.body
+        };
       }
     } catch (err) {
       print('Error creating booking: ${err.toString()}');

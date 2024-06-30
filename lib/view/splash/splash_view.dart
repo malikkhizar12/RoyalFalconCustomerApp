@@ -12,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   SplashServices splashServices = SplashServices();
-  AppNotifications appNotifications = AppNotifications();
+  // AppNotifications appNotifications = AppNotifications();
 
   Future<bool> checkAuth() async {
     return await splashServices.checkAuthentication();
@@ -22,8 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    appNotifications.requestNotificationsPermissions();
-    appNotifications.foregroundMessage();
+    // appNotifications.requestNotificationsPermissions();
+    // appNotifications.foregroundMessage();
   }
 
   @override
