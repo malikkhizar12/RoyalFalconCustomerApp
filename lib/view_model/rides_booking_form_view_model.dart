@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/src/material/scaffold.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
@@ -10,12 +11,17 @@ class RidesBookingFormViewModel extends ChangeNotifier {
 
   BuildContext context;
   Map<String, dynamic>? paymentIntent;
+
   String possibleTime = "0", distanceInKm = "0";
   double amountToPay = 0.0;
-
+  bool isLoading = false;
+  void setLoading(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
   Future<void> makePayment() async {
     try {
-      print(amountToPay);
+      setLoading(true);
       // Create payment intent data
       paymentIntent =
           await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED');
@@ -35,6 +41,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       );
       // Display payment sheet
       displayPaymentSheet();
+
     } catch (e) {
       print("exception $e");
 
@@ -43,6 +50,10 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       } else {
         print("exception $e");
       }
+
+    }
+    finally{
+      setLoading(false);
     }
   }
 
@@ -58,7 +69,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       // If any error comes during payment
       // so payment will be cancelled
       print('Error: $e');
-      Utils.errorMessage("Payment Cancelled", context);
+      Utils.errorMessage("Payment Cancelled" as ScaffoldMessengerState, context);
     } catch (e) {
       print("Error in displaying");
       print('$e');

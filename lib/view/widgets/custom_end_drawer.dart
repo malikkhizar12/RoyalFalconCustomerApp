@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/utils/routes/routes_names.dart';
 
 import '../../view_model/auth_view_model.dart';
 import '../home_screen/profile.dart';
@@ -34,7 +35,7 @@ class CustomEndDrawer extends StatelessWidget {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  ProfileScreen()));
                   }),
                   buildMenuItem('My Booking', () {
-                    // Handle My Booking action
+                    Navigator.pushNamed(context, RoutesNames.myBookings);
                   }),
                   buildMenuItem('Favorite', () {
                     // Handle Favorite action

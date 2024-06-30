@@ -130,87 +130,88 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       create: (BuildContext context) =>
           RidesBookingFormViewModel(context, widget.price),
       child: Consumer<RidesBookingFormViewModel>(
-        builder: (BuildContext context, model, Widget? child) => Scaffold(
-          backgroundColor: const Color(0xFF1C1F23),
-          resizeToAvoidBottomInset: true,
-          body: Column(
-            children: [
-              SizedBox(height: 15.h),
-              const AppbarCustom(title: "Booking"),
-              SizedBox(height: 15.h),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FormTextField(
-                          label: "Name",
-                          hint: 'XYZ',
-                          mandatory: true,
-                          controller: nameController,
-                        ),
-                        SizedBox(height: 16.h),
-                        FormTextField(
-                          label: "Email",
-                          hint: 'xyz@gmail.com',
-                          mandatory: true,
-                          controller: emailController,
-                        ),
-                        SizedBox(height: 16.h),
-                        Row(
+        builder: (BuildContext context, model, Widget? child) => Stack(
+          children: [
+            Scaffold(
+              backgroundColor: const Color(0xFF1C1F23),
+              resizeToAvoidBottomInset: true,
+              body: Column(
+                children: [
+                  SizedBox(height: 15.h),
+                  const AppbarCustom(title: "Booking"),
+                  SizedBox(height: 15.h),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Booking Type: ",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16.sp),
-                                  ),
-                                  SizedBox(height: 8.w),
-                                  Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 14.w),
-                                    height: 60.h,
-                                    width: 200.w,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<bool>(
-                                        value: isFromAirportBooking,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            isFromAirportBooking = newValue!;
-                                          });
-                                        },
-                                        dropdownColor: Color(0xFF1C1F23),
-                                        items: [
-                                          DropdownMenuItem<bool>(
-                                            value: false,
-                                            child: Text(
-                                              'Normal Booking',
-                                              style:
-                                                  TextStyle(color: Colors.grey),
-                                            ),
+                            FormTextField(
+                              label: "Name",
+                              hint: 'XYZ',
+                              mandatory: true,
+                              controller: nameController,
+                            ),
+                            SizedBox(height: 16.h),
+                            FormTextField(
+                              label: "Email",
+                              hint: 'xyz@gmail.com',
+                              mandatory: true,
+                              controller: emailController,
+                            ),
+                            SizedBox(height: 16.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Booking Type: ",
+                                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                                      ),
+                                      SizedBox(height: 8.w),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                        height: 60.h,
+                                        width: 200.w,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.grey),
+                                          color: Colors.transparent,
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<bool>(
+                                            value: isFromAirportBooking,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                isFromAirportBooking = newValue!;
+                                              });
+                                            },
+                                            dropdownColor: Color(0xFF1C1F23),
+                                            items: [
+                                              DropdownMenuItem<bool>(
+                                                value: false,
+                                                child: Text(
+                                                  'Normal Booking',
+                                                  style: TextStyle(color: Colors.grey),
+                                                ),
+                                              ),
+                                              DropdownMenuItem<bool>(
+                                                value: true,
+                                                child: Text(
+                                                  'Airport Booking',
+                                                  style: TextStyle(color: Colors.grey),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          DropdownMenuItem<bool>(
-                                            value: true,
-                                            child: Text(
-                                              'Airport Booking',
-                                              style:
-                                                  TextStyle(color: Colors.grey),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                   ),
+
                                 ],
                               ),
                             ),
@@ -493,10 +494,17 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                       ],
                     ),
                   ),
+                              
+                           
+                             
+            if (model.isLoading)
+              Container(
+                color: Colors.black54,
+                child: Center(
+                  child: CircularProgressIndicator(color: Color(0xFFFFBC07),),
                 ),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
