@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_falcon/utils/colors.dart';
+import 'package:royal_falcon/view/my_bookings/widgets/filter_dropdown.dart';
 
 import '../widgets/appbarcustom.dart';
 
@@ -37,62 +38,18 @@ class _MyBookingsState extends State<MyBookings> {
                 child: Column(
                   children: [
                     SizedBox(height: 16.h),
-                    Container(
-
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      height: 60.h,
-                      width: 200.w,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFBC07),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedFilter,
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedFilter = newValue!;
-                            });
-                            // Perform actions based on the selected filter
-                            // Example: filter list based on the selected filter
-                          },
-                          dropdownColor: Color(0xFFFFBC07),
-                          icon: Icon(
-                            Icons.arrow_drop_down, // Customize your icon here
-                            color: Colors.white, // Change the icon color here
-                          ),                          items: [
-                            DropdownMenuItem<String>(
-                              value: 'All',
-                              child: Text(
-                                'All',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: 'Approved',
-                              child: Text(
-                                'Approved',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: 'Disapproved',
-                              child: Text(
-                                'Disapproved',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: 'Pending',
-                              child: Text(
-                                'Pending',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    FilterDropdown(
+                      selectedFilter: _selectedFilter,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedFilter = newValue!;
+                        });
+                        // Perform actions based on the selected filter
+                        // Example: filter list based on the selected filter
+                      },
                     ),
+
+
                   ],
                 ),
               ),

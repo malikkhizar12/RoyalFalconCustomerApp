@@ -5,18 +5,20 @@ class UserModel {
 
   UserModel({this.message, this.token, this.user});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    token = json['token'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      message: json['message'],
+      token: json['token'],
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['token'] = this.token;
-    if (this.user != null) {
-      data['user'] = this.user!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['token'] = token;
+    if (user != null) {
+      data['user'] = user!.toJson();
     }
     return data;
   }
@@ -30,19 +32,21 @@ class User {
 
   User({this.name, this.email, this.phoneNumber, this.profileImage});
 
-  User.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    email = json['email'];
-    phoneNumber = json['phoneNumber'];
-    profileImage = json['profileImage'];
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      name: json['name'],
+      email: json['email'],
+      phoneNumber: json['phoneNumber'],
+      profileImage: json['profileImage'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['phoneNumber'] = this.phoneNumber;
-    data['profileImage'] = this.profileImage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['email'] = email;
+    data['phoneNumber'] = phoneNumber;
+    data['profileImage'] = profileImage;
     return data;
   }
 }

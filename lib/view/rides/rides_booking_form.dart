@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart'; // Import for date formatting
+import 'package:intl/intl.dart';
 import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
 import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
 import 'package:search_map_place_updated/search_map_place_updated.dart';
 
+import '../../utils/utils/utils.dart';
 import '../widgets/appbarcustom.dart';
 
 class RidesBookingForm extends StatefulWidget {
   final double price;
+  final String id;
   final bool isFromAirportBooking;
 
-  const RidesBookingForm(
-      {Key? key, required this.price, this.isFromAirportBooking = false})
-      : super(key: key);
+  const RidesBookingForm({
+    Key? key,
+    required this.price,
+    required this.id,
+    this.isFromAirportBooking = false,
+  }) : super(key: key);
 
   @override
   _RidesBookingFormState createState() => _RidesBookingFormState();
@@ -32,24 +36,24 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   final TextEditingController bagsController = TextEditingController();
   final TextEditingController pickupTimeController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
   final TextEditingController flightNoController = TextEditingController();
-  final TextEditingController specialRequestController =
-      TextEditingController();
+  final TextEditingController specialRequestController = TextEditingController();
 
   DateTime? selectedDateTime;
   double? pickUpLatitude, pickUpLongitude, dropOffLatitude, dropOffLongitude;
   String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
+  String pickupLocationName = '';
+  String dropOffLocationName = '';
 
   @override
   void initState() {
     super.initState();
-    // Initialize booking type based on widget's initial value
     isFromAirportBooking = widget.isFromAirportBooking;
   }
 
   @override
   void dispose() {
-    // Dispose all controllers when the widget is disposed
     nameController.dispose();
     emailController.dispose();
     passengersController.dispose();
@@ -58,6 +62,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     contactNumberController.dispose();
     flightNoController.dispose();
     specialRequestController.dispose();
+    cityController.dispose();
     super.dispose();
   }
 
@@ -66,15 +71,13 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       context: context,
       initialDate: selectedDateTime ?? DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now()
-          .add(Duration(days: 365)), // Allow selection for one year from now
-      // Customize date picker colors
+      lastDate: DateTime.now().add(Duration(days: 365)),
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.light(
-              primary: const Color(0xFFFFBC07), // Customize primary color
-              onPrimary: Colors.black, // Customize text color on primary color
+              primary: const Color(0xFFFFBC07),
+              onPrimary: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(),
@@ -89,14 +92,12 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(selectedDateTime ?? DateTime.now()),
-        // Customize time picker colors
         builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
               colorScheme: ColorScheme.light(
-                primary: const Color(0xFFFFBC07), // Customize primary color
-                onPrimary:
-                    Colors.black, // Customize text color on primary color
+                primary: const Color(0xFFFFBC07),
+                onPrimary: Colors.black,
               ),
               textButtonTheme: TextButtonThemeData(
                 style: TextButton.styleFrom(),
@@ -116,19 +117,61 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          pickupTimeController.text = DateFormat.yMd()
-              .add_jm()
-              .format(selectedDateTime!); // Format date and time
+          pickupTimeController.text = DateFormat.yMd().add_jm().format(selectedDateTime!);
         });
       }
     }
   }
 
+  void sendBookingData(BuildContext context) {
+    final String name = nameController.text;
+    final vehicleId = widget.id;
+    final String email = emailController.text;
+    final int passengers = int.tryParse(passengersController.text) ?? 0;
+    final int bags = int.tryParse(bagsController.text) ?? 0;
+    final String contactNumber = contactNumberController.text;
+    final String specialRequest = specialRequestController.text;
+    final String city = cityController.text;
+
+    final String pickupTime = pickupTimeController.text;
+    DateTime pickupDateTime;
+    try {
+      final cleanedPickupTime = pickupTime.replaceAll('\u202F', ' ');
+      pickupDateTime = DateFormat('M/d/yyyy h:mm a').parse(cleanedPickupTime);
+    } catch (e) {
+      print('Error parsing date: $e');
+      Utils.errorMessage("Invalid date format", context);
+      return;
+    }
+    String formattedPickupDateTime = DateFormat('yyyy-MM-ddTHH:mm').format(pickupDateTime);
+
+    final Map<String, dynamic> bookingData = {
+      'city': city,
+      'bookingType': isFromAirportBooking ? 'airport' : 'normal',
+      'name': name,
+      'email': email,
+      'specialRequest': specialRequest,
+      'contactNumber': contactNumber,
+      'noOfpeople': passengers,
+      'noOfBaggage': bags,
+      'pickUpDateTime': formattedPickupDateTime,
+      'fromLat': pickUpLatitude,
+      'fromLong': pickUpLongitude,
+      'toLat': dropOffLatitude,
+      'toLong': dropOffLongitude,
+      'fromLocationName': pickupLocationName,
+      'toLocationName': dropOffLocationName,
+      'vehicleCategoryId': vehicleId,
+      'bookingAmount': widget.price
+    };
+
+    Provider.of<RidesBookingFormViewModel>(context, listen: false).createBooking(bookingData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) =>
-          RidesBookingFormViewModel(context, widget.price),
+      create: (BuildContext context) => RidesBookingFormViewModel(context, widget.price),
       child: Consumer<RidesBookingFormViewModel>(
         builder: (BuildContext context, model, Widget? child) => Stack(
           children: [
@@ -197,21 +240,23 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                               });
                                             },
                                             dropdownColor: Color(0xFF1C1F23),
+                                            icon: Icon(
+                                              Icons.arrow_drop_down,
+                                              color: Colors.white,
+                                            ),
                                             items: [
                                               DropdownMenuItem<bool>(
                                                 value: false,
                                                 child: Text(
                                                   'Normal Booking',
-                                                  style: TextStyle(
-                                                      color: Colors.grey),
+                                                  style: TextStyle(color: Colors.white),
                                                 ),
                                               ),
                                               DropdownMenuItem<bool>(
                                                 value: true,
                                                 child: Text(
                                                   'Airport Booking',
-                                                  style: TextStyle(
-                                                      color: Colors.grey),
+                                                  style: TextStyle(color: Colors.white),
                                                 ),
                                               ),
                                             ],
@@ -227,7 +272,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                     label: "City",
                                     hint: 'Pickup City',
                                     mandatory: true,
-                                    controller: TextEditingController(),
+                                    controller: cityController,
                                   ),
                                 ),
                               ],
@@ -260,8 +305,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      _selectDateAndTime(
-                                          context); // Call function to show combined date-time picker
+                                      _selectDateAndTime(context); // Call function to show combined date-time picker
                                     },
                                     child: AbsorbPointer(
                                       child: FormTextField(
@@ -284,35 +328,6 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 ),
                               ],
                             ),
-                            // SizedBox(height: 16.h),
-                            // Row(
-                            //   children: [
-                            //     Expanded(
-                            //       child: LocationInput(
-                            //         mandatory: true,
-                            //         name: "pickupLocation",
-                            //         labelTitle: "Pickup location:",
-                            //         labelStyle: TextStyle(
-                            //             color: Colors.white, fontSize: 16),
-                            //         inputStyle: InputDecoration(
-                            //           hintText: 'Select location',
-                            //           hintStyle: TextStyle(color: Colors.grey),
-                            //           enabledBorder: OutlineInputBorder(
-                            //             borderSide: BorderSide(color: Colors.grey),
-                            //             borderRadius: BorderRadius.circular(15),
-                            //           ),
-                            //           focusedBorder: OutlineInputBorder(
-                            //             borderSide:
-                            //                 BorderSide(color: Color(0xFFFFBC07)),
-                            //             borderRadius: BorderRadius.circular(15),
-                            //           ),
-                            //         ),
-                            //         containerStyle: BoxDecoration(),
-                            //         isPickup: true,
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                             SizedBox(height: 16.h),
                             Row(
                               children: [
@@ -335,7 +350,6 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                             SizedBox(height: 8.h),
                             Container(
                               width: 1.sw,
-                              // height: 65.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.r),
                                 border: Border.all(color: Colors.grey),
@@ -348,19 +362,17 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   iconColor: Colors.grey,
                                   placeType: PlaceType.address,
                                   bgColor: Color(0xFF1C1F23),
-                                  textColor: Colors.grey,
+                                  textColor: Colors.white,
                                   placeholder: "Search Location",
                                   apiKey: googleMapApiKey,
                                   onSelected: (Place place) async {
-                                    Geolocation? pickUpLocation =
-                                        await place.geolocation;
-                                    print(pickUpLocation!.coordinates);
-                                    pickUpLatitude =
-                                        pickUpLocation.coordinates.latitude;
-                                    pickUpLongitude =
-                                        pickUpLocation.coordinates.longitude;
-                                    if (dropOffLatitude != null ||
-                                        dropOffLongitude != null) {
+                                    Geolocation? pickUpLocation = await place.geolocation;
+                                    setState(() {
+                                      pickUpLatitude = pickUpLocation?.coordinates.latitude;
+                                      pickUpLongitude = pickUpLocation?.coordinates.longitude;
+                                      pickupLocationName = place.description ?? '';
+                                    });
+                                    if (dropOffLatitude != null || dropOffLongitude != null) {
                                       model.getTravelTime(
                                           pickUpLatitude!,
                                           pickUpLongitude!,
@@ -391,7 +403,6 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                             SizedBox(height: 8.h),
                             Container(
                               width: 1.sw,
-                              // height: 65.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.r),
                                 border: Border.all(color: Colors.grey),
@@ -404,19 +415,17 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   iconColor: Colors.grey,
                                   placeType: PlaceType.address,
                                   bgColor: Color(0xFF1C1F23),
-                                  textColor: Colors.grey,
+                                  textColor: Colors.white,
                                   placeholder: "Search Location",
                                   apiKey: googleMapApiKey,
                                   onSelected: (Place place) async {
-                                    Geolocation? dropOffLocation =
-                                        await place.geolocation;
-                                    print(dropOffLocation!.coordinates);
-                                    dropOffLatitude =
-                                        dropOffLocation.coordinates.latitude;
-                                    dropOffLongitude =
-                                        dropOffLocation.coordinates.longitude;
-                                    if (pickUpLatitude != null ||
-                                        pickUpLongitude != null) {
+                                    Geolocation? dropOffLocation = await place.geolocation;
+                                    setState(() {
+                                      dropOffLatitude = dropOffLocation?.coordinates.latitude;
+                                      dropOffLongitude = dropOffLocation?.coordinates.longitude;
+                                      dropOffLocationName = place.description ?? '';
+                                    });
+                                    if (pickUpLatitude != null || pickUpLongitude != null) {
                                       model.getTravelTime(
                                           pickUpLatitude!,
                                           pickUpLongitude!,
@@ -425,33 +434,6 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                     }
                                   }),
                             ),
-                            // Row(
-                            //   children: [
-                            //     Expanded(
-                            //       child: LocationInput(
-                            //         mandatory: true,
-                            //         name: "dropoffLocation",
-                            //         labelTitle: "Drop off location:",
-                            //         labelStyle: TextStyle(
-                            //             color: Colors.white, fontSize: 16),
-                            //         inputStyle: InputDecoration(
-                            //           hintText: 'Select location',
-                            //           hintStyle: TextStyle(color: Colors.grey),
-                            //           enabledBorder: OutlineInputBorder(
-                            //             borderSide: BorderSide(color: Colors.grey),
-                            //             borderRadius: BorderRadius.circular(15),
-                            //           ),
-                            //           focusedBorder: OutlineInputBorder(
-                            //             borderSide:
-                            //                 BorderSide(color: Color(0xFFFFBC07)),
-                            //             borderRadius: BorderRadius.circular(15),
-                            //           ),
-                            //         ),
-                            //         containerStyle: BoxDecoration(),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                             SizedBox(height: 16.h),
                             Row(
                               children: [
@@ -465,8 +447,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 ),
                                 SizedBox(width: 8.w),
                                 Visibility(
-                                  visible:
-                                      isFromAirportBooking, // Show flight number field only for airport booking
+                                  visible: isFromAirportBooking,
                                   child: Expanded(
                                     child: FormTextField(
                                       label: "Flight No:",
@@ -494,7 +475,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   context,
                                   model.distanceInKm.toString(),
                                   model.possibleTime.toString(), () {
-                                model.makePayment();
+                                sendBookingData(context); // Updated to use sendBookingData method
                               }),
                             ),
                           ],
@@ -502,16 +483,17 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                       ),
                     ),
                   ),
-                  if (model.isLoading)
-                    Container(
-                      color: Colors.black54,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFFFFBC07),
-                        ),
-                      ),
-                    ),
                 ],
+              ),
+            ),
+            if (model.isLoading)
+              Container(
+                color: Colors.black54,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFFFFBC07),
+                  ),
+                ),
               ),
             ),
           ],
@@ -607,8 +589,9 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
               ),
             ),
             child: Text(
-              'Pay Now',
+              'Book Now',
               style: TextStyle(
+                fontWeight: FontWeight.bold,
                 fontSize: 14.sp,
                 color: Colors.black,
               ),

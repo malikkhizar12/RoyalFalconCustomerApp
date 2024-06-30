@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../model/user_model.dart';
-
 class UserViewModel with ChangeNotifier {
   Future<bool> saveUser(UserModel user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -30,7 +29,7 @@ class UserViewModel with ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     await prefs.remove('user');
-    if(kDebugMode){
+    if (kDebugMode) {
       print("user removed");
     }
     return true;

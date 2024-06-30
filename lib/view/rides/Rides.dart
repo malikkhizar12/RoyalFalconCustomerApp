@@ -137,7 +137,8 @@ class _RidesState extends State<Rides> {
                                               price: category['minimumAmount'].toDouble(),
                                               baggage: category['noOfBaggage'],
                                               persons: category['noOfPeople'],
-                                              rating: 4.0, // Assuming a default rating, adjust as needed
+                                              rating: 4.0,
+                                              id: category['_id'], // Assuming a default rating, adjust as needed
                                             );
                                           },
                                         );

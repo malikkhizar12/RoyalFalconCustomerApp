@@ -6,6 +6,7 @@ import '../widgets/starRating.dart';
 
 class RidesMainAbuDhabiCard extends StatelessWidget {
   final String name;
+  final String id;
   final String imageUrl;
   final double price;
   final int baggage;
@@ -19,7 +20,7 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
     required this.price,
     required this.baggage,
     required this.persons,
-    required this.rating,
+    required this.rating, required this.id,
   }) : super(key: key);
 
   @override
@@ -115,7 +116,7 @@ class RidesMainAbuDhabiCard extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RidesBookingForm(price: price),
+                                builder: (context) => RidesBookingForm(price: price, id: id,),
                               ),
                             );
                           },
