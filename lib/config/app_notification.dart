@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -73,46 +72,12 @@ class AppNotifications {
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
     );
-    // String? planId = message.data['planId'];
-    // String? tipId = message.data['tipId'];
     dev.log('here 1 ${message.data}');
     dev.log("${message.data['type']}");
-    // if (message.data['type'] == 'customer_accept') {
-    //   var data = message.data['data'];
-    //   var val = jsonDecode(data.toString());
-    //   var bookingId = val['id'];
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => TrackingRideScreen(
-    //                 bookingId: bookingId,
-    //               )));
-    // }
-    // if (message.data['type'] == 'customer_accept_order') {
-    //   var data = message.data['data'];
-    //   var val = jsonDecode(data.toString());
-    //   var bookingId = val['id'];
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => TrackingOrderScreen(
-    //                 bookingId: bookingId,
-    //                 isOrderList: false,
-    //               )));
-    // }
     await flutterLocalNotifications.initialize(
       initializationSetting,
       onDidReceiveNotificationResponse: (notificationPayload) {
         handleMessage(context, message);
-        // if (notificationPayload.actionId != null) {
-        //   if (notificationPayload.actionId == 'useful') {
-        //     callUpdateTipNotifications(isUseful: true, planId: planId ?? '', tipId: tipId ?? '');
-        //   } else if (notificationPayload.actionId == 'not useful') {
-        //     callUpdateTipNotifications(isUseful: false, planId: planId ?? '', tipId: tipId ?? '');
-        //   }
-        // } else {
-        //   handleMessage(context, message);
-        // }
       },
     );
   }
