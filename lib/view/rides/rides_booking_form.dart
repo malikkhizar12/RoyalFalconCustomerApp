@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
 import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
 import 'package:search_map_place_updated/search_map_place_updated.dart';
@@ -495,7 +496,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   model.possibleTime.toString(), () {
                                 sendBookingData(
                                     context); // Updated to use sendBookingData method
-                              }),
+                              },model.isLoading),
                             ),
                           ],
                         ),
@@ -522,7 +523,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   }
 
   Widget buildSummarySection(
-      BuildContext context, String distanceValue, String possibleTime, onTap) {
+      BuildContext context, String distanceValue, String possibleTime, onTap,bool isLoading) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -607,7 +608,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                 vertical: 10.h,
               ),
             ),
-            child: Text(
+            child: isLoading ? CircularProgressIndicator(color: ColorConstants.kWhiteColor,) : Text(
               'Book Now',
               style: TextStyle(
                 fontWeight: FontWeight.bold,

@@ -24,11 +24,11 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> makePayment() async {
+  Future<void> makePayment(String bookingId) async {
     try {
       print(amountToPay);
       paymentIntent =
-          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', "1");
+          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', bookingId);
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent!['client_secret'],
@@ -127,7 +127,9 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       if (response.statusCode == 201) {
         print('Booking request sent successfully.');
         setLoading(false);
-        makePayment();
+        var data = jsonDecode(response.body);
+        print(data['bookingId']);
+        makePayment(data['bookingId']);
         return jsonDecode(response.body);
       } else {
         print('Error creating booking: HTTP ${response.statusCode}');
