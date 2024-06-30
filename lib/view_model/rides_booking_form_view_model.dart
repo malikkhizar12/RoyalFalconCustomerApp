@@ -7,34 +7,14 @@ import 'package:http/http.dart' as http;
 import 'package:royal_falcon/utils/utils/utils.dart';
 
 class RidesBookingFormViewModel extends ChangeNotifier {
-  RidesBookingFormViewModel(this.context);
+  RidesBookingFormViewModel(this.context, this.amountToPay);
 
   BuildContext context;
   Map<String, dynamic>? paymentIntent;
-  bool isLoading = false;
 
-  // GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
-  // TextEditingController _controller = TextEditingController();
-  // String _selectedLocation = "";
-  //
-  // Future<void> _handlePressButton() async {
-  //   String kGoogleApiKey = dotenv.env['GOOGLE_API_KEY']!;
-  //   Prediction p = await PlacesAutocomplete.show(
-  //     context: context,
-  //     apiKey: kGoogleApiKey,
-  //     mode: Mode.overlay, // Mode.fullscreen
-  //     language: "en",
-  //     components: [Component(Component.country, "us")],
-  //   );
-  //
-  //   if (p != null) {
-  //     PlacesDetailsResponse detail =
-  //         await _places.getDetailsByPlaceId(p.placeId);
-  //     _selectedLocation = p.description;
-  //     _controller.text = p.description
-  //     notifyListeners();
-  //   }
-  // }
+  String possibleTime = "0", distanceInKm = "0";
+  double amountToPay = 0.0;
+  bool isLoading = false;
   void setLoading(bool value) {
     isLoading = value;
     notifyListeners();
@@ -42,9 +22,9 @@ class RidesBookingFormViewModel extends ChangeNotifier {
   Future<void> makePayment() async {
     try {
       setLoading(true);
-
       // Create payment intent data
-      paymentIntent = await createPaymentIntent('100', 'AED');
+      paymentIntent =
+          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED');
       // initialise the payment sheet setup
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
@@ -96,13 +76,15 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  createPaymentIntent(String amount, String currency) async {
+  createPaymentIntent(String amount, String currency, int bookingId) async {
     try {
       Map<String, dynamic> body = {
         'amount': ((int.parse(amount)) * 100).toString(),
         'currency': currency,
         'payment_method_types[]': 'card',
+        'meta_data': {"booking_id": bookingId}
       };
+      print(body);
       var secretKey = dotenv.env['STRIPE_SECRET_KEY'];
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/payment_intents'),
@@ -116,6 +98,30 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       return jsonDecode(response.body.toString());
     } catch (err) {
       print('Error charging user: ${err.toString()}');
+    }
+  }
+
+  Future<void> getTravelTime(
+      double startLat, double startLng, double endLat, double endLng) async {
+    final apiKey = dotenv.env['GOOGLE_API_KEY'];
+    final url =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=$startLat,$startLng&destination=$endLat,$endLng&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['routes'].isNotEmpty) {
+        final leg = data['routes'][0]['legs'][0];
+        print(data['routes']);
+        possibleTime = leg['duration']['text'].toString();
+        distanceInKm = leg['distance']['text'].toString();
+        print('Travel time: $possibleTime   distance $distanceInKm');
+        notifyListeners();
+      } else {
+        print('No route found');
+      }
+    } else {
+      print('Failed to fetch directions');
     }
   }
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart'; // Import for date formatting
 import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
 import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
+import 'package:search_map_place_updated/search_map_place_updated.dart';
 
 import '../widgets/appbarcustom.dart';
-import '../widgets/location_input.dart';
 
 class RidesBookingForm extends StatefulWidget {
   final double price;
@@ -31,9 +33,12 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   final TextEditingController pickupTimeController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController flightNoController = TextEditingController();
-  final TextEditingController specialRequestController = TextEditingController();
+  final TextEditingController specialRequestController =
+      TextEditingController();
 
   DateTime? selectedDateTime;
+  double? pickUpLatitude, pickUpLongitude, dropOffLatitude, dropOffLongitude;
+  String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
 
   @override
   void initState() {
@@ -61,7 +66,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       context: context,
       initialDate: selectedDateTime ?? DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)), // Allow selection for one year from now
+      lastDate: DateTime.now()
+          .add(Duration(days: 365)), // Allow selection for one year from now
       // Customize date picker colors
       builder: (BuildContext context, Widget? child) {
         return Theme(
@@ -89,11 +95,11 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             data: ThemeData.light().copyWith(
               colorScheme: ColorScheme.light(
                 primary: const Color(0xFFFFBC07), // Customize primary color
-                onPrimary: Colors.black, // Customize text color on primary color
+                onPrimary:
+                    Colors.black, // Customize text color on primary color
               ),
               textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                ),
+                style: TextButton.styleFrom(),
               ),
             ),
             child: child!,
@@ -110,7 +116,9 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          pickupTimeController.text = DateFormat.yMd().add_jm().format(selectedDateTime!); // Format date and time
+          pickupTimeController.text = DateFormat.yMd()
+              .add_jm()
+              .format(selectedDateTime!); // Format date and time
         });
       }
     }
@@ -119,7 +127,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => RidesBookingFormViewModel(context),
+      create: (BuildContext context) =>
+          RidesBookingFormViewModel(context, widget.price),
       child: Consumer<RidesBookingFormViewModel>(
         builder: (BuildContext context, model, Widget? child) => Stack(
           children: [
@@ -200,171 +209,294 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: FormTextField(
-                                    label: "City",
-                                    hint: 'Pickup City',
-                                    mandatory: true,
-                                    controller: TextEditingController(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: FormTextField(
-                                    label: "No. of Passengers:",
-                                    hint: '02',
-                                    mandatory: true,
-                                    controller: passengersController,
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: FormTextField(
-                                    label: "No. of Bags",
-                                    hint: '03',
-                                    mandatory: true,
-                                    controller: bagsController,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _selectDateAndTime(context); // Call function to show combined date-time picker
-                                    },
-                                    child: AbsorbPointer(
-                                      child: FormTextField(
-                                        label: "Pickup time:",
-                                        hint: 'Select Date and Time',
-                                        mandatory: true,
-                                        controller: pickupTimeController,
-                                      ),
-                                    ),),),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: FormTextField(
-                                    label: "Contact Number",
-                                    hint: '+971********',
-                                    mandatory: true,
-                                    controller: contactNumberController,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: LocationInput(
-                                    mandatory: true,
-                                    name: "pickupLocation",
-                                    labelTitle: "Pickup location:",
-                                    labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                                    inputStyle: InputDecoration(
-                                      hintText: 'Select location',
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Color(0xFFFFBC07)),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                    containerStyle: BoxDecoration(),
-                                    isPickup: true,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: LocationInput(
-                                    mandatory: true,
-                                    name: "dropoffLocation",
-                                    labelTitle: "Drop off location:",
-                                    labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                                    inputStyle: InputDecoration(
-                                      hintText: 'Select location',
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Color(0xFFFFBC07)),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                    containerStyle: BoxDecoration(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: FormTextField(
-                                    label: "Special Request:",
-                                    hint: '03 Adult / 01 Child',
-                                    mandatory: true,
-                                    controller: specialRequestController,
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                Visibility(
-                                  visible: isFromAirportBooking, // Show flight number field only for airport booking
-                                  child: Expanded(
-                                    child: FormTextField(
-                                      label: "Flight No:",
-                                      hint: '1223432332',
-                                      mandatory: isFromAirportBooking,
-                                      controller: flightNoController,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.h),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.28,
-                              width: double.infinity,
-                              padding: EdgeInsets.all(16.h),
-                              margin: EdgeInsets.only(top: 16.h),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF333639),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20),
-                                ),
+
+                                ],
                               ),
-                              child: buildSummarySection(context,(){
-                                model.makePayment();
-                              }),
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: FormTextField(
+                                label: "City",
+                                hint: 'Pickup City',
+                                mandatory: true,
+                                controller: TextEditingController(),
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormTextField(
+                                label: "No. of Passengers:",
+                                hint: '02',
+                                mandatory: true,
+                                controller: passengersController,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: FormTextField(
+                                label: "No. of Bags",
+                                hint: '03',
+                                mandatory: true,
+                                controller: bagsController,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  _selectDateAndTime(
+                                      context); // Call function to show combined date-time picker
+                                },
+                                child: AbsorbPointer(
+                                  child: FormTextField(
+                                    label: "Pickup time:",
+                                    hint: 'Select Date and Time',
+                                    mandatory: true,
+                                    controller: pickupTimeController,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: FormTextField(
+                                label: "Contact Number",
+                                hint: '+971********',
+                                mandatory: true,
+                                controller: contactNumberController,
+                              ),
+                            ),
+                          ],
+                        ),
+                        // SizedBox(height: 16.h),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: LocationInput(
+                        //         mandatory: true,
+                        //         name: "pickupLocation",
+                        //         labelTitle: "Pickup location:",
+                        //         labelStyle: TextStyle(
+                        //             color: Colors.white, fontSize: 16),
+                        //         inputStyle: InputDecoration(
+                        //           hintText: 'Select location',
+                        //           hintStyle: TextStyle(color: Colors.grey),
+                        //           enabledBorder: OutlineInputBorder(
+                        //             borderSide: BorderSide(color: Colors.grey),
+                        //             borderRadius: BorderRadius.circular(15),
+                        //           ),
+                        //           focusedBorder: OutlineInputBorder(
+                        //             borderSide:
+                        //                 BorderSide(color: Color(0xFFFFBC07)),
+                        //             borderRadius: BorderRadius.circular(15),
+                        //           ),
+                        //         ),
+                        //         containerStyle: BoxDecoration(),
+                        //         isPickup: true,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Text(
+                              "Pickup location:",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                            Text(
+                              ' *',
+                              style: TextStyle(
+                                color: Color(0xFFFFBC07),
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8.h),
+                        Container(
+                          width: 1.sw,
+                          // height: 65.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.r),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                          ),
+                          child: SearchMapPlaceWidget(
+                              hasClearButton: true,
+                              iconColor: Colors.grey,
+                              placeType: PlaceType.address,
+                              bgColor: Color(0xFF1C1F23),
+                              textColor: Colors.grey,
+                              placeholder: "Search Location",
+                              apiKey: googleMapApiKey,
+                              onSelected: (Place place) async {
+                                Geolocation? pickUpLocation =
+                                    await place.geolocation;
+                                print(pickUpLocation!.coordinates);
+                                pickUpLatitude =
+                                    pickUpLocation.coordinates.latitude;
+                                pickUpLongitude =
+                                    pickUpLocation.coordinates.longitude;
+                                if (dropOffLatitude != null ||
+                                    dropOffLongitude != null) {
+                                  model.getTravelTime(
+                                      pickUpLatitude!,
+                                      pickUpLongitude!,
+                                      dropOffLatitude!,
+                                      dropOffLongitude!);
+                                }
+                              }),
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Text(
+                              "Drop off location:",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                            Text(
+                              ' *',
+                              style: TextStyle(
+                                color: Color(0xFFFFBC07),
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8.h),
+                        Container(
+                          width: 1.sw,
+                          // height: 65.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.r),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                          ),
+                          child: SearchMapPlaceWidget(
+                              hasClearButton: true,
+                              iconColor: Colors.grey,
+                              placeType: PlaceType.address,
+                              bgColor: Color(0xFF1C1F23),
+                              textColor: Colors.grey,
+                              placeholder: "Search Location",
+                              apiKey: googleMapApiKey,
+                              onSelected: (Place place) async {
+                                Geolocation? dropOffLocation =
+                                    await place.geolocation;
+                                print(dropOffLocation!.coordinates);
+                                dropOffLatitude =
+                                    dropOffLocation.coordinates.latitude;
+                                dropOffLongitude =
+                                    dropOffLocation.coordinates.longitude;
+                                if (pickUpLatitude != null ||
+                                    pickUpLongitude != null) {
+                                  model.getTravelTime(
+                                      pickUpLatitude!,
+                                      pickUpLongitude!,
+                                      dropOffLatitude!,
+                                      dropOffLongitude!);
+                                }
+                              }),
+                        ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: LocationInput(
+                        //         mandatory: true,
+                        //         name: "dropoffLocation",
+                        //         labelTitle: "Drop off location:",
+                        //         labelStyle: TextStyle(
+                        //             color: Colors.white, fontSize: 16),
+                        //         inputStyle: InputDecoration(
+                        //           hintText: 'Select location',
+                        //           hintStyle: TextStyle(color: Colors.grey),
+                        //           enabledBorder: OutlineInputBorder(
+                        //             borderSide: BorderSide(color: Colors.grey),
+                        //             borderRadius: BorderRadius.circular(15),
+                        //           ),
+                        //           focusedBorder: OutlineInputBorder(
+                        //             borderSide:
+                        //                 BorderSide(color: Color(0xFFFFBC07)),
+                        //             borderRadius: BorderRadius.circular(15),
+                        //           ),
+                        //         ),
+                        //         containerStyle: BoxDecoration(),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormTextField(
+                                label: "Special Request:",
+                                hint: '03 Adult / 01 Child',
+                                mandatory: true,
+                                controller: specialRequestController,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Visibility(
+                              visible:
+                                  isFromAirportBooking, // Show flight number field only for airport booking
+                              child: Expanded(
+                                child: FormTextField(
+                                  label: "Flight No:",
+                                  hint: '1223432332',
+                                  mandatory: isFromAirportBooking,
+                                  controller: flightNoController,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.28,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(16.h),
+                          margin: EdgeInsets.only(top: 16.h),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF333639),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                          ),
+                          child: buildSummarySection(
+                              context,
+                              model.distanceInKm.toString(),
+                              model.possibleTime.toString(), () {
+                            model.makePayment();
+                          }),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
+                              
+                           
+                             
             if (model.isLoading)
               Container(
                 color: Colors.black54,
@@ -378,7 +510,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     );
   }
 
-  Widget buildSummarySection(BuildContext context,onTap) {
+  Widget buildSummarySection(
+      BuildContext context, String distanceValue, String possibleTime, onTap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -397,7 +530,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                   ),
                 ),
                 Text(
-                  "26.7km",
+                  "$distanceValue",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
@@ -405,7 +538,6 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                 ),
               ],
             ),
-
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -418,7 +550,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                   ),
                 ),
                 Text(
-                  "10 minutes",
+                  "$possibleTime",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
@@ -428,7 +560,6 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             ),
           ],
         ),
-
         SizedBox(height: 20.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
