@@ -6,55 +6,42 @@ import 'package:http/http.dart' as http;
 import 'package:royal_falcon/resources/app_url.dart';
 import 'package:royal_falcon/utils/utils/utils.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/user_model.dart'; // Add this import
+import '../model/user_model.dart';
 
 class RidesBookingFormViewModel extends ChangeNotifier {
-
   RidesBookingFormViewModel(this.context, this.amountToPay);
 
   BuildContext context;
   Map<String, dynamic>? paymentIntent;
   String possibleTime = "0", distanceInKm = "0";
   double amountToPay = 0.0;
-  final UserViewModel userViewModel=UserViewModel();
-  Future<void> bookRideAndMakePayment(Map<String, dynamic> bookingData) async {
-    try {
-      // Call the booking API
-      var bookingResponse = await createBooking(bookingData);
-      if (bookingResponse['status'] == 'Booking created successfully') {
-        // If booking is successful, proceed with payment
-        await makePayment();
-      } else {
-        // Handle booking failure
-        Utils.errorMessage("Booking Failed", context);
-      }
-    } catch (e) {
-      print("exception $e");
-      Utils.errorMessage("An error occurred", context);
-    }
+  bool isLoading = false;
+  final UserViewModel userViewModel = UserViewModel();
+
+  void setLoading(bool value) {
+    isLoading = value;
+    notifyListeners();
   }
+
+
 
   Future<void> makePayment() async {
     try {
       print(amountToPay);
-      // Create payment intent data
       paymentIntent = await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED');
-      // Initialise the payment sheet setup
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent!['client_secret'],
           customerId: paymentIntent!['customer'],
           customerEphemeralKeySecret: paymentIntent!['ephemeralKey'],
           googlePay: const PaymentSheetGooglePay(
-              currencyCode: "AED",
-              merchantCountryCode: "AE"
+            currencyCode: "AED",
+            merchantCountryCode: "AE",
           ),
           merchantDisplayName: 'RFL',
         ),
       );
-      // Display payment sheet
       displayPaymentSheet();
     } catch (e) {
       print("exception $e");
@@ -93,7 +80,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         Uri.parse('https://api.stripe.com/v1/payment_intents'),
         headers: {
           'Authorization': 'Bearer $secretKey',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: body,
       );
@@ -108,6 +95,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
 
   Future<Map<String, dynamic>> createBooking(Map<String, dynamic> bookingData) async {
     try {
+      setLoading(true);
       UserModel? userModel = await userViewModel.getUser();
       if (userModel == null) {
         throw Exception('User not found or not logged in');
@@ -125,7 +113,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         Uri.parse(Appurl.createBooking),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': '$token',
+          'Authorization': '$token', // Ensure 'Bearer' is included
         },
         body: jsonEncode(bookingData),
       );
@@ -136,6 +124,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
 
       if (response.statusCode == 201) {
         print('Booking request sent successfully.');
+        setLoading(false);
         makePayment();
         return jsonDecode(response.body);
       } else {
@@ -147,6 +136,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       return {'status': 'error', 'message': err.toString()};
     }
   }
+
   Future<void> getTravelTime(
       double startLat, double startLng, double endLat, double endLng) async {
     final apiKey = dotenv.env['GOOGLE_API_KEY'];
