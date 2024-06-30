@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart'; // Import for date formatting
+import 'package:intl/intl.dart';
 import 'package:royal_falcon/view/rides/rides_widgets/form_text_field.dart';
 import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
 import 'package:search_map_place_updated/search_map_place_updated.dart';
@@ -38,8 +38,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController flightNoController = TextEditingController();
-  final TextEditingController specialRequestController =
-  TextEditingController();
+  final TextEditingController specialRequestController = TextEditingController();
 
   DateTime? selectedDateTime;
   double? pickUpLatitude, pickUpLongitude, dropOffLatitude, dropOffLongitude;
@@ -50,13 +49,11 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   @override
   void initState() {
     super.initState();
-    // Initialize booking type based on widget's initial value
     isFromAirportBooking = widget.isFromAirportBooking;
   }
 
   @override
   void dispose() {
-    // Dispose all controllers when the widget is disposed
     nameController.dispose();
     emailController.dispose();
     passengersController.dispose();
@@ -75,16 +72,12 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       initialDate: selectedDateTime ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(Duration(days: 365)),
-      // Allow selection for one year from now
-      // Customize date picker colors
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.light(
               primary: const Color(0xFFFFBC07),
-              // Customize primary color
               onPrimary: Colors.black,
-              // Customize text color on primary color
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(),
@@ -99,15 +92,12 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(selectedDateTime ?? DateTime.now()),
-        // Customize time picker colors
         builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
               colorScheme: ColorScheme.light(
                 primary: const Color(0xFFFFBC07),
-                // Customize primary color
                 onPrimary: Colors.black,
-                // Customize text color on primary color
               ),
               textButtonTheme: TextButtonThemeData(
                 style: TextButton.styleFrom(),
@@ -127,17 +117,13 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          pickupTimeController.text =
-              DateFormat.yMd().add_jm().format(selectedDateTime!);
-          // Format date and time
+          pickupTimeController.text = DateFormat.yMd().add_jm().format(selectedDateTime!);
         });
       }
     }
   }
 
-
   void sendBookingData(BuildContext context) {
-    // Collect all form data here and process as needed
     final String name = nameController.text;
     final vehicleId = widget.id;
     final String email = emailController.text;
@@ -147,11 +133,9 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     final String specialRequest = specialRequestController.text;
     final String city = cityController.text;
 
-    // Convert pickupTime to the required format
     final String pickupTime = pickupTimeController.text;
     DateTime pickupDateTime;
     try {
-      // Remove any non-breaking spaces or unexpected characters
       final cleanedPickupTime = pickupTime.replaceAll('\u202F', ' ');
       pickupDateTime = DateFormat('M/d/yyyy h:mm a').parse(cleanedPickupTime);
     } catch (e) {
@@ -178,20 +162,16 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       'fromLocationName': pickupLocationName,
       'toLocationName': dropOffLocationName,
       'vehicleCategoryId': vehicleId,
-      'bookingAmount': widget.price // Make sure to calculate or provide this value correctly
+      'bookingAmount': widget.price
     };
 
-    // Example of sending data to a model or service
-    Provider.of<RidesBookingFormViewModel>(context, listen: false)
-        .createBooking(bookingData);
-
-    // You can also navigate or show a success message here
+    Provider.of<RidesBookingFormViewModel>(context, listen: false).createBooking(bookingData);
   }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) =>
-          RidesBookingFormViewModel(context, widget.price),
+      create: (BuildContext context) => RidesBookingFormViewModel(context, widget.price),
       child: Consumer<RidesBookingFormViewModel>(
         builder: (BuildContext context, model, Widget? child) => Stack(
           children: [
@@ -253,19 +233,23 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                               });
                                             },
                                             dropdownColor: Color(0xFF1C1F23),
+                                            icon: Icon(
+                                              Icons.arrow_drop_down,
+                                              color: Colors.white,
+                                            ),
                                             items: [
                                               DropdownMenuItem<bool>(
                                                 value: false,
                                                 child: Text(
                                                   'Normal Booking',
-                                                  style: TextStyle(color: Colors.grey),
+                                                  style: TextStyle(color: Colors.white),
                                                 ),
                                               ),
                                               DropdownMenuItem<bool>(
                                                 value: true,
                                                 child: Text(
                                                   'Airport Booking',
-                                                  style: TextStyle(color: Colors.grey),
+                                                  style: TextStyle(color: Colors.white),
                                                 ),
                                               ),
                                             ],
@@ -371,7 +355,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   iconColor: Colors.grey,
                                   placeType: PlaceType.address,
                                   bgColor: Color(0xFF1C1F23),
-                                  textColor: Colors.grey,
+                                  textColor: Colors.white,
                                   placeholder: "Search Location",
                                   apiKey: googleMapApiKey,
                                   onSelected: (Place place) async {
@@ -424,7 +408,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   iconColor: Colors.grey,
                                   placeType: PlaceType.address,
                                   bgColor: Color(0xFF1C1F23),
-                                  textColor: Colors.grey,
+                                  textColor: Colors.white,
                                   placeholder: "Search Location",
                                   apiKey: googleMapApiKey,
                                   onSelected: (Place place) async {
@@ -597,8 +581,9 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
               ),
             ),
             child: Text(
-              'book Now',
+              'Book Now',
               style: TextStyle(
+                fontWeight: FontWeight.bold,
                 fontSize: 14.sp,
                 color: Colors.black,
               ),
@@ -609,4 +594,3 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     );
   }
 }
-
