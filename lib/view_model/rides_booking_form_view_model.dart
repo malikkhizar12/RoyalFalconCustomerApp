@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/material/scaffold.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
@@ -19,12 +18,13 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     isLoading = value;
     notifyListeners();
   }
+
   Future<void> makePayment() async {
     try {
       setLoading(true);
       // Create payment intent data
       paymentIntent =
-          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED');
+          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', 1);
       // initialise the payment sheet setup
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
@@ -41,7 +41,6 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       );
       // Display payment sheet
       displayPaymentSheet();
-
     } catch (e) {
       print("exception $e");
 
@@ -50,9 +49,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       } else {
         print("exception $e");
       }
-
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
   }
@@ -69,7 +66,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       // If any error comes during payment
       // so payment will be cancelled
       print('Error: $e');
-      Utils.errorMessage("Payment Cancelled" as ScaffoldMessengerState, context);
+      Utils.errorMessage("Payment Cancelled", context);
     } catch (e) {
       print("Error in displaying");
       print('$e');
@@ -82,7 +79,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         'amount': ((int.parse(amount)) * 100).toString(),
         'currency': currency,
         'payment_method_types[]': 'card',
-        'meta_data': {"booking_id": bookingId}
+        'metadata': {"booking_id": bookingId}
       };
       print(body);
       var secretKey = dotenv.env['STRIPE_SECRET_KEY'];
