@@ -24,7 +24,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       setLoading(true);
       // Create payment intent data
       paymentIntent =
-          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', 1);
+          await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', "1");
       // initialise the payment sheet setup
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
@@ -73,13 +73,14 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  createPaymentIntent(String amount, String currency, int bookingId) async {
+  createPaymentIntent(String amount, String currency, String bookingId) async {
     try {
       Map<String, dynamic> body = {
         'amount': ((int.parse(amount)) * 100).toString(),
         'currency': currency,
         'payment_method_types[]': 'card',
-        'metadata': {"booking_id": bookingId}
+        'metadata[booking_id]': bookingId
+        // 'metadata': {"booking_id": bookingId}
       };
       print(body);
       var secretKey = dotenv.env['STRIPE_SECRET_KEY'];
