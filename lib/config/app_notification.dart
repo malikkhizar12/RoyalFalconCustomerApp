@@ -192,8 +192,6 @@ class AppNotifications {
   /// to show notification
   void firebaseNotificationsInitialization(BuildContext context) {
     FirebaseMessaging.onMessage.listen((notificationMessage) {
-      // RemoteNotification? notification = notificationMessage.notification;
-      // AndroidNotification? android = notificationMessage.notification!.android;
       if (Platform.isIOS) {
         initLocalNotifications(context, notificationMessage);
         foregroundMessage();
@@ -224,9 +222,6 @@ class AppNotifications {
 
       /// Uncomment the code below to handle action button callbacks
     });
-    // FirebaseMessaging.onBackgroundMessage((message) async {
-    //   handleMessage(context, message);
-    // });
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) async {
