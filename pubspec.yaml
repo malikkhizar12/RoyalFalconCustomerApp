@@ -39,7 +39,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.13.1"
-
+  hive_generator:
+  build_runner:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true

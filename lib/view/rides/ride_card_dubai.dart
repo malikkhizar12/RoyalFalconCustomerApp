@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/starRating.dart';
-import 'models/dubai_list_model.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RideCardDubai extends StatelessWidget {
-  final DubaiListModel package;
+  final dynamic package;
   final VoidCallback onTap;
 
   const RideCardDubai({
@@ -29,11 +28,11 @@ class RideCardDubai extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      package.imageUrl,
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
+                    child: Image.network(
+                      package['categoryVehicleImage'] ?? '',
+                      width: 80.w,
+                      height: 80.h,
+                      fit: BoxFit.fill,
                     ),
                   ),
                   SizedBox(width: 16),
@@ -42,7 +41,7 @@ class RideCardDubai extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          package.name,
+                          package['name'] ?? '',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -50,10 +49,8 @@ class RideCardDubai extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        const StarRating(rating: 4),
-                        const SizedBox(height: 4),
                         Text(
-                          '${package.starRating}/5',
+                          'Persons: ${package['noOfPeople']}',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -61,7 +58,7 @@ class RideCardDubai extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${package.totalReviews} Reviews',
+                          'Baggages: ${package['noOfBaggage']}',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -76,11 +73,11 @@ class RideCardDubai extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 child: Text(
-                  package.price,
+                  '\$${package['minimumAmount']}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color:  Color(0xFFFFBC07),
                   ),
                 ),
               ),

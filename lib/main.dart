@@ -10,6 +10,7 @@ import 'package:royal_falcon/view_model/airport_animation_view_model.dart';
 import 'package:royal_falcon/view_model/auth_view_model.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/map_view_model.dart';
+import 'package:royal_falcon/view_model/my_bookings_view_model.dart';
 import 'package:royal_falcon/view_model/normal_booking_view_model.dart';
 import 'package:royal_falcon/view_model/profile_screen_view_model.dart';
 import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
@@ -18,14 +19,24 @@ import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'model/my_bookings_model.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: '.env');
-  Stripe.publishableKey= dotenv.env["STRIPE_PUBLISH_KEY"]!;
+  Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
   await Stripe.instance.applySettings();
   await Hive.initFlutter();
-  await Hive.openBox('vehicleCategories');
+
+  // Register the adapters
+  Hive.registerAdapter(BookingsAdapter());
+  Hive.registerAdapter(GuestAdapter());
+  Hive.registerAdapter(CoordinatesAdapter());
+  Hive.registerAdapter(VehicleCategoryAdapter());
+
+  await Hive.openBox<Bookings>('bookingsBox');
+  await Hive.openBox('vehicleCategoriesBox');
 
   runApp(const MyApp());
 }
@@ -46,6 +57,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => VehicleViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileScreenViewModel()),
         ChangeNotifierProvider(create: (_) => MapsViewModel()),
+        ChangeNotifierProvider(create: (_) => MyBookingsViewModel()), // Add this line
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),

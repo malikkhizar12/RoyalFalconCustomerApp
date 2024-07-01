@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 import 'package:royal_falcon/resources/app_url.dart';
 import 'package:royal_falcon/utils/utils/utils.dart';
+import 'package:royal_falcon/view_model/my_bookings_view_model.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 
 import '../model/user_model.dart';
+
+import '../view/my_bookings/my_booking.dart'; // Import the MyBookings page
 
 class RidesBookingFormViewModel extends ChangeNotifier {
   RidesBookingFormViewModel(this.context, this.amountToPay);
@@ -18,13 +23,11 @@ class RidesBookingFormViewModel extends ChangeNotifier {
   double amountToPay = 0.0;
   bool isLoading = false;
   final UserViewModel userViewModel = UserViewModel();
-
+  final MyBookingsViewModel myBookingsViewModel= MyBookingsViewModel();
   void setLoading(bool value) {
     isLoading = value;
     notifyListeners();
   }
-
-
 
   Future<void> makePayment() async {
     try {
@@ -58,6 +61,12 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       await Stripe.instance.presentPaymentSheet();
       Utils.successMessage("Paid successfully", context);
       paymentIntent = null;
+      // Navigate to MyBookings page
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MyBookings()),
+            (Route<dynamic> route) => false,
+      );
     } on StripeException catch (e) {
       print('Error: $e');
       Utils.errorMessage("Payment Cancelled", context);
@@ -117,22 +126,35 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         },
         body: jsonEncode(bookingData),
       );
+      if(kDebugMode)
+      {
+        print('Request Body: ${jsonEncode(bookingData)}');
+        print('Response Status Code: ${response.statusCode}');
+        print('Response Body: ${response.body}');
+      }
 
-      print('Request Body: ${jsonEncode(bookingData)}');
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
 
       if (response.statusCode == 201) {
-        print('Booking request sent successfully.');
+        if(kDebugMode){
+          print('Booking request sent successfully.');
+
+        }
         setLoading(false);
         makePayment();
+        myBookingsViewModel.fetchUserBookings();
         return jsonDecode(response.body);
       } else {
-        print('Error creating booking: HTTP ${response.statusCode}');
+        if(kDebugMode){
+          print('Error creating booking: HTTP ${response.statusCode}');
+
+        }
         return {'status': 'error', 'message': 'HTTP ${response.statusCode}', 'response': response.body};
       }
     } catch (err) {
-      print('Error creating booking: ${err.toString()}');
+      if(kDebugMode){
+        print('Error creating booking: ${err.toString()}');
+
+      }
       return {'status': 'error', 'message': err.toString()};
     }
   }
@@ -151,7 +173,10 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         print(data['routes']);
         possibleTime = leg['duration']['text'].toString();
         distanceInKm = leg['distance']['text'].toString();
-        print('Travel time: $possibleTime   distance $distanceInKm');
+        if(kDebugMode){
+          print('Travel time: $possibleTime   distance $distanceInKm');
+
+        }
         notifyListeners();
       } else {
         print('No route found');
