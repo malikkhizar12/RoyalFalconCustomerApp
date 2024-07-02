@@ -6,15 +6,18 @@ import 'package:royal_falcon/view_model/user_view_model.dart';
 import '../model/my_bookings_model.dart';
 import '../model/user_model.dart';
 import '../resources/app_url.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyBookingsViewModel extends ChangeNotifier {
   List<Bookings> _bookings = [];
+  List<Bookings> filteredBookings = [];
   bool _isLoading = false;
   String? _errorMessage;
   Map<String, String> _statuses = {};
   int _currentPage = 1;
   int _totalPages = 1;
   bool _isFetchingNextPage = false;
+  String _selectedFilter = 'All';
 
   List<Bookings> get bookings => _bookings;
   bool get isLoading => _isLoading;
@@ -22,6 +25,7 @@ class MyBookingsViewModel extends ChangeNotifier {
   bool get isFetchingNextPage => _isFetchingNextPage;
   int get currentPage => _currentPage;
   int get totalPages => _totalPages;
+  String get selectedFilter => _selectedFilter;
 
   MyBookingsViewModel() {
     fetchUserBookings(); // Fetch bookings initially
@@ -34,12 +38,29 @@ class MyBookingsViewModel extends ChangeNotifier {
     _totalPages = 1; // Reset total pages to ensure fresh fetch
     try {
       await _fetchAllBookings(replace: true); // Replace data on initial fetch
+      filterBookings(_selectedFilter); // Initialize filtered bookings
     } catch (error) {
       _errorMessage = error.toString();
     } finally {
       setLoading(false);
       notifyListeners();
     }
+  }
+
+  void setFilter(String status) {
+    _selectedFilter = status;
+    filterBookings(status);
+  }
+
+  void filterBookings(String status) {
+    print('Filtering bookings with status: $status');
+    if (status == 'All') {
+      filteredBookings = List.from(_bookings); // Copy list to avoid direct reference
+    } else {
+      filteredBookings = _bookings.where((booking) => booking.status.toLowerCase() == status.toLowerCase()).toList();
+    }
+    print('Filtered bookings count: ${filteredBookings.length}');
+    notifyListeners(); // Notify listeners of the state change
   }
 
   Future<void> fetchNextPage() async {
@@ -94,6 +115,11 @@ class MyBookingsViewModel extends ChangeNotifier {
       _bookings.sort((a, b) => b.createdAt.compareTo(a.createdAt)); // Sort by createdAt in descending order
 
       _totalPages = jsonResponse['pagination']['totalPages'];
+      filterBookings(_selectedFilter); // Update filtered bookings after fetching
+
+      // Cache the bookings data locally
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('cachedBookings', json.encode(_bookings));
     } else {
       throw Exception('Failed to load bookings');
     }
