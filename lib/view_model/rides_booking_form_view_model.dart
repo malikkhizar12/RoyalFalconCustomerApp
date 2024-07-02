@@ -139,23 +139,20 @@ class RidesBookingFormViewModel extends ChangeNotifier {
           print('Booking request sent successfully.');
         }
         Map<String, dynamic> bookingResponse = jsonDecode(response.body);
-        String bookingId = bookingResponse['id']; // Assuming 'id' is the booking ID in the response
+        String bookingId = bookingResponse['bookingId']; // Assuming 'bookingId' is the correct key
         await makePayment(bookingId);
         setLoading(false);
 
         myBookingsViewModel.fetchUserBookings();
-        return jsonDecode(response.body);
+        return bookingResponse;
       } else {
-        if (kDebugMode) {
-          setLoading(false);
-          print('Error creating booking: HTTP ${response.statusCode}');
-        }
+        setLoading(false);
+        print('Error creating booking: HTTP ${response.statusCode}');
         return {'status': 'error', 'message': 'HTTP ${response.statusCode}', 'response': response.body};
       }
     } catch (err) {
-      if (kDebugMode) {
-        print('Error creating booking: ${err.toString()}');
-      }
+      setLoading(false);
+      print('Error creating booking: ${err.toString()}');
       return {'status': 'error', 'message': err.toString()};
     }
   }
