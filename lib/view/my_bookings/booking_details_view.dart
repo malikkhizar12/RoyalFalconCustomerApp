@@ -120,20 +120,37 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                           SizedBox(height: 8.h),
                           Text('No Driver assigned yet', style: TextStyle(fontSize: 16.sp, color: Colors.white)),
                           SizedBox(height: 16.h),
-                          Center(
-                            child: ValueListenableBuilder<String>(
-                              valueListenable: ValueNotifier<String>(viewModel.getStatus(widget.booking.id)),
-                              builder: (context, status, child) {
-                                return Text(
-                                  status.toLowerCase() == 'pending'
-                                      ? 'Waiting for Admin approval.'
-                                      : 'Status: $status',
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    color: status.toLowerCase() == 'pending' ? Colors.green : Colors.white,
+                          if (widget.booking.status.toLowerCase() == 'payment pending')
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // Add your payment logic here
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFFFFBC07), // Background color
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
-                                );
-                              },
+                                ),
+                                child: Text(
+                                  'Pay Now',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          SizedBox(height: 8.h),
+                          Center(
+                            child: Text(
+                              widget.booking.status.toLowerCase() == 'pending'
+                                  ? 'Waiting for Admin approval.'
+                                  : 'Status: ${widget.booking.status}',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                color: widget.booking.status.toLowerCase() == 'pending' ? Colors.orange : Colors.green,
+                              ),
                             ),
                           ),
                         ],

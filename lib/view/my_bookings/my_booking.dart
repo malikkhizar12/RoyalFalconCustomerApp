@@ -95,7 +95,7 @@ class _MyBookingsState extends State<MyBookings> {
                                             context,
                                             MaterialPageRoute(builder: (context) => Rides()),
                                           );
-                                          },
+                                        },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Color(0xFFFFBC07), // Background color
                                           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
@@ -145,13 +145,12 @@ class _MyBookingsState extends State<MyBookings> {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  guest.vehicleCategoryId?.name ?? 'Unknown Vehicle',
+                                                  guest.vehicleCategoryId?.name ?? 'Vehicle',
                                                   style: TextStyle(
                                                     fontSize: 16.sp,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                SizedBox(height: 4.h),
                                                 Text(
                                                   '${guest.noOfBaggage} Baggage',
                                                   style: TextStyle(
@@ -170,9 +169,18 @@ class _MyBookingsState extends State<MyBookings> {
                                               ],
                                             ),
                                             trailing: Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
+                                                if (booking.status.toLowerCase() == 'payment pending')
+                                                  Text(
+                                                    'Pay Now >',
+                                                    style: TextStyle(
+                                                      color: Color(0xFFFFBC07),
+                                                      fontSize: 14.sp,
+                                                    ),
+                                                  ),
+                                                SizedBox(height: 4.h),
                                                 Text(
                                                   booking.status,
                                                   style: TextStyle(
