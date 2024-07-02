@@ -37,8 +37,10 @@ class AuthViewModel with ChangeNotifier {
         await userViewModel.saveUser(userModel);
 
         setLoading(false);
-        Navigator.pushReplacementNamed(context, RoutesNames.home,
-            arguments: userModel);
+        Navigator.pushNamedAndRemoveUntil(
+            context, RoutesNames.home, arguments: userModel, (route) => false);
+        // Navigator.pushReplacementNamed(context, RoutesNames.home,
+        //     arguments: userModel);
       } else {
         throw Exception('Login failed');
       }

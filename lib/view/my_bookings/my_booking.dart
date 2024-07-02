@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/colors.dart';
+import 'package:royal_falcon/view/Rides/Rides.dart';
 import 'package:royal_falcon/view/my_bookings/widgets/filter_dropdown.dart';
 import 'package:royal_falcon/view_model/my_bookings_view_model.dart';
 import 'package:royal_falcon/view/widgets/appbarcustom.dart';
@@ -69,12 +70,51 @@ class _MyBookingsState extends State<MyBookings> {
                                 child: Text('Error: ${viewModel.errorMessage}'),
                               );
                             } else if (viewModel.bookings.isEmpty) {
-                              return Center(child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10.w),
-
-                                height: 300,
+                              return Center(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                  height: 300.h,
+                                  width: double.infinity,
                                   color: Color(0xFF595959),
-                                  child: Center(child: Text('No bookings found',style: TextStyle(color: Colors.white),))));
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'No bookings Yet',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 20.h),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => Rides()),
+                                          );
+                                          },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xFFFFBC07), // Background color
+                                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.r),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Book your first ride',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
                             } else {
                               return Column(
                                 children: [

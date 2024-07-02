@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/config/app_notification.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 
 import '../widgets/custom_end_drawer.dart';
@@ -17,12 +18,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late HomeScreenViewModel _homeScreenViewModel;
+  // AppNotifications appNotifications = AppNotifications();
 
   @override
   void initState() {
     super.initState();
     _homeScreenViewModel = Provider.of<HomeScreenViewModel>(context, listen: false);
     _homeScreenViewModel.initializeData(context);
+    // appNotifications.firebaseNotificationsInitialization(context);
+    // appNotifications.setUpInteractMessage(context);
   }
 
 

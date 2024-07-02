@@ -11,7 +11,6 @@ import 'package:royal_falcon/view_model/my_bookings_view_model.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 
 import '../model/user_model.dart';
-
 import '../view/my_bookings/my_booking.dart'; // Import the MyBookings page
 
 class RidesBookingFormViewModel extends ChangeNotifier {
@@ -23,16 +22,17 @@ class RidesBookingFormViewModel extends ChangeNotifier {
   double amountToPay = 0.0;
   bool isLoading = false;
   final UserViewModel userViewModel = UserViewModel();
-  final MyBookingsViewModel myBookingsViewModel= MyBookingsViewModel();
+  final MyBookingsViewModel myBookingsViewModel = MyBookingsViewModel();
+
   void setLoading(bool value) {
     isLoading = value;
     notifyListeners();
   }
 
-  Future<void> makePayment() async {
+  Future<void> makePayment(String bookingId) async {
     try {
       print(amountToPay);
-      paymentIntent = await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED');
+      paymentIntent = await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', bookingId);
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent!['client_secret'],
@@ -56,7 +56,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  displayPaymentSheet() async {
+  Future<void> displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet();
       Utils.successMessage("Paid successfully", context);
@@ -76,12 +76,13 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> createPaymentIntent(String amount, String currency) async {
+  Future<Map<String, dynamic>> createPaymentIntent(String amount, String currency, String bookingId) async {
     try {
       Map<String, dynamic> body = {
         'amount': ((int.parse(amount)) * 100).toString(),
         'currency': currency,
         'payment_method_types[]': 'card',
+        'metadata[booking_id]': bookingId
       };
       print(body);
       var secretKey = dotenv.env['STRIPE_SECRET_KEY'];
@@ -122,45 +123,44 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         Uri.parse(Appurl.createBooking),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': '$token', // Ensure 'Bearer' is included
+          'Authorization': '$token',
         },
         body: jsonEncode(bookingData),
       );
-      if(kDebugMode)
-      {
+
+      if (kDebugMode) {
         print('Request Body: ${jsonEncode(bookingData)}');
         print('Response Status Code: ${response.statusCode}');
         print('Response Body: ${response.body}');
       }
 
-
       if (response.statusCode == 201) {
-        if(kDebugMode){
+        if (kDebugMode) {
           print('Booking request sent successfully.');
-
         }
+        Map<String, dynamic> bookingResponse = jsonDecode(response.body);
+        String bookingId = bookingResponse['id']; // Assuming 'id' is the booking ID in the response
+        await makePayment(bookingId);
         setLoading(false);
-        makePayment();
+
         myBookingsViewModel.fetchUserBookings();
         return jsonDecode(response.body);
       } else {
-        if(kDebugMode){
+        if (kDebugMode) {
+          setLoading(false);
           print('Error creating booking: HTTP ${response.statusCode}');
-
         }
         return {'status': 'error', 'message': 'HTTP ${response.statusCode}', 'response': response.body};
       }
     } catch (err) {
-      if(kDebugMode){
+      if (kDebugMode) {
         print('Error creating booking: ${err.toString()}');
-
       }
       return {'status': 'error', 'message': err.toString()};
     }
   }
 
-  Future<void> getTravelTime(
-      double startLat, double startLng, double endLat, double endLng) async {
+  Future<void> getTravelTime(double startLat, double startLng, double endLat, double endLng) async {
     final apiKey = dotenv.env['GOOGLE_API_KEY'];
     final url =
         'https://maps.googleapis.com/maps/api/directions/json?origin=$startLat,$startLng&destination=$endLat,$endLng&key=$apiKey';
@@ -173,9 +173,8 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         print(data['routes']);
         possibleTime = leg['duration']['text'].toString();
         distanceInKm = leg['distance']['text'].toString();
-        if(kDebugMode){
+        if (kDebugMode) {
           print('Travel time: $possibleTime   distance $distanceInKm');
-
         }
         notifyListeners();
       } else {

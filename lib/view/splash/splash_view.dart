@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:royal_falcon/config/app_notification.dart';
 import 'package:royal_falcon/view/login/login.dart';
 import 'package:royal_falcon/view_model/splash_services/splash_services.dart';
 
@@ -11,9 +12,18 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   SplashServices splashServices = SplashServices();
+  // AppNotifications appNotifications = AppNotifications();
 
   Future<bool> checkAuth() async {
     return await splashServices.checkAuthentication();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // appNotifications.requestNotificationsPermissions();
+    // appNotifications.foregroundMessage();
   }
 
   @override

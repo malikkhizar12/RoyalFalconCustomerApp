@@ -9,7 +9,6 @@ import 'package:search_map_place_updated/search_map_place_updated.dart';
 
 import '../../utils/utils/utils.dart';
 import '../widgets/appbarcustom.dart';
-
 class RidesBookingForm extends StatefulWidget {
   final double price;
   final String id;
@@ -276,7 +275,9 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                     children: [
                                       Text(
                                         "Booking Type: ",
-                                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.sp),
                                       ),
                                       SizedBox(height: 8.w),
                                       Container(
@@ -411,32 +412,32 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 borderRadius: BorderRadius.circular(15.r),
                                 border: Border.all(color: Colors.grey),
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
                               child: SearchMapPlaceWidget(
-                                  hasClearButton: true,
-                                  iconColor: Colors.grey,
-                                  placeType: PlaceType.address,
-                                  bgColor: Color(0xFF1C1F23),
-                                  textColor: Colors.white,
-                                  placeholder: "Search Location",
-                                  apiKey: googleMapApiKey,
-                                  onSelected: (Place place) async {
-                                    Geolocation? pickUpLocation = await place.geolocation;
-                                    setState(() {
-                                      pickUpLatitude = pickUpLocation?.coordinates.latitude;
-                                      pickUpLongitude = pickUpLocation?.coordinates.longitude;
-                                      pickupLocationName = place.description ?? '';
-                                    });
-                                    if (dropOffLatitude != null || dropOffLongitude != null) {
-                                      model.getTravelTime(
-                                          pickUpLatitude!,
-                                          pickUpLongitude!,
-                                          dropOffLatitude!,
-                                          dropOffLongitude!);
-                                    }
-                                  }),
+                                hasClearButton: true,
+                                iconColor: Colors.grey,
+                                placeType: PlaceType.address,
+                                bgColor: Color(0xFF1C1F23),
+                                textColor: Colors.white,
+                                placeholder: "Search Location",
+                                apiKey: googleMapApiKey,
+                                onSelected: (Place place) async {
+                                  Geolocation? pickUpLocation = await place.geolocation;
+                                  setState(() {
+                                    pickUpLatitude = pickUpLocation?.coordinates.latitude;
+                                    pickUpLongitude = pickUpLocation?.coordinates.longitude;
+                                    pickupLocationName = place.description ?? '';
+                                  });
+                                  if (dropOffLatitude != null || dropOffLongitude != null) {
+                                    model.getTravelTime(
+                                      pickUpLatitude!,
+                                      pickUpLongitude!,
+                                      dropOffLatitude!,
+                                      dropOffLongitude!,
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                             SizedBox(height: 16.h),
                             Row(
@@ -464,32 +465,32 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 borderRadius: BorderRadius.circular(15.r),
                                 border: Border.all(color: Colors.grey),
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
                               child: SearchMapPlaceWidget(
-                                  hasClearButton: true,
-                                  iconColor: Colors.grey,
-                                  placeType: PlaceType.address,
-                                  bgColor: Color(0xFF1C1F23),
-                                  textColor: Colors.white,
-                                  placeholder: "Search Location",
-                                  apiKey: googleMapApiKey,
-                                  onSelected: (Place place) async {
-                                    Geolocation? dropOffLocation = await place.geolocation;
-                                    setState(() {
-                                      dropOffLatitude = dropOffLocation?.coordinates.latitude;
-                                      dropOffLongitude = dropOffLocation?.coordinates.longitude;
-                                      dropOffLocationName = place.description ?? '';
-                                    });
-                                    if (pickUpLatitude != null || pickUpLongitude != null) {
-                                      model.getTravelTime(
-                                          pickUpLatitude!,
-                                          pickUpLongitude!,
-                                          dropOffLatitude!,
-                                          dropOffLongitude!);
-                                    }
-                                  }),
+                                hasClearButton: true,
+                                iconColor: Colors.grey,
+                                placeType: PlaceType.address,
+                                bgColor: Color(0xFF1C1F23),
+                                textColor: Colors.white,
+                                placeholder: "Search Location",
+                                apiKey: googleMapApiKey,
+                                onSelected: (Place place) async {
+                                  Geolocation? dropOffLocation = await place.geolocation;
+                                  setState(() {
+                                    dropOffLatitude = dropOffLocation?.coordinates.latitude;
+                                    dropOffLongitude = dropOffLocation?.coordinates.longitude;
+                                    dropOffLocationName = place.description ?? '';
+                                  });
+                                  if (pickUpLatitude != null || pickUpLongitude != null) {
+                                    model.getTravelTime(
+                                      pickUpLatitude!,
+                                      pickUpLongitude!,
+                                      dropOffLatitude!,
+                                      dropOffLongitude!,
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                             SizedBox(height: 16.h),
                             Row(
@@ -552,11 +553,14 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 ),
                               ),
                               child: buildSummarySection(
-                                  context,
-                                  model.distanceInKm.toString(),
-                                  model.possibleTime.toString(), () {
-                                sendBookingData(context);
-                              }),
+                                context,
+                                model.distanceInKm.toString(),
+                                model.possibleTime.toString(),
+                                    () {
+                                  sendBookingData(context);
+                                },
+                              ),
+
                             ),
                           ],
                         ),
@@ -581,8 +585,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     );
   }
 
-  Widget buildSummarySection(
-      BuildContext context, String distanceValue, String possibleTime, onTap) {
+  Widget buildSummarySection(BuildContext context, String distanceValue, String possibleTime, void Function()? onTap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
