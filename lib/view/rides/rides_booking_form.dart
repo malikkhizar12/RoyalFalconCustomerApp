@@ -10,6 +10,7 @@ import 'package:search_map_place_updated/search_map_place_updated.dart';
 
 import '../../utils/utils/utils.dart';
 import '../widgets/appbarcustom.dart';
+
 class RidesBookingForm extends StatefulWidget {
   final double price;
   final String id;
@@ -38,8 +39,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController flightNoController = TextEditingController();
   final TextEditingController flightTimeController = TextEditingController();
-  final TextEditingController specialRequestController = TextEditingController();
-
+  final TextEditingController specialRequestController =
+      TextEditingController();
 
   DateTime? selectedDateTime;
   DateTime? selectedFlightDateTime;
@@ -152,7 +153,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     if (pickedFlightDateTime != null) {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedFlightDateTime ?? DateTime.now()),
+        initialTime:
+            TimeOfDay.fromDateTime(selectedFlightDateTime ?? DateTime.now()),
         builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
@@ -178,7 +180,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
             pickedTime.hour,
             pickedTime.minute,
           );
-          flightTimeController.text = DateFormat.yMd().add_jm().format(selectedFlightDateTime!);
+          flightTimeController.text =
+              DateFormat.yMd().add_jm().format(selectedFlightDateTime!);
         });
       }
     }
@@ -232,7 +235,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       bookingData['flightTiming'] = flightTimeController.text;
     }
 
-    Provider.of<RidesBookingFormViewModel>(context, listen: false).createBooking(bookingData);
+    Provider.of<RidesBookingFormViewModel>(context, listen: false)
+        .createBooking(bookingData);
   }
 
   @override
@@ -276,7 +280,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Booking Type: ",
@@ -286,20 +291,24 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                       ),
                                       SizedBox(height: 8.w),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16.w),
                                         height: 60.h,
                                         width: 200.w,
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.grey),
+                                          border:
+                                              Border.all(color: Colors.grey),
                                           color: Colors.transparent,
-                                          borderRadius: BorderRadius.circular(15),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                         ),
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<bool>(
                                             value: isFromAirportBooking,
                                             onChanged: (newValue) {
                                               setState(() {
-                                                isFromAirportBooking = newValue!;
+                                                isFromAirportBooking =
+                                                    newValue!;
                                               });
                                             },
                                             dropdownColor: Color(0xFF1C1F23),
@@ -430,13 +439,18 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 placeholder: "Search Location",
                                 apiKey: googleMapApiKey,
                                 onSelected: (Place place) async {
-                                  Geolocation? pickUpLocation = await place.geolocation;
+                                  Geolocation? pickUpLocation =
+                                      await place.geolocation;
                                   setState(() {
-                                    pickUpLatitude = pickUpLocation?.coordinates.latitude;
-                                    pickUpLongitude = pickUpLocation?.coordinates.longitude;
-                                    pickupLocationName = place.description ?? '';
+                                    pickUpLatitude =
+                                        pickUpLocation?.coordinates.latitude;
+                                    pickUpLongitude =
+                                        pickUpLocation?.coordinates.longitude;
+                                    pickupLocationName =
+                                        place.description ?? '';
                                   });
-                                  if (dropOffLatitude != null || dropOffLongitude != null) {
+                                  if (dropOffLatitude != null ||
+                                      dropOffLongitude != null) {
                                     model.getTravelTime(
                                       pickUpLatitude!,
                                       pickUpLongitude!,
@@ -564,14 +578,11 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 ),
                               ),
                               child: buildSummarySection(
-                                context,
-                                model.distanceInKm.toString(),
-                                model.possibleTime.toString(),
-                                    () {
-                                  sendBookingData(context);
-                                },
-                              ),
-
+                                  context,
+                                  model.distanceInKm.toString(),
+                                  model.possibleTime.toString(), () {
+                                sendBookingData(context);
+                              }, model.isLoading),
                             ),
                           ],
                         ),
@@ -596,7 +607,8 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     );
   }
 
-  Widget buildSummarySection(BuildContext context, String distanceValue, String possibleTime, void Function()? onTap) {
+  Widget buildSummarySection(BuildContext context, String distanceValue,
+      String possibleTime, void Function()? onTap, bool isLoading) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -681,14 +693,18 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                 vertical: 10.h,
               ),
             ),
-            child: isLoading ? CircularProgressIndicator(color: ColorConstants.kWhiteColor,) : Text(
-              'Book Now',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14.sp,
-                color: Colors.black,
-              ),
-            ),
+            child: isLoading
+                ? CircularProgressIndicator(
+                    color: ColorConstants.kWhiteColor,
+                  )
+                : Text(
+                    'Book Now',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                      color: Colors.black,
+                    ),
+                  ),
           ),
         ),
       ],

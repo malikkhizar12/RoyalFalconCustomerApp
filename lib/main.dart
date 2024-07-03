@@ -60,7 +60,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => VehicleViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileScreenViewModel()),
         ChangeNotifierProvider(create: (_) => MapsViewModel()),
-        ChangeNotifierProvider(create: (_) => MyBookingsViewModel()), // Add this line
+        ChangeNotifierProvider(
+            create: (_) => MyBookingsViewModel()), // Add this line
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
