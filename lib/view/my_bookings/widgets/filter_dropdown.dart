@@ -1,8 +1,7 @@
-// filter_dropdown.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class FilterDropdown extends StatefulWidget {
+class FilterDropdown extends StatelessWidget {
   final String selectedFilter;
   final ValueChanged<String?> onChanged;
 
@@ -12,11 +11,6 @@ class FilterDropdown extends StatefulWidget {
     required this.onChanged,
   }) : super(key: key);
 
-  @override
-  _FilterDropdownState createState() => _FilterDropdownState();
-}
-
-class _FilterDropdownState extends State<FilterDropdown> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,8 +23,8 @@ class _FilterDropdownState extends State<FilterDropdown> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: widget.selectedFilter,
-          onChanged: widget.onChanged,
+          value: selectedFilter,
+          onChanged: onChanged,
           dropdownColor: Color(0xFFFFBC07),
           icon: Icon(
             Icons.arrow_drop_down,
@@ -45,16 +39,9 @@ class _FilterDropdownState extends State<FilterDropdown> {
               ),
             ),
             DropdownMenuItem<String>(
-              value: 'Approved',
+              value: 'Payment Pending',
               child: Text(
-                'Approved',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            DropdownMenuItem<String>(
-              value: 'Disapproved',
-              child: Text(
-                'Disapproved',
+                'Payment Pending',
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -62,6 +49,27 @@ class _FilterDropdownState extends State<FilterDropdown> {
               value: 'Pending',
               child: Text(
                 'Pending',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            DropdownMenuItem<String>(
+              value: 'Assigned',
+              child: Text(
+                'Assigned',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            DropdownMenuItem<String>(
+              value: 'Completed',
+              child: Text(
+                'Completed',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            DropdownMenuItem<String>(
+              value: 'Rejected',
+              child: Text(
+                'Rejected',
                 style: TextStyle(color: Colors.white),
               ),
             ),

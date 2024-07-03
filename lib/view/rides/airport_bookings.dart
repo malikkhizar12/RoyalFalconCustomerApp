@@ -5,10 +5,8 @@ import 'package:royal_falcon/view/rides/ride_card_dubai.dart';
 import '../../utils/colors.dart';
 import '../widgets/appbarcustom.dart';
 import 'location_buttons.dart';
-import 'models/abudhabi_list_model.dart';
-import 'models/dubai_list_model.dart';
-import '../../view_model/airport_animation_view_model.dart';
 import 'rides_booking_form.dart';
+import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 
 class AirportBookings extends StatefulWidget {
   @override
@@ -18,30 +16,24 @@ class AirportBookings extends StatefulWidget {
 class _AirportBookingsState extends State<AirportBookings> {
   String selectedLocation = 'Dubai';
 
-  List<dynamic> getSelectedRidesList() {
-    return selectedLocation == 'Dubai' ? DubaiListModel.getDubaiRides() : AbuDhabiListModel.getAbuDhabiRides();
-  }
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AirportAnimationViewModel>(context, listen: false).startAnimation();
+      Provider.of<VehicleViewModel>(context, listen: false).fetchVehicleCategories(context);
     });
   }
 
-  void navigateToBookingForm(BuildContext context, String price) {
-    double parsedPrice = double.parse(price.split(' ')[0]); // Extract numeric value
+  void navigateToBookingForm(BuildContext context, String price, String id) {
+    double parsedPrice = double.parse(price); // Extract numeric value
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RidesBookingForm(price: parsedPrice, isFromAirportBooking: true, id: '',),
+        builder: (context) => RidesBookingForm(price: parsedPrice, isFromAirportBooking: true, id: id),
       ),
     );
-
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,29 +76,37 @@ class _AirportBookingsState extends State<AirportBookings> {
           ),
           const SizedBox(height: 16),
           Expanded(
-            child: Consumer<AirportAnimationViewModel>(
-              builder: (context, airportAnimationViewModel, child) {
+            child: Consumer<VehicleViewModel>(
+              builder: (context, vehicleViewModel, child) {
+                if (vehicleViewModel.loading) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                List<dynamic> selectedRidesList = selectedLocation == 'Dubai'
+                    ? vehicleViewModel.dubaiVehicles
+                    : vehicleViewModel.abuDhabiVehicles;
+
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: getSelectedRidesList().length,
+                  itemCount: selectedRidesList.length,
                   itemBuilder: (context, index) {
-                    final package = getSelectedRidesList()[index];
+                    final package = selectedRidesList[index];
                     return AnimatedContainer(
                       duration: Duration(milliseconds: 400 + (index * 250)),
                       curve: Curves.decelerate,
                       transform: Matrix4.translationValues(
-                        airportAnimationViewModel.myAnimation ? 0 : 400,
+                        vehicleViewModel.loading ? 400 : 0,
                         0,
                         0,
                       ),
                       child: selectedLocation == 'Dubai'
                           ? RideCardDubai(
                         package: package,
-                        onTap: () => navigateToBookingForm(context, package.price),
+                        onTap: () => navigateToBookingForm(context, package['minimumAmount'].toString(), package['_id']),
                       )
                           : RideCardAbudhabi(
                         package: package,
-                        onTap: () => navigateToBookingForm(context, package.price),
+                        onTap: () => navigateToBookingForm(context, package['minimumAmount'].toString(), package['_id']),
                       ),
                     );
                   },

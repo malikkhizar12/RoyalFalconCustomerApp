@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/starRating.dart';
-import 'models/abudhabi_list_model.dart';
 
 class RideCardAbudhabi extends StatelessWidget {
-  final AbuDhabiListModel package;
+  final dynamic package;
   final VoidCallback onTap;
 
   const RideCardAbudhabi({
@@ -29,11 +27,18 @@ class RideCardAbudhabi extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      package.imageUrl,
+                    child: Container(
                       width: 80,
                       height: 80,
-                      fit: BoxFit.cover,
+                      child: Image.network(
+                        package['categoryVehicleImage'],
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.fill,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.error, color: Colors.red);
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -42,7 +47,7 @@ class RideCardAbudhabi extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          package.name,
+                          package['name'],
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -50,10 +55,8 @@ class RideCardAbudhabi extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        const StarRating(rating: 4),
-                        const SizedBox(height: 4),
                         Text(
-                          '${package.starRating}/5',
+                          'No of People: ${package['noOfPeople']}',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -61,7 +64,7 @@ class RideCardAbudhabi extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${package.totalReviews} Reviews',
+                          'No of Baggage: ${package['noOfBaggage']}',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -76,11 +79,11 @@ class RideCardAbudhabi extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 child: Text(
-                  package.price,
+                  '${package['minimumAmount']} AED',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Color(0xFFFFBC07),
                   ),
                 ),
               ),
