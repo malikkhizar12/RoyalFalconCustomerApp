@@ -10,7 +10,6 @@ import 'package:search_map_place_updated/search_map_place_updated.dart';
 
 import '../../utils/utils/utils.dart';
 import '../widgets/appbarcustom.dart';
-
 class RidesBookingForm extends StatefulWidget {
   final double price;
   final String id;
@@ -28,9 +27,8 @@ class RidesBookingForm extends StatefulWidget {
 }
 
 class _RidesBookingFormState extends State<RidesBookingForm> {
-  bool isFromAirportBooking = false; // Track the selected booking type
+  bool isFromAirportBooking = false;
 
-  // Controllers for text input fields
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passengersController = TextEditingController();
@@ -39,10 +37,12 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController flightNoController = TextEditingController();
-  final TextEditingController specialRequestController =
-      TextEditingController();
+  final TextEditingController flightTimeController = TextEditingController();
+  final TextEditingController specialRequestController = TextEditingController();
+
 
   DateTime? selectedDateTime;
+  DateTime? selectedFlightDateTime;
   double? pickUpLatitude, pickUpLongitude, dropOffLatitude, dropOffLongitude;
   String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
   String pickupLocationName = '';
@@ -63,6 +63,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     pickupTimeController.dispose();
     contactNumberController.dispose();
     flightNoController.dispose();
+    flightTimeController.dispose();
     specialRequestController.dispose();
     cityController.dispose();
     super.dispose();
@@ -126,6 +127,63 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     }
   }
 
+  Future<void> _selectFlightDateAndTime(BuildContext context) async {
+    final DateTime? pickedFlightDateTime = await showDatePicker(
+      context: context,
+      initialDate: selectedFlightDateTime ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: const Color(0xFFFFBC07),
+              onPrimary: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedFlightDateTime != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedFlightDateTime ?? DateTime.now()),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: ColorScheme.light(
+                primary: const Color(0xFFFFBC07),
+                onPrimary: Colors.black,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(),
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          selectedFlightDateTime = DateTime(
+            pickedFlightDateTime.year,
+            pickedFlightDateTime.month,
+            pickedFlightDateTime.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+          flightTimeController.text = DateFormat.yMd().add_jm().format(selectedFlightDateTime!);
+        });
+      }
+    }
+  }
+
   void sendBookingData(BuildContext context) {
     final String name = nameController.text;
     final vehicleId = widget.id;
@@ -169,8 +227,12 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       'bookingAmount': widget.price
     };
 
-    Provider.of<RidesBookingFormViewModel>(context, listen: false)
-        .createBooking(bookingData);
+    if (isFromAirportBooking) {
+      bookingData['flightNo'] = flightNoController.text;
+      bookingData['flightTiming'] = flightTimeController.text;
+    }
+
+    Provider.of<RidesBookingFormViewModel>(context, listen: false).createBooking(bookingData);
   }
 
   @override
@@ -214,8 +276,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Booking Type: ",
@@ -225,24 +286,20 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                       ),
                                       SizedBox(height: 8.w),
                                       Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w),
+                                        padding: EdgeInsets.symmetric(horizontal: 16.w),
                                         height: 60.h,
                                         width: 200.w,
                                         decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.grey),
+                                          border: Border.all(color: Colors.grey),
                                           color: Colors.transparent,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                          borderRadius: BorderRadius.circular(15),
                                         ),
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<bool>(
                                             value: isFromAirportBooking,
                                             onChanged: (newValue) {
                                               setState(() {
-                                                isFromAirportBooking =
-                                                    newValue!;
+                                                isFromAirportBooking = newValue!;
                                               });
                                             },
                                             dropdownColor: Color(0xFF1C1F23),
@@ -363,37 +420,32 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 borderRadius: BorderRadius.circular(15.r),
                                 border: Border.all(color: Colors.grey),
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
                               child: SearchMapPlaceWidget(
-                                  hasClearButton: true,
-                                  iconColor: Colors.grey,
-                                  placeType: PlaceType.address,
-                                  bgColor: Color(0xFF1C1F23),
-                                  textColor: Colors.white,
-                                  placeholder: "Search Location",
-                                  apiKey: googleMapApiKey,
-                                  onSelected: (Place place) async {
-                                    Geolocation? pickUpLocation =
-                                        await place.geolocation;
-                                    setState(() {
-                                      pickUpLatitude =
-                                          pickUpLocation?.coordinates.latitude;
-                                      pickUpLongitude =
-                                          pickUpLocation?.coordinates.longitude;
-                                      pickupLocationName =
-                                          place.description ?? '';
-                                    });
-                                    if (dropOffLatitude != null ||
-                                        dropOffLongitude != null) {
-                                      model.getTravelTime(
-                                          pickUpLatitude!,
-                                          pickUpLongitude!,
-                                          dropOffLatitude!,
-                                          dropOffLongitude!);
-                                    }
-                                  }),
+                                hasClearButton: true,
+                                iconColor: Colors.grey,
+                                placeType: PlaceType.address,
+                                bgColor: Color(0xFF1C1F23),
+                                textColor: Colors.white,
+                                placeholder: "Search Location",
+                                apiKey: googleMapApiKey,
+                                onSelected: (Place place) async {
+                                  Geolocation? pickUpLocation = await place.geolocation;
+                                  setState(() {
+                                    pickUpLatitude = pickUpLocation?.coordinates.latitude;
+                                    pickUpLongitude = pickUpLocation?.coordinates.longitude;
+                                    pickupLocationName = place.description ?? '';
+                                  });
+                                  if (dropOffLatitude != null || dropOffLongitude != null) {
+                                    model.getTravelTime(
+                                      pickUpLatitude!,
+                                      pickUpLongitude!,
+                                      dropOffLatitude!,
+                                      dropOffLongitude!,
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                             SizedBox(height: 16.h),
                             Row(
@@ -421,9 +473,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 borderRadius: BorderRadius.circular(15.r),
                                 border: Border.all(color: Colors.grey),
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
                               child: SearchMapPlaceWidget(
                                   hasClearButton: true,
                                   iconColor: Colors.grey,
@@ -478,6 +528,29 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 16.h),
+                            Visibility(
+                              visible: isFromAirportBooking,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _selectFlightDateAndTime(context);
+                                      },
+                                      child: AbsorbPointer(
+                                        child: FormTextField(
+                                          label: "Flight Time:",
+                                          hint: 'Select Flight Date and Time',
+                                          mandatory: true,
+                                          controller: flightTimeController,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             SizedBox(height: 20.h),
                             Container(
                               height: MediaQuery.of(context).size.height * 0.28,
@@ -491,12 +564,14 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 ),
                               ),
                               child: buildSummarySection(
-                                  context,
-                                  model.distanceInKm.toString(),
-                                  model.possibleTime.toString(), () {
-                                sendBookingData(
-                                    context); // Updated to use sendBookingData method
-                              },model.isLoading),
+                                context,
+                                model.distanceInKm.toString(),
+                                model.possibleTime.toString(),
+                                    () {
+                                  sendBookingData(context);
+                                },
+                              ),
+
                             ),
                           ],
                         ),
@@ -506,24 +581,22 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                 ],
               ),
             ),
-            // if (model.isLoading)
-            //   Container(
-            //     color: Colors.black54,
-            //     child: Center(
-            //       child: CircularProgressIndicator(
-            //         color: Color(0xFFFFBC07),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            if (model.isLoading)
+              Container(
+                color: Colors.black54,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFFFFBC07),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget buildSummarySection(
-      BuildContext context, String distanceValue, String possibleTime, onTap,bool isLoading) {
+  Widget buildSummarySection(BuildContext context, String distanceValue, String possibleTime, void Function()? onTap) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
