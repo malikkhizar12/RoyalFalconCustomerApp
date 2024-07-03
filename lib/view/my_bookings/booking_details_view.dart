@@ -41,7 +41,6 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MyBookingsViewModel>(context);
-    print(widget.booking.id);
 
     String formattedDate =
         DateFormat('MMMM d').format(widget.booking.guests.first.pickUpDateTime);
