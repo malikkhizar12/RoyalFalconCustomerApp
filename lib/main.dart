@@ -22,7 +22,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: '.env');
-  Stripe.publishableKey= dotenv.env["STRIPE_PUBLISH_KEY"]!;
+  Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
   await Stripe.instance.applySettings();
   await Hive.initFlutter();
   await Hive.openBox('vehicleCategories');
