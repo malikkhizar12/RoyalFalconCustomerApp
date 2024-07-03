@@ -30,7 +30,8 @@ class _MyBookingsState extends State<MyBookings> {
               return RefreshIndicator(
                 displacement: 40,
                 color: Color(0xFFFFBC07),
-                onRefresh: viewModel.fetchUserBookings, // Trigger API call on pull-to-refresh
+                onRefresh: viewModel
+                    .fetchUserBookings, // Trigger API call on pull-to-refresh
                 child: Column(
                   children: [
                     const AppbarCustom(title: 'My Bookings'),
@@ -63,146 +64,194 @@ class _MyBookingsState extends State<MyBookings> {
                             Expanded(
                               child: viewModel.isLoading
                                   ? Center(
-                                child: CircularProgressIndicator(
-                                  color: Color(0xFFFFBC07),
-                                ),
-                              )
+                                      child: CircularProgressIndicator(
+                                        color: Color(0xFFFFBC07),
+                                      ),
+                                    )
                                   : viewModel.errorMessage != null
-                                  ? Center(
-                                child: Text('Error: ${viewModel.errorMessage}'),
-                              )
-                                  : viewModel.filteredBookings.isEmpty
-                                  ? Center(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                  height: 300.h,
-                                  width: double.infinity,
-                                  color: Color(0xFF595959),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'No bookings Yet',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 24.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      SizedBox(height: 20.h),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => Rides()),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xFFFFBC07), // Background color
-                                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10.r),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'Book your first ride',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18.sp,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                                  : ListView.builder(
-                                itemCount: viewModel.filteredBookings.length,
-                                itemBuilder: (context, index) {
-                                  Bookings booking = viewModel.filteredBookings[index];
-                                  Guest guest = booking.guests.first;
-
-                                  return Card(
-                                    color: Color(0xFF595959),
-                                    margin: EdgeInsets.symmetric(vertical: 8.h),
-                                    child: ListTile(
-                                      leading: guest.vehicleCategoryId != null
-                                          ? Image.network(
-                                        guest.vehicleCategoryId!.categoryVehicleImage,
-                                        width: 80.w,
-                                        height: 90.h,
-                                        fit: BoxFit.cover,
-                                      )
-                                          : Container(
-                                        width: 80.w,
-                                        height: 90.h,
-                                        color: Colors.white,
-                                        child: Image.asset('images/lexus300.png'),
-                                      ),
-                                      title: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            guest.vehicleCategoryId?.name ?? 'Vehicle',
-                                            style: TextStyle(
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${guest.noOfBaggage} Baggage',
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          SizedBox(height: 4.h),
-                                          Text(
-                                            '${guest.noOfPeople} Persons',
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      trailing: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          if (booking.status.toLowerCase() == 'payment pending')
-                                            Text(
-                                              'Pay Now >',
-                                              style: TextStyle(
-                                                color: Color(0xFFFFBC07),
-                                                fontSize: 14.sp,
+                                      ? Center(
+                                          child: Text(
+                                              'Error: ${viewModel.errorMessage}'),
+                                        )
+                                      : viewModel.filteredBookings.isEmpty
+                                          ? Center(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10.w),
+                                                height: 300.h,
+                                                width: double.infinity,
+                                                color: Color(0xFF595959),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'No bookings Yet',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 24.sp,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                    SizedBox(height: 20.h),
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      Rides()),
+                                                        );
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: Color(
+                                                            0xFFFFBC07), // Background color
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    20.w,
+                                                                vertical: 15.h),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.r),
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        'Book your first ride',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 18.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
+                                            )
+                                          : ListView.builder(
+                                              itemCount: viewModel
+                                                  .filteredBookings.length,
+                                              itemBuilder: (context, index) {
+                                                Bookings booking = viewModel
+                                                    .filteredBookings[index];
+                                                Guest guest =
+                                                    booking.guests.first;
+
+                                                return Card(
+                                                  color: Color(0xFF595959),
+                                                  margin: EdgeInsets.symmetric(
+                                                      vertical: 8.h),
+                                                  child: ListTile(
+                                                    leading:
+                                                        guest.vehicleCategoryId !=
+                                                                null
+                                                            ? Image.network(
+                                                                guest
+                                                                    .vehicleCategoryId!
+                                                                    .categoryVehicleImage,
+                                                                width: 80.w,
+                                                                height: 90.h,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                            : Container(
+                                                                width: 80.w,
+                                                                height: 90.h,
+                                                                color: Colors
+                                                                    .white,
+                                                                child: Image.asset(
+                                                                    'images/lexus300.png'),
+                                                              ),
+                                                    title: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          guest.vehicleCategoryId
+                                                                  ?.name ??
+                                                              'Vehicle',
+                                                          style: TextStyle(
+                                                            fontSize: 16.sp,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '${guest.noOfBaggage} Baggage',
+                                                          style: TextStyle(
+                                                            fontSize: 14.sp,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 4.h),
+                                                        Text(
+                                                          '${guest.noOfPeople} Persons',
+                                                          style: TextStyle(
+                                                            fontSize: 14.sp,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    trailing: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        if (booking.status
+                                                                .toLowerCase() ==
+                                                            'payment pending')
+                                                          Text(
+                                                            'Pay Now >',
+                                                            style: TextStyle(
+                                                              color: Color(
+                                                                  0xFFFFBC07),
+                                                              fontSize: 14.sp,
+                                                            ),
+                                                          ),
+                                                        SizedBox(height: 4.h),
+                                                        Text(
+                                                          booking.status,
+                                                          style: TextStyle(
+                                                            color: booking
+                                                                        .status
+                                                                        .toLowerCase() ==
+                                                                    'pending'
+                                                                ? Colors.orange
+                                                                : Colors.green,
+                                                            fontSize: 14.sp,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              BookingDetailsPage(
+                                                                  booking:
+                                                                      booking),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                          SizedBox(height: 4.h),
-                                          Text(
-                                            booking.status,
-                                            style: TextStyle(
-                                              color: booking.status.toLowerCase() == 'pending'
-                                                  ? Colors.orange
-                                                  : Colors.green,
-                                              fontSize: 14.sp,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => BookingDetailsPage(booking: booking),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
                             ),
                             if (viewModel.currentPage < viewModel.totalPages)
                               Padding(
