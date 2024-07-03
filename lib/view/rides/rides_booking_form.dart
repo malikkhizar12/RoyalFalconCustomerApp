@@ -688,6 +688,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(13.0),
               ),
+              minimumSize: Size(200.w, 50.h),
               padding: EdgeInsets.symmetric(
                 horizontal: 30.w,
                 vertical: 10.h,
