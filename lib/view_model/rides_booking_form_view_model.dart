@@ -76,7 +76,8 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> createPaymentIntent(String amount, String currency, String bookingId) async {
+  createPaymentIntent(String amount, String currency, String bookingId) async {
+
     try {
       Map<String, dynamic> body = {
         'amount': ((int.parse(amount)) * 100).toString(),
@@ -103,7 +104,8 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> createBooking(Map<String, dynamic> bookingData) async {
+  Future<Map<String, dynamic>> createBooking(
+      Map<String, dynamic> bookingData) async {
     try {
       setLoading(true);
       UserModel? userModel = await userViewModel.getUser();
@@ -142,13 +144,21 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         String bookingId = bookingResponse['bookingId']; // Assuming 'bookingId' is the correct key
         await makePayment(bookingId);
         setLoading(false);
+        var data = jsonDecode(response.body);
+        print(data['bookingId']);
+        makePayment(data['bookingId']);
+        return jsonDecode(response.body);
 
-        myBookingsViewModel.fetchUserBookings();
-        return bookingResponse;
+//         myBookingsViewModel.fetchUserBookings();
+//         return bookingResponse;
       } else {
         setLoading(false);
         print('Error creating booking: HTTP ${response.statusCode}');
-        return {'status': 'error', 'message': 'HTTP ${response.statusCode}', 'response': response.body};
+        return {
+          'status': 'error',
+          'message': 'HTTP ${response.statusCode}',
+          'response': response.body
+        };
       }
     } catch (err) {
       setLoading(false);
