@@ -41,6 +41,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MyBookingsViewModel>(context);
+    print(widget.booking.id);
 
     String formattedDate = DateFormat('MMMM d').format(widget.booking.guests.first.pickUpDateTime);
     String formattedTime = DateFormat('h:mm a').format(widget.booking.guests.first.pickUpDateTime);
@@ -125,6 +126,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   // Add your payment logic here
+                                  viewModel.makePayment(context, widget.booking.id, widget.booking.guests.first.vehicleCategoryId!.minimumAmount);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFFFFBC07), // Background color
