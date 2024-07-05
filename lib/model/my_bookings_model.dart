@@ -20,6 +20,8 @@ class Bookings extends HiveObject {
   final DateTime createdAt;
   @HiveField(7)
   final DateTime updatedAt;
+  @HiveField(8)
+  final Driver driver; // New field
 
   Bookings({
     required this.id,
@@ -30,6 +32,7 @@ class Bookings extends HiveObject {
     required this.status,
     required this.createdAt,
     required this.updatedAt,
+    required this.driver, // New field
   });
 
   factory Bookings.fromJson(Map<String, dynamic> json) {
@@ -42,6 +45,7 @@ class Bookings extends HiveObject {
       status: json['status'] ?? '',
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
+      driver: Driver.fromJson(json['driverId'] ?? {}), // New field
     );
   }
 
@@ -55,6 +59,7 @@ class Bookings extends HiveObject {
       'status': status,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'driverId': driver.toJson(), // New field
     };
   }
 }
@@ -244,6 +249,187 @@ class VehicleCategory extends HiveObject {
       'minimumAmount': minimumAmount,
       'categoryVehicleImage': categoryVehicleImage,
       'city': city,
+    };
+  }
+}
+
+@HiveType(typeId: 4)
+class Driver extends HiveObject {
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String name;
+  @HiveField(2)
+  final String email;
+  @HiveField(3)
+  final String phoneNumber;
+  @HiveField(4)
+  final String role;
+  @HiveField(5)
+  final DriverDetails driverDetails;
+
+  Driver({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phoneNumber,
+    required this.role,
+    required this.driverDetails,
+  });
+
+  factory Driver.fromJson(Map<String, dynamic> json) {
+    return Driver(
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
+      role: json['role'] ?? '',
+      driverDetails: DriverDetails.fromJson(json['driverDetails'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'name': name,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'role': role,
+      'driverDetails': driverDetails.toJson(),
+    };
+  }
+}
+
+@HiveType(typeId: 5)
+class DriverDetails extends HiveObject {
+  @HiveField(0)
+  final String licenseNumber;
+  @HiveField(1)
+  final DateTime licenseExpiryDate;
+  @HiveField(2)
+  final String passportNumber;
+  @HiveField(3)
+  final String transaCardPicture;
+  @HiveField(4)
+  final String emiratesIdFront;
+  @HiveField(5)
+  final String emiratesIdBack;
+  @HiveField(6)
+  final String drivingLicensePic;
+  @HiveField(7)
+  final String passportPic;
+  @HiveField(8)
+  final Vehicle attachVehicle;
+
+  DriverDetails({
+    required this.licenseNumber,
+    required this.licenseExpiryDate,
+    required this.passportNumber,
+    required this.transaCardPicture,
+    required this.emiratesIdFront,
+    required this.emiratesIdBack,
+    required this.drivingLicensePic,
+    required this.passportPic,
+    required this.attachVehicle,
+  });
+
+  factory DriverDetails.fromJson(Map<String, dynamic> json) {
+    return DriverDetails(
+      licenseNumber: json['licenseNumber'] ?? '',
+      licenseExpiryDate: DateTime.parse(json['licenseExpiryDate'] ?? DateTime.now().toIso8601String()),
+      passportNumber: json['passportNumber'] ?? '',
+      transaCardPicture: json['transaCardPicture'] ?? '',
+      emiratesIdFront: json['emiratesIdFront'] ?? '',
+      emiratesIdBack: json['emiratesIdBack'] ?? '',
+      drivingLicensePic: json['drivingLicensePic'] ?? '',
+      passportPic: json['passportPic'] ?? '',
+      attachVehicle: Vehicle.fromJson(json['attachVehicle'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'licenseNumber': licenseNumber,
+      'licenseExpiryDate': licenseExpiryDate.toIso8601String(),
+      'passportNumber': passportNumber,
+      'transaCardPicture': transaCardPicture,
+      'emiratesIdFront': emiratesIdFront,
+      'emiratesIdBack': emiratesIdBack,
+      'drivingLicensePic': drivingLicensePic,
+      'passportPic': passportPic,
+      'attachVehicle': attachVehicle.toJson(),
+    };
+  }
+}
+
+@HiveType(typeId: 6)
+class Vehicle extends HiveObject {
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final VehicleCategory vehicleCategory;
+  @HiveField(2)
+  final String plateNo;
+  @HiveField(3)
+  final String chasisNo;
+  @HiveField(4)
+  final DateTime regStartDate;
+  @HiveField(5)
+  final DateTime regEndDate;
+  @HiveField(6)
+  final String insuranceCompany;
+  @HiveField(7)
+  final String color;
+  @HiveField(8)
+  final List<String> registryImages;
+  @HiveField(9)
+  final List<String> vehicleImages;
+  @HiveField(10)
+  final String driver;
+
+  Vehicle({
+    required this.id,
+    required this.vehicleCategory,
+    required this.plateNo,
+    required this.chasisNo,
+    required this.regStartDate,
+    required this.regEndDate,
+    required this.insuranceCompany,
+    required this.color,
+    required this.registryImages,
+    required this.vehicleImages,
+    required this.driver,
+  });
+
+  factory Vehicle.fromJson(Map<String, dynamic> json) {
+    return Vehicle(
+      id: json['_id'] ?? '',
+      vehicleCategory: VehicleCategory.fromJson(json['vehicleCategory'] ?? {}),
+      plateNo: json['plateNo'] ?? '',
+      chasisNo: json['chasisNo'] ?? '',
+      regStartDate: DateTime.parse(json['regStartDate'] ?? DateTime.now().toIso8601String()),
+      regEndDate: DateTime.parse(json['regEndDate'] ?? DateTime.now().toIso8601String()),
+      insuranceCompany: json['insuranceCompany'] ?? '',
+      color: json['color'] ?? '',
+      registryImages: json['registryImages'] != null ? List<String>.from(json['registryImages']) : [],
+      vehicleImages: json['vehicleImages'] != null ? List<String>.from(json['vehicleImages']) : [],
+      driver: json['driver'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'vehicleCategory': vehicleCategory.toJson(),
+      'plateNo': plateNo,
+      'chasisNo': chasisNo,
+      'regStartDate': regStartDate.toIso8601String(),
+      'regEndDate': regEndDate.toIso8601String(),
+      'insuranceCompany': insuranceCompany,
+      'color': color,
+      'registryImages': registryImages,
+      'vehicleImages': vehicleImages,
+      'driver': driver,
     };
   }
 }

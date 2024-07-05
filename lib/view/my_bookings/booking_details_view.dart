@@ -167,6 +167,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFFFFBC07))),
                           SizedBox(height: 8.h),
+
                           Text('No Driver assigned yet',
                               style: TextStyle(
                                   fontSize: 16.sp, color: Colors.white)),
