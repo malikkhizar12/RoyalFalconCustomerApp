@@ -189,7 +189,14 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                           fontSize: 16.sp, color: Colors.white),
                                     ),
                                     Text(
-                                      widget.booking.driver.driverDetails.attachVehicle.vehicleCategory.name,
+                                      widget.booking.driver.driverDetails
+                                          .attachVehicle.vehicleCategory.name,
+                                      style: TextStyle(
+                                          fontSize: 16.sp, color: Colors.white),
+                                    ),
+                                    Text(
+                                      widget.booking.driver.driverDetails
+                                          .attachVehicle.color,
                                       style: TextStyle(
                                           fontSize: 16.sp, color: Colors.white),
                                     ),
