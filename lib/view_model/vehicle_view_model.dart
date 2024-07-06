@@ -21,22 +21,24 @@ class VehicleViewModel with ChangeNotifier {
 
   Future<void> fetchVehicleCategories(BuildContext context) async {
     try {
-      setLoading(true);
-
       // Open Hive box
       var box = await Hive.openBox('vehicleCategories');
 
-      // Check if data exists in Hive
+      // Show cached data if available
       var cachedDubaiVehicles = box.get('dubai');
       var cachedAbuDhabiVehicles = box.get('abuDhabi');
 
-      // If data exists, use it
       if (cachedDubaiVehicles != null && cachedAbuDhabiVehicles != null) {
         _dubaiVehicles = cachedDubaiVehicles;
         _abuDhabiVehicles = cachedAbuDhabiVehicles;
-        setLoading(false);
-        return;
+        notifyListeners();
       }
+
+      // Fetch new data from API
+      setLoading(true);
+
+      // Clear old data in Hive
+      await box.clear();
 
       // Fetch Dubai vehicles
       var dubaiResponse = await _vehicleRepository.getVehicleCategories('Dubai');

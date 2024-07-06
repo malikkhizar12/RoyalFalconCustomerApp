@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
+import 'package:royal_falcon/utils/utils/utils.dart';
 import 'dart:convert';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 import '../model/my_bookings_model.dart';
@@ -18,6 +21,7 @@ class MyBookingsViewModel extends ChangeNotifier {
   int _totalPages = 1;
   bool _isFetchingNextPage = false;
   String _selectedFilter = 'All';
+  Map<String, dynamic>? paymentIntent;
 
   List<Bookings> get bookings => _bookings;
   bool get isLoading => _isLoading;
@@ -53,13 +57,11 @@ class MyBookingsViewModel extends ChangeNotifier {
   }
 
   void filterBookings(String status) {
-    print('Filtering bookings with status: $status');
     if (status == 'All') {
       filteredBookings = List.from(_bookings); // Copy list to avoid direct reference
     } else {
       filteredBookings = _bookings.where((booking) => booking.status.toLowerCase() == status.toLowerCase()).toList();
     }
-    print('Filtered bookings count: ${filteredBookings.length}');
     notifyListeners(); // Notify listeners of the state change
   }
 
@@ -89,17 +91,15 @@ class MyBookingsViewModel extends ChangeNotifier {
       throw Exception('Token is empty or invalid');
     }
 
-    print('Fetching page $_currentPage');
     final response = await http.get(
-      Uri.parse('${Appurl.getBooking}?page=$_currentPage&limit=10'),
+      Uri.parse('${Appurl.getBooking}?page=$_currentPage&limit=10'), // Fetch fewer items per page
       headers: {
         'Content-Type': 'application/json',
         'Authorization': '$token',
       },
     );
 
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -142,5 +142,74 @@ class MyBookingsViewModel extends ChangeNotifier {
 
   String getStatus(String bookingId) {
     return _statuses[bookingId] ?? '';
+  }
+
+  Future<void> makePayment(BuildContext context, String bookingId, amountToPay) async {
+    try {
+      paymentIntent = await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', bookingId);
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: paymentIntent!['client_secret'],
+          customerId: paymentIntent!['customer'],
+          customerEphemeralKeySecret: paymentIntent!['ephemeralKey'],
+          googlePay: const PaymentSheetGooglePay(
+            currencyCode: "AED",
+            merchantCountryCode: "AE",
+          ),
+          merchantDisplayName: 'RFL',
+        ),
+      );
+      displayPaymentSheet(context);
+    } catch (e) {
+      print("exception $e");
+      if (e is StripeConfigException) {
+        print("Stripe exception ${e.message}");
+      } else {
+        print("exception $e");
+      }
+    }
+  }
+
+  Future<void> displayPaymentSheet(BuildContext context) async {
+    try {
+      await Stripe.instance.presentPaymentSheet();
+      Utils.successMessage("Paid successfully", context);
+      paymentIntent = null;
+      // Navigate to MyBookings page
+      Navigator.pop(context);
+    } on StripeException catch (e) {
+      print('Error: $e');
+      Utils.errorMessage("Payment Cancelled", context);
+    } catch (e) {
+      print("Error in displaying");
+      print('$e');
+    }
+  }
+
+  createPaymentIntent(String amount, String currency, String bookingId) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': ((int.parse(amount)) * 100).toString(),
+        'currency': currency,
+        'payment_method_types[]': 'card',
+        'metadata[booking_id]': bookingId
+      };
+      print(body);
+      var secretKey = dotenv.env['STRIPE_SECRET_KEY'];
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization': 'Bearer $secretKey',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+
+      print('Payment Intent Body: ${response.body.toString()}');
+      return jsonDecode(response.body.toString());
+    } catch (err) {
+      print('Error charging user: ${err.toString()}');
+      throw Exception('Failed to create payment intent');
+    }
   }
 }
