@@ -39,7 +39,7 @@ class FormTextField extends StatelessWidget {
           children: [
             Text(
               label,
-              style:  TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 16.sp,
               ),
@@ -54,17 +54,16 @@ class FormTextField extends StatelessWidget {
               ),
           ],
         ),
-         SizedBox(height: 8.h),
+        SizedBox(height: 8.h),
         SizedBox(
           height: 60.h,
           child: TextField(
-
             controller: controller, // Bind the controller to the TextField
             readOnly: readOnly,
             onTap: onTap,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
-
+              isDense: true,
               hintText: hint,
               hintStyle: const TextStyle(color: Colors.grey),
               enabledBorder: OutlineInputBorder(

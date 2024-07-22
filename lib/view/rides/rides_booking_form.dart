@@ -569,24 +569,24 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                             ),
                             SizedBox(height: 20.h),
                             Container(
-                              height: MediaQuery.of(context).size.height * 0.28,
-                              width: double.infinity,
-                              padding: EdgeInsets.all(16.h),
-                              margin: EdgeInsets.only(top: 16.h),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF333639),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20),
+                                height: MediaQuery.of(context).size.height * 0.28,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(16.h),
+                                margin: EdgeInsets.only(top: 16.h),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF333639),
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
                                 ),
-                              ),
-                              child: SummarySection(
-                                distanceValue: model.distanceInKm.toString(),
-                                possibleTime: model.possibleTime.toString(),
-                                onTap: () {
-                                  sendBookingData(context);                                },
-                                isLoading: model.isLoading,
-                                price: widget.price, // Pass the price
-                              )
+                                child: SummarySection(
+                                  distanceValue: model.distanceInKm.toString(),
+                                  possibleTime: model.possibleTime.toString(),
+                                  onTap: () {
+                                    sendBookingData(context);                                },
+                                  isLoading: model.isLoading,
+                                  price: widget.price, // Pass the price
+                                )
 
 
                             ),
