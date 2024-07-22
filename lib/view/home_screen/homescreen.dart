@@ -1,14 +1,13 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
-import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
-import 'package:search_map_place_updated/search_map_place_updated.dart';
+import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 
-import '../../utils/colors.dart';
+import '../../view_model/rides_booking_form_view_model.dart';
 import '../widgets/custom_end_drawer.dart';
-import '../widgets/home_screen_categories.dart';
 import '../Rides/Rides.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,22 +19,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
-  double? pickUpLatitude, pickUpLongitude, dropOffLatitude, dropOffLongitude;
-  String pickupLocationName = '';
-  String dropOffLocationName = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late HomeScreenViewModel _homeScreenViewModel;
 
   @override
   void initState() {
     super.initState();
-    _homeScreenViewModel = Provider.of<HomeScreenViewModel>(context, listen: false);
+    _homeScreenViewModel =
+        Provider.of<HomeScreenViewModel>(context, listen: false);
     _homeScreenViewModel.initializeData(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<VehicleViewModel>(context, listen: false)
+          .fetchVehicleCategories(context);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final RidesBookingFormViewModel model = RidesBookingFormViewModel(context, 0);
+    final RidesBookingFormViewModel model =
+        RidesBookingFormViewModel(context, 0);
 
     return SafeArea(
       child: Scaffold(
@@ -59,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20, top: 10),
+                padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
                 child: Column(
                   children: [
                     Container(
@@ -85,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onPressed: () {
                                   // Handle notifications button press
                                 },
-                                icon: Image.asset('images/notificaton_icon.png'),
+                                icon:
+                                    Image.asset('images/notificaton_icon.png'),
                               ),
                               IconButton(
                                 onPressed: () {
@@ -103,84 +106,133 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             SizedBox(height: 20.h),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.r),
-                                gradient: LinearGradient(
-                                  colors: [Color(0xFF3A3E41), Color(0xFF22262A)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    spreadRadius: 2,
-                                    blurRadius: 10,
-                                    offset: Offset(0, 3),
-                                  ),
+                            SizedBox(height: 20.h),
+                            Text(
+                              "Best For Your Comfort",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.sp),
+                            ),
+                            SizedBox(height: 20.h),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  _buildCategoryChip(
+                                      'Rides',
+                                      () => Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => Rides()))),
+                                  _buildCategoryChip('Buses', () {
+                                    // Handle Getaway tap
+                                  }),
+                                  _buildCategoryChip('Getaway', () {
+                                    // Handle Explore tap
+                                  }),
+                                  // _buildCategoryChip('Partner up', () {
+                                  //   // Handle Partner up tap
+                                  // }),
+                                  _buildCategoryChip('Passport pro', () {
+                                    // Handle Passport pro tap
+                                  }),
+
                                 ],
                               ),
-                              height: 286,
-                              width: 1.sw,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 30),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: HomeScreenCategories(
-                                          categoryTitle: 'Rides',
-                                          imagePath: 'images/wheels.png',
-                                          onTap: () => Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) => Rides(),
+                            ),
+                            SizedBox(height: 20),
+                            Consumer<VehicleViewModel>(
+                              builder: (context, vehicleViewModel, child) {
+                                if (vehicleViewModel.loading) {
+                                  return CircularProgressIndicator();
+                                } else if (vehicleViewModel
+                                        .dubaiVehicles.isEmpty &&
+                                    vehicleViewModel.abuDhabiVehicles.isEmpty) {
+                                  return Center(
+                                      child: Text('No vehicles available'));
+                                } else {
+                                  return CarouselSlider(
+                                    options: CarouselOptions(
+                                      height: 210.0.h,
+                                      enlargeCenterPage: true,
+                                      autoPlay: false,
+                                      aspectRatio: 16 / 9,
+                                      autoPlayCurve: Curves.fastOutSlowIn,
+                                      enableInfiniteScroll: true,
+                                      autoPlayAnimationDuration:
+                                          Duration(milliseconds: 800),
+                                      viewportFraction: 0.8,
+                                    ),
+                                    items: (vehicleViewModel.dubaiVehicles +
+                                            vehicleViewModel.abuDhabiVehicles)
+                                        .map<Widget>((vehicle) {
+                                      return Builder(
+                                        builder: (BuildContext context) {
+                                          return Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 5.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey,
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      const Expanded(
-                                        child: HomeScreenCategories(
-                                          categoryTitle: 'Getaway',
-                                          imagePath: 'images/getaway.png',
-                                          // onTap: () => Get.to(GetAway()),
-                                        ),
-                                      ),
-                                      const Expanded(
-                                        child: HomeScreenCategories(
-                                          categoryTitle: 'Explore',
-                                          imagePath: 'images/explore.png',
-                                          // onTap: () => Get.to(ExploreMain()),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Row(
-                                    children: [
-                                      Expanded(
-                                        child: HomeScreenCategories(
-                                          categoryTitle: 'Partner up',
-                                          imagePath: 'images/partner.png',
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: HomeScreenCategories(
-                                          categoryTitle: 'Passport pro',
-                                          imagePath: 'images/passport_pro.png',
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: HomeScreenCategories(
-                                          categoryTitle: 'More services',
-                                          imagePath: 'images/more_services.png',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
+                                            child: Image.network(
+                                                vehicle['categoryVehicleImage'],
+                                                fit: BoxFit.cover),
+                                          );
+                                        },
+                                      );
+                                    }).toList(),
+                                  );
 
+                                }
+                              },
+                            ),
+                            SizedBox(height: 20.h),
+                            Center(
+                              child: SizedBox(
+                                width: 0.8.sw,
+                                height: 45.h,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [Colors.yellowAccent, Color(0xFFCF9D2C)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  child: Center(
+                                    child: Text(
+                                      "Royal Falcon Limousine",
+                                      style: TextStyle(
+                                        color: Colors.black.withOpacity(0.6),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20.h),
+                            Text(
+                              "Other Services",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.sp),
+                            ),
+                            SizedBox(height: 10.h,),
+                            Container(
+                              height: 210.0.h,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  _buildServiceCard('images/hourly_booking.webp', 'Hourly Bookings'),
+                                  _buildServiceCard('images/activities_image.webp', 'Activities'),
+                                  _buildServiceCard('images/partner_up_image.webp', ' Partner Up '),
                                 ],
                               ),
                             ),
@@ -194,6 +246,84 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryChip(String label, VoidCallback onTap) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              colors: [Colors.yellowAccent, Color(0xFFCF9D2C)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Text(
+              label,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _buildServiceCard(String imagePath, String title) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Stack(
+        children: [
+          Container(
+            width: 180.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                image: AssetImage(imagePath),
+                fit: BoxFit.cover,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: 10,
+            child: Text(
+              title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                backgroundColor: Colors.black45,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
