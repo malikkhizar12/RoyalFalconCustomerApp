@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:royal_falcon/config/app_notification.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
+import 'package:royal_falcon/view_model/rides_booking_form_view_model.dart';
+import 'package:search_map_place_updated/search_map_place_updated.dart';
 
+import '../../utils/colors.dart';
 import '../widgets/custom_end_drawer.dart';
 import '../widgets/home_screen_categories.dart';
-import '../widgets/searchbar.dart';
 import '../Rides/Rides.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,27 +19,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
+  double? pickUpLatitude, pickUpLongitude, dropOffLatitude, dropOffLongitude;
+  String pickupLocationName = '';
+  String dropOffLocationName = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late HomeScreenViewModel _homeScreenViewModel;
-  // AppNotifications appNotifications = AppNotifications();
 
   @override
   void initState() {
     super.initState();
     _homeScreenViewModel = Provider.of<HomeScreenViewModel>(context, listen: false);
     _homeScreenViewModel.initializeData(context);
-    // appNotifications.firebaseNotificationsInitialization(context);
-    // appNotifications.setUpInteractMessage(context);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
+    final RidesBookingFormViewModel model = RidesBookingFormViewModel(context, 0);
+
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
-        endDrawer:  CustomEndDrawer(),
+        endDrawer: CustomEndDrawer(),
         backgroundColor: const Color(0xFF22262A),
         body: SingleChildScrollView(
           child: Stack(
@@ -55,18 +59,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 20,
-                ),
+                padding: const EdgeInsets.only(right: 20,left: 20, top: 10),
                 child: Column(
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          ),
+                        ],
                       ),
                       margin: EdgeInsets.only(top: 15, bottom: 20),
-                      height: 49,
+                      height: 60,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -95,34 +103,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Hello ${homeScreenViewModel.capitalizeFirstLetter(homeScreenViewModel.userName ?? "Guest")}',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              homeScreenViewModel.userEmail ?? "Your Email",
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            const ElevatedSearchBar(
-                              hintText: "Search",
-                            ),
-                            const SizedBox(height: 20),
+                             SizedBox(height: 20.h),
                             Container(
                               decoration: BoxDecoration(
-                                color: const Color(0xFF3A3E41),
-                                border: Border.all(color: Colors.white, width: 0.4),
+                                borderRadius: BorderRadius.circular(15.r),
+                                gradient: LinearGradient(
+                                  colors: [Color(0xFF3A3E41), Color(0xFF22262A)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
                               ),
-                              height: 388,
-                              width: 381,
+                              height: 286,
+                              width: 1.sw,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -133,7 +133,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: HomeScreenCategories(
                                           categoryTitle: 'Rides',
                                           imagePath: 'images/wheels.png',
-                                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  Rides())),
+                                          onTap: () => Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => Rides(),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       const Expanded(
@@ -157,8 +161,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       Expanded(
                                         child: HomeScreenCategories(
-                                          categoryTitle: 'Stay Local',
-                                          imagePath: 'images/stay_local.png',
+                                          categoryTitle: 'Partner up',
+                                          imagePath: 'images/partner.png',
                                         ),
                                       ),
                                       Expanded(
@@ -169,30 +173,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       Expanded(
                                         child: HomeScreenCategories(
-                                          categoryTitle: 'Invest in',
-                                          imagePath: 'images/invest.png',
+                                          categoryTitle: 'More services',
+                                          imagePath: 'images/more_services.png',
                                         ),
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 20),
-                                  const Row(
-                                    children: [
-                                      Expanded(
-                                        child: HomeScreenCategories(
-                                          categoryTitle: 'Partner up',
-                                          imagePath: 'images/partner.png',
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: HomeScreenCategories(
-                                          categoryTitle: 'More services',
-                                          imagePath: 'images/more_services.png',
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                    ],
-                                  ),
+
                                 ],
                               ),
                             ),

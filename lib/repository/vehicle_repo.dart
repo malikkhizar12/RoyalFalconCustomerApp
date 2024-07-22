@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-
 import '../resources/app_url.dart';
 import '../data/network/base_api_services.dart';
 import '../data/network/network_api_services.dart';

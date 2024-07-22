@@ -20,6 +20,7 @@ import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'model/driver_booking_model.dart';
 import 'model/my_bookings_model.dart';
 
 void main() async {
@@ -36,6 +37,13 @@ void main() async {
   Hive.registerAdapter(GuestAdapter());
   Hive.registerAdapter(CoordinatesAdapter());
   Hive.registerAdapter(VehicleCategoryAdapter());
+  Hive.registerAdapter(DriverBookingDataAdapter());
+  Hive.registerAdapter(MyDriverBookingAdapter());
+  Hive.registerAdapter(DriverGuestAdapter());
+  Hive.registerAdapter(LocationAdapter());
+  Hive.registerAdapter(PaginationAdapter());
+
+  await Hive.openBox<DriverBookingData>('driverBookingDataBox');
 
   await Hive.openBox<Bookings>('bookingsBox');
   await Hive.openBox('vehicleCategoriesBox');

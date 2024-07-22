@@ -1,3 +1,51 @@
+import 'driver_model.dart';
+
+class User {
+  String? id;
+  String? name;
+  String? email;
+  String? phoneNumber;
+  String? profileImage;
+  String? role;
+  Driver? driverDetails;
+
+  User({
+    this.id,
+    this.name,
+    this.email,
+    this.phoneNumber,
+    this.profileImage,
+    this.role,
+    this.driverDetails,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['_id'],
+      name: json['name'],
+      email: json['email'],
+      phoneNumber: json['phoneNumber'],
+      profileImage: json['profileImage'],
+      role: json['role'],
+      driverDetails: json['driverDetails'] != null ? Driver.fromJson(json['driverDetails']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = id;
+    data['name'] = name;
+    data['email'] = email;
+    data['phoneNumber'] = phoneNumber;
+    data['profileImage'] = profileImage;
+    data['role'] = role;
+    if (driverDetails != null) {
+      data['driverDetails'] = driverDetails!.toJson();
+    }
+    return data;
+  }
+}
+
 class UserModel {
   String? message;
   String? token;
@@ -20,33 +68,6 @@ class UserModel {
     if (user != null) {
       data['user'] = user!.toJson();
     }
-    return data;
-  }
-}
-
-class User {
-  String? name;
-  String? email;
-  String? phoneNumber;
-  String? profileImage;
-
-  User({this.name, this.email, this.phoneNumber, this.profileImage});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      name: json['name'],
-      email: json['email'],
-      phoneNumber: json['phoneNumber'],
-      profileImage: json['profileImage'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['name'] = name;
-    data['email'] = email;
-    data['phoneNumber'] = phoneNumber;
-    data['profileImage'] = profileImage;
     return data;
   }
 }

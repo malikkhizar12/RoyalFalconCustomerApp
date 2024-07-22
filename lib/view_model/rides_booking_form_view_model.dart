@@ -141,13 +141,13 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         if (kDebugMode) {
           print('Booking request sent successfully.');
         }
-        Map<String, dynamic> bookingResponse = jsonDecode(response.body);
-        String bookingId = bookingResponse['bookingId']; // Assuming 'bookingId' is the correct key
-        await makePayment(bookingId);
-        setLoading(false);
+        // Map<String, dynamic> bookingResponse = jsonDecode(response.body);
+        // String bookingId = bookingResponse['bookingId']; // Assuming 'bookingId' is the correct key
         var data = jsonDecode(response.body);
         print(data['bookingId']);
         makePayment(data['bookingId']);
+        setLoading(false);
+
         return jsonDecode(response.body);
 
 //         myBookingsViewModel.fetchUserBookings();

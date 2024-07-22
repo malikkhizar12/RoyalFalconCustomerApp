@@ -20,41 +20,45 @@ class VehicleViewModel with ChangeNotifier {
   }
 
   Future<void> fetchVehicleCategories(BuildContext context) async {
-    try {
-      // Open Hive box
-      var box = await Hive.openBox('vehicleCategories');
+    if (_dubaiVehicles.isNotEmpty && _abuDhabiVehicles.isNotEmpty) {
+      // Data already loaded, no need to fetch again
+      return;
+    }
 
-      // Show cached data if available
+    try {
+      var box = await Hive.openBox('vehicleCategories');
       var cachedDubaiVehicles = box.get('dubai');
       var cachedAbuDhabiVehicles = box.get('abuDhabi');
 
+      // Show cached data if available
       if (cachedDubaiVehicles != null && cachedAbuDhabiVehicles != null) {
         _dubaiVehicles = cachedDubaiVehicles;
         _abuDhabiVehicles = cachedAbuDhabiVehicles;
         notifyListeners();
       }
 
-      // Fetch new data from API
-      setLoading(true);
+      // Fetch new data from API if cache is empty
+      if (_dubaiVehicles.isEmpty || _abuDhabiVehicles.isEmpty) {
+        setLoading(true);
 
-      // Clear old data in Hive
-      await box.clear();
+        if (_dubaiVehicles.isEmpty) {
+          var dubaiResponse = await _fetchVehicleData('Dubai');
+          if (dubaiResponse != null) {
+            _dubaiVehicles = dubaiResponse;
+            box.put('dubai', _dubaiVehicles);
+          }
+        }
 
-      // Fetch Dubai vehicles
-      var dubaiResponse = await _vehicleRepository.getVehicleCategories('Dubai');
-      if (dubaiResponse != null && dubaiResponse['vehicleCategories'] != null) {
-        _dubaiVehicles = dubaiResponse['vehicleCategories'];
-        box.put('dubai', _dubaiVehicles);
+        if (_abuDhabiVehicles.isEmpty) {
+          var abuDhabiResponse = await _fetchVehicleData('Abu Dhabi');
+          if (abuDhabiResponse != null) {
+            _abuDhabiVehicles = abuDhabiResponse;
+            box.put('abuDhabi', _abuDhabiVehicles);
+          }
+        }
+
+        setLoading(false);
       }
-
-      // Fetch Abu Dhabi vehicles
-      var abuDhabiResponse = await _vehicleRepository.getVehicleCategories('Abu Dhabi');
-      if (abuDhabiResponse != null && abuDhabiResponse['vehicleCategories'] != null) {
-        _abuDhabiVehicles = abuDhabiResponse['vehicleCategories'];
-        box.put('abuDhabi', _abuDhabiVehicles);
-      }
-
-      setLoading(false);
     } catch (e) {
       setLoading(false);
       print('Error fetching vehicle categories: $e');
@@ -65,6 +69,18 @@ class VehicleViewModel with ChangeNotifier {
         ),
       );
     }
+  }
+
+  Future<List<dynamic>?> _fetchVehicleData(String location) async {
+    try {
+      var response = await _vehicleRepository.getVehicleCategories(location);
+      if (response != null && response['vehicleCategories'] != null) {
+        return response['vehicleCategories'];
+      }
+    } catch (e) {
+      print('Error fetching data for $location: $e');
+    }
+    return null;
   }
 
   List<dynamic> getVehiclesByLocation(String location) {

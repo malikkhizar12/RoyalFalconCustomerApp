@@ -7,4 +7,5 @@ class Appurl {
  static var vehicle = baseUrl + '/admin/getVehicleCategory';
  static var createBooking = baseUrl + '/user/createbooking';
  static var getBooking = baseUrl + '/user/getBookings';
+ static var getDriverBooking = baseUrl + '/driver/getDriverBookings';
 }

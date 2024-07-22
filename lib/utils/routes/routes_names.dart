@@ -1,10 +1,10 @@
-class RoutesNames{
-  static const  String login = 'login_screen';
-  static const  String home = 'home_screen';
-  static const String splash = 'splash_screen';
-  static const String normalBookings = 'normal_bookings';
-  static const String airportBookings = 'airport_bookings';
-  static const String myBookings = 'my_bookings';
-
-
+class RoutesNames {
+  static const String login = '/login';
+  static const String home = '/home';
+  static const String splash = '/splash';
+  static const String normalBookings = '/normalBookings';
+  static const String airportBookings = '/airportBookings';
+  static const String myBookings = '/myBookings';
+  static const String driverProfile = '/driverProfile';
+  static const String driverHome = '/driverHome';
 }

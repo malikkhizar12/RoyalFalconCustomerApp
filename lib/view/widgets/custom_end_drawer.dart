@@ -1,15 +1,37 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/routes/routes_names.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../view_model/auth_view_model.dart';
+import '../driver_panel/home_screen/driver_profile/driver_profile_screen.dart';
 import '../home_screen/profile.dart';
 
 class CustomEndDrawer extends StatelessWidget {
   CustomEndDrawer({
     super.key,
   });
+  static Future<Map<String, dynamic>> _getUserDetails() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJson = prefs.getString('user');
+    if (userJson != null) {
+      Map<String, dynamic> userMap = jsonDecode(userJson);
+      String role = userMap['role'];
+      String userId = userMap['_id'] ?? '';
+      return {
+        'authenticated': true,
+        'role': role,
+        'userId': userId,
+      };
+    }
+    return {
+      'authenticated': false,
+      'role': '',
+      'userId': '',
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +53,35 @@ class CustomEndDrawer extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  buildMenuItem('Profile', () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  ProfileScreen()));
-                  }),
-                  buildMenuItem('My Booking', () {
-                    Navigator.pushNamed(context, RoutesNames.myBookings);
-                  }),
+                  FutureBuilder<Map<String, dynamic>>(
+                    future: _getUserDetails(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        var userDetails = snapshot.data!;
+                        return Column(
+                          children: [
+                            buildMenuItem('Profile', () {
+                              if (userDetails['role'] == 'driver') {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DriverProfileScreen()));
+                              } else {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                              }
+                            }),
+                            if (userDetails['role'] != 'driver')
+                              buildMenuItem('My Booking', () {
+                                Navigator.pushNamed(context, RoutesNames.myBookings);
+                              }),
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
                   buildMenuItem('Favorite', () {
                     // Handle Favorite action
                   }),
@@ -92,7 +137,7 @@ class CustomEndDrawer extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 40.w),
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color?>(const Color(0xFFFFBC07)),
+                  backgroundColor: WidgetStateProperty.all<Color?>(const Color(0xFFFFBC07)),
                 ),
                 onPressed: () {
                   authViewModel.logout(context);
