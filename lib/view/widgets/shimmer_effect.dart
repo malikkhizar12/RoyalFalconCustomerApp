@@ -5,16 +5,21 @@ class FullScreenShimmerLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Color(0xFF333639)!,
-      direction: ShimmerDirection.ltr,
+      baseColor: Color(0xFF333639),
       highlightColor: Colors.grey[100]!,
-      child: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(10.0),
-        ),
+      child: Column(
+        children: List.generate(5, (index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Container(
+              width: double.infinity,
+              height: 20.0,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+              ),
+            ),
+          );
+        }),
       ),
     );
   }

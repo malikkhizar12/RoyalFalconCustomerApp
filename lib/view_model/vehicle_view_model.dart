@@ -20,45 +20,25 @@ class VehicleViewModel with ChangeNotifier {
   }
 
   Future<void> fetchVehicleCategories(BuildContext context) async {
-    if (_dubaiVehicles.isNotEmpty && _abuDhabiVehicles.isNotEmpty) {
-      // Data already loaded, no need to fetch again
-      return;
-    }
+    setLoading(true);
 
     try {
       var box = await Hive.openBox('vehicleCategories');
-      var cachedDubaiVehicles = box.get('dubai');
-      var cachedAbuDhabiVehicles = box.get('abuDhabi');
 
-      // Show cached data if available
-      if (cachedDubaiVehicles != null && cachedAbuDhabiVehicles != null) {
-        _dubaiVehicles = cachedDubaiVehicles;
-        _abuDhabiVehicles = cachedAbuDhabiVehicles;
-        notifyListeners();
+      // Always fetch new data from API
+      var dubaiResponse = await _fetchVehicleData('Dubai');
+      if (dubaiResponse != null) {
+        _dubaiVehicles = dubaiResponse;
+        box.put('dubai', _dubaiVehicles);
       }
 
-      // Fetch new data from API if cache is empty
-      if (_dubaiVehicles.isEmpty || _abuDhabiVehicles.isEmpty) {
-        setLoading(true);
-
-        if (_dubaiVehicles.isEmpty) {
-          var dubaiResponse = await _fetchVehicleData('Dubai');
-          if (dubaiResponse != null) {
-            _dubaiVehicles = dubaiResponse;
-            box.put('dubai', _dubaiVehicles);
-          }
-        }
-
-        if (_abuDhabiVehicles.isEmpty) {
-          var abuDhabiResponse = await _fetchVehicleData('Abu Dhabi');
-          if (abuDhabiResponse != null) {
-            _abuDhabiVehicles = abuDhabiResponse;
-            box.put('abuDhabi', _abuDhabiVehicles);
-          }
-        }
-
-        setLoading(false);
+      var abuDhabiResponse = await _fetchVehicleData('Abu Dhabi');
+      if (abuDhabiResponse != null) {
+        _abuDhabiVehicles = abuDhabiResponse;
+        box.put('abuDhabi', _abuDhabiVehicles);
       }
+
+      setLoading(false);
     } catch (e) {
       setLoading(false);
       print('Error fetching vehicle categories: $e');

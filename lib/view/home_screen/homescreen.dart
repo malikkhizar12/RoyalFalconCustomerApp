@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 
 import '../../view_model/rides_booking_form_view_model.dart';
 import '../widgets/custom_end_drawer.dart';
 import '../Rides/Rides.dart';
+import '../widgets/shimmer_effect.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,19 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _homeScreenViewModel =
-        Provider.of<HomeScreenViewModel>(context, listen: false);
+    _homeScreenViewModel = Provider.of<HomeScreenViewModel>(context, listen: false);
     _homeScreenViewModel.initializeData(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<VehicleViewModel>(context, listen: false)
-          .fetchVehicleCategories(context);
+      Provider.of<VehicleViewModel>(context, listen: false).fetchVehicleCategories(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final RidesBookingFormViewModel model =
-        RidesBookingFormViewModel(context, 0);
+    final RidesBookingFormViewModel model = RidesBookingFormViewModel(context, 0);
 
     return SafeArea(
       child: Scaffold(
@@ -87,8 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onPressed: () {
                                   // Handle notifications button press
                                 },
-                                icon:
-                                    Image.asset('images/notificaton_icon.png'),
+                                icon: Image.asset('images/notificaton_icon.png'),
                               ),
                               IconButton(
                                 onPressed: () {
@@ -121,22 +119,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   _buildCategoryChip(
                                       'Rides',
-                                      () => Navigator.of(context).push(
+                                          () => Navigator.of(context).push(
                                           MaterialPageRoute(
-                                              builder: (context) => Rides()))),
+                                              builder: (context) => Rides()
+                                          )
+                                          )
+                                  ),
                                   _buildCategoryChip('Buses', () {
                                     // Handle Getaway tap
                                   }),
                                   _buildCategoryChip('Getaway', () {
                                     // Handle Explore tap
                                   }),
-                                  // _buildCategoryChip('Partner up', () {
-                                  //   // Handle Partner up tap
-                                  // }),
                                   _buildCategoryChip('Passport pro', () {
                                     // Handle Passport pro tap
                                   }),
-
                                 ],
                               ),
                             ),
@@ -144,12 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Consumer<VehicleViewModel>(
                               builder: (context, vehicleViewModel, child) {
                                 if (vehicleViewModel.loading) {
-                                  return CircularProgressIndicator();
-                                } else if (vehicleViewModel
-                                        .dubaiVehicles.isEmpty &&
-                                    vehicleViewModel.abuDhabiVehicles.isEmpty) {
-                                  return Center(
-                                      child: Text('No vehicles available'));
+                                  return FullScreenShimmerLoading();
+                                } else if (vehicleViewModel.dubaiVehicles.isEmpty && vehicleViewModel.abuDhabiVehicles.isEmpty) {
+                                  return Center(child: Text('No vehicles available'));
                                 } else {
                                   return CarouselSlider(
                                     options: CarouselOptions(
@@ -159,33 +153,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                       aspectRatio: 16 / 9,
                                       autoPlayCurve: Curves.fastOutSlowIn,
                                       enableInfiniteScroll: true,
-                                      autoPlayAnimationDuration:
-                                          Duration(milliseconds: 800),
+                                      autoPlayAnimationDuration: Duration(milliseconds: 800),
                                       viewportFraction: 0.8,
                                     ),
-                                    items: (vehicleViewModel.dubaiVehicles +
-                                            vehicleViewModel.abuDhabiVehicles)
+                                    items: (vehicleViewModel.dubaiVehicles + vehicleViewModel.abuDhabiVehicles)
                                         .map<Widget>((vehicle) {
                                       return Builder(
                                         builder: (BuildContext context) {
                                           return Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 5.0),
+                                            width: MediaQuery.of(context).size.width,
+                                            margin: EdgeInsets.symmetric(horizontal: 5.0),
                                             decoration: BoxDecoration(
                                               color: Colors.grey,
                                             ),
-                                            child: Image.network(
-                                                vehicle['categoryVehicleImage'],
-                                                fit: BoxFit.cover),
+                                            child: Image.network(vehicle['categoryVehicleImage'], fit: BoxFit.cover),
                                           );
                                         },
                                       );
                                     }).toList(),
                                   );
-
                                 }
                               },
                             ),
@@ -200,7 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       colors: [Colors.yellowAccent, Color(0xFFCF9D2C)],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
-                                    ),                                    borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    borderRadius: BorderRadius.circular(25),
                                   ),
                                   padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                                   child: Center(
@@ -224,17 +211,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20.sp),
                             ),
-                            SizedBox(height: 10.h,),
-                            Container(
-                              height: 210.0.h,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  _buildServiceCard('images/hourly_booking.webp', 'Hourly Bookings'),
-                                  _buildServiceCard('images/activities_image.webp', 'Activities'),
-                                  _buildServiceCard('images/partner_up_image.webp', ' Partner Up '),
-                                ],
-                              ),
+                            SizedBox(height: 10.h),
+                            Consumer<VehicleViewModel>(
+                              builder: (context, vehicleViewModel, child) {
+                                if (vehicleViewModel.loading) {
+                                  return FullScreenShimmerLoading();
+                                } else {
+                                  return Container(
+                                    height: 210.0.h,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: [
+                                        _buildServiceCard('images/hourly_booking.webp', 'Hourly Bookings',() => Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) => HourlyBooking()
+                                            )
+                                        )),
+                                        _buildServiceCard('images/activities_image.webp', 'Activities',(){}),
+                                        _buildServiceCard('images/partner_up_image.webp', ' Partner Up ', (){}),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           ],
                         );
@@ -287,27 +286,31 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  Widget _buildServiceCard(String imagePath, String title) {
+
+  Widget _buildServiceCard(String imagePath, String title, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
         children: [
-          Container(
-            width: 180.w,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: AssetImage(imagePath),
-                fit: BoxFit.cover,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              width: 180.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.cover,
                 ),
-              ],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
             ),
           ),
           Positioned(
