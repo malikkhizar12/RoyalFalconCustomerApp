@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/utils/routes/routes.dart';
 import 'package:royal_falcon/utils/routes/routes_names.dart';
 import 'package:royal_falcon/view/splash/splash_view.dart';
@@ -78,9 +80,12 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'RFL',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
+            theme: ThemeData.dark().copyWith(
+              scaffoldBackgroundColor: ColorConstants.backgroundColor,
+              textTheme:
+                  GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+                      .apply(bodyColor: Colors.white),
+              // canvasColor: secondaryColor,
             ),
             home: SplashScreen(),
             onGenerateRoute: Routes.generateRoute,
