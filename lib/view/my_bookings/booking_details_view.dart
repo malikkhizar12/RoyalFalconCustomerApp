@@ -44,6 +44,8 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MyBookingsViewModel>(context);
+    print(
+        "this is data${widget.booking.driver.driverDetails.attachVehicle.vehicleCategory.name}");
 
     String formattedDate = DateFormat('MMMM d').format(widget.booking.guests.first.pickUpDateTime);
     String formattedTime = DateFormat('h:mm a').format(widget.booking.guests.first.pickUpDateTime);
@@ -233,6 +235,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFFFFBC07))),
                           SizedBox(height: 8.h),
+
                           if (widget.booking.status == "assigned") ...[
                             Container(
                               width: MediaQuery.of(context).size.width,
@@ -335,6 +338,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                 style: TextStyle(
                                     fontSize: 16.sp, color: Colors.white)),
                           ],
+
                           SizedBox(height: 16.h),
                           if (widget.booking.status.toLowerCase() ==
                               'payment pending')

@@ -24,6 +24,7 @@ class Bookings extends HiveObject {
   @HiveField(8)
   final Driver? driver; // New field
 
+
   Bookings({
     required this.id,
     required this.bookingSource,
@@ -47,6 +48,7 @@ class Bookings extends HiveObject {
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
       driver: json['driverId'] != null ? Driver.fromJson(json['driverId']) : null, // Handle null case
+
     );
   }
 
@@ -60,7 +62,9 @@ class Bookings extends HiveObject {
       'status': status,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+
       'driverId': driver?.toJson(), // New field
+
     };
   }
 }
