@@ -1,26 +1,29 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 import '../../model/user_model.dart';
 
 class SplashServices {
   Future<UserModel?> getUserData() => UserViewModel().getUser();
 
-  Future<bool> checkAuthentication() async {
-    UserModel? user = await getUserData();
+  Future<Map<String, dynamic>> checkAuthentication() async {
+    UserModel? userModel = await getUserData();
 
     if (kDebugMode) {
-      print("User Data: ${user?.toJson()}");
+      print("User Data: ${userModel?.toJson()}");
     }
 
     await Future.delayed(const Duration(seconds: 2));
 
-    if (user == null || user.token == null || user.token!.isEmpty) {
+    if (userModel == null || userModel.token == null || userModel.token!.isEmpty) {
       print("User is not authenticated");
-      return false;
+      return {'authenticated': false};
     } else {
       print("User is authenticated");
-      return true;
+      return {
+        'authenticated': true,
+        'role': userModel.user?.role ?? '',
+        'userId': userModel.user?.id ?? '' // Ensure the userId is correctly accessed and handle null
+      };
     }
   }
 }

@@ -1,3 +1,4 @@
+
 import 'package:hive/hive.dart';
 
 part 'my_bookings_model.g.dart';
@@ -21,7 +22,8 @@ class Bookings extends HiveObject {
   @HiveField(7)
   final DateTime updatedAt;
   @HiveField(8)
-  final Driver driver; // New field
+  final Driver? driver; // New field
+
 
   Bookings({
     required this.id,
@@ -45,7 +47,8 @@ class Bookings extends HiveObject {
       status: json['status'] ?? '',
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
-      driver: Driver.fromJson(json['driverId'] ?? {}), // New field
+      driver: json['driverId'] != null ? Driver.fromJson(json['driverId']) : null, // Handle null case
+
     );
   }
 
@@ -59,7 +62,9 @@ class Bookings extends HiveObject {
       'status': status,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
-      'driverId': driver.toJson(), // New field
+
+      'driverId': driver?.toJson(), // New field
+
     };
   }
 }

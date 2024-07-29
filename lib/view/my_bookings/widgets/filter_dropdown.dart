@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,7 +20,7 @@ class FilterDropdown extends StatelessWidget {
       width: 200.w,
       decoration: BoxDecoration(
         color: Color(0xFFFFBC07),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(25),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(

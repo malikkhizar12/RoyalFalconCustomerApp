@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -32,8 +33,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
   Future<void> makePayment(String bookingId) async {
     try {
       print(amountToPay);
-      paymentIntent = await createPaymentIntent(
-          amountToPay.toStringAsFixed(0), 'AED', bookingId);
+      paymentIntent = await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', bookingId);
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent!['client_secret'],
@@ -66,7 +66,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => MyBookings()),
-        (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
       );
     } on StripeException catch (e) {
       print('Error: $e');
@@ -78,6 +78,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
   }
 
   createPaymentIntent(String amount, String currency, String bookingId) async {
+
     try {
       Map<String, dynamic> body = {
         'amount': ((int.parse(amount)) * 100).toString(),
@@ -140,18 +141,17 @@ class RidesBookingFormViewModel extends ChangeNotifier {
         if (kDebugMode) {
           print('Booking request sent successfully.');
         }
-        Map<String, dynamic> bookingResponse = jsonDecode(response.body);
-        String bookingId = bookingResponse[
-            'bookingId']; // Assuming 'bookingId' is the correct key
-        await makePayment(bookingId);
+        // Map<String, dynamic> bookingResponse = jsonDecode(response.body);
+        // String bookingId = bookingResponse['bookingId']; // Assuming 'bookingId' is the correct key
+        var data = jsonDecode(response.body);
+        print(data['bookingId']);
+        makePayment(data['bookingId']);
         setLoading(false);
-        // var data = jsonDecode(response.body);
-        // print(data['bookingId']);
-        // makePayment(data['bookingId']);
-        // return jsonDecode(response.body);
 
-        myBookingsViewModel.fetchUserBookings();
-        return bookingResponse;
+        return jsonDecode(response.body);
+
+//         myBookingsViewModel.fetchUserBookings();
+//         return bookingResponse;
       } else {
         setLoading(false);
         print('Error creating booking: HTTP ${response.statusCode}');
@@ -168,8 +168,7 @@ class RidesBookingFormViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getTravelTime(
-      double startLat, double startLng, double endLat, double endLng) async {
+  Future<void> getTravelTime(double startLat, double startLng, double endLat, double endLng) async {
     final apiKey = dotenv.env['GOOGLE_API_KEY'];
     final url =
         'https://maps.googleapis.com/maps/api/directions/json?origin=$startLat,$startLng&destination=$endLat,$endLng&key=$apiKey';

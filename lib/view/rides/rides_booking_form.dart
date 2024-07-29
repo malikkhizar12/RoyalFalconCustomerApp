@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +11,7 @@ import 'package:search_map_place_updated/search_map_place_updated.dart';
 
 import '../../utils/utils/utils.dart';
 import '../widgets/appbarcustom.dart';
+import '../widgets/build_summary_booking_section.dart';
 
 class RidesBookingForm extends StatefulWidget {
   final double price;
@@ -40,7 +42,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   final TextEditingController flightNoController = TextEditingController();
   final TextEditingController flightTimeController = TextEditingController();
   final TextEditingController specialRequestController =
-      TextEditingController();
+  TextEditingController();
 
   DateTime? selectedDateTime;
   DateTime? selectedFlightDateTime;
@@ -154,7 +156,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime:
-            TimeOfDay.fromDateTime(selectedFlightDateTime ?? DateTime.now()),
+        TimeOfDay.fromDateTime(selectedFlightDateTime ?? DateTime.now()),
         builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
@@ -208,7 +210,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
       return;
     }
     String formattedPickupDateTime =
-        DateFormat('yyyy-MM-ddTHH:mm').format(pickupDateTime);
+    DateFormat('yyyy-MM-ddTHH:mm').format(pickupDateTime);
 
     final Map<String, dynamic> bookingData = {
       'city': city,
@@ -281,7 +283,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Booking Type: ",
@@ -297,10 +299,10 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                         width: 200.w,
                                         decoration: BoxDecoration(
                                           border:
-                                              Border.all(color: Colors.grey),
+                                          Border.all(color: Colors.grey),
                                           color: Colors.transparent,
                                           borderRadius:
-                                              BorderRadius.circular(15),
+                                          BorderRadius.circular(15),
                                         ),
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<bool>(
@@ -308,7 +310,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                             onChanged: (newValue) {
                                               setState(() {
                                                 isFromAirportBooking =
-                                                    newValue!;
+                                                newValue!;
                                               });
                                             },
                                             dropdownColor: Color(0xFF1C1F23),
@@ -440,7 +442,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                 apiKey: googleMapApiKey,
                                 onSelected: (Place place) async {
                                   Geolocation? pickUpLocation =
-                                      await place.geolocation;
+                                  await place.geolocation;
                                   setState(() {
                                     pickUpLatitude =
                                         pickUpLocation?.coordinates.latitude;
@@ -498,7 +500,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                                   apiKey: googleMapApiKey,
                                   onSelected: (Place place) async {
                                     Geolocation? dropOffLocation =
-                                        await place.geolocation;
+                                    await place.geolocation;
                                     setState(() {
                                       dropOffLatitude =
                                           dropOffLocation?.coordinates.latitude;
@@ -567,22 +569,26 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
                             ),
                             SizedBox(height: 20.h),
                             Container(
-                              height: MediaQuery.of(context).size.height * 0.28,
-                              width: double.infinity,
-                              padding: EdgeInsets.all(16.h),
-                              margin: EdgeInsets.only(top: 16.h),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF333639),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20),
+                                height: MediaQuery.of(context).size.height * 0.28,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(16.h),
+                                margin: EdgeInsets.only(top: 16.h),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF333639),
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
                                 ),
-                              ),
-                              child: buildSummarySection(
-                                  context,
-                                  model.distanceInKm.toString(),
-                                  model.possibleTime.toString(), () {
-                                sendBookingData(context);
-                              }, model.isLoading),
+                                child: SummarySection(
+                                  distanceValue: model.distanceInKm.toString(),
+                                  possibleTime: model.possibleTime.toString(),
+                                  onTap: () {
+                                    sendBookingData(context);                                },
+                                  isLoading: model.isLoading,
+                                  price: widget.price, // Pass the price
+                                )
+
+
                             ),
                           ],
                         ),
@@ -607,108 +613,5 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     );
   }
 
-  Widget buildSummarySection(BuildContext context, String distanceValue,
-      String possibleTime, void Function()? onTap, bool isLoading) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Total Distance",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "$distanceValue",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Possible time",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "$possibleTime",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(height: 20.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Total Cost",
-              style: TextStyle(
-                color: const Color(0xFFFFBC07),
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "${widget.price} AED",
-              style: TextStyle(
-                color: const Color(0xFFFFBC07),
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 26.h),
-        Center(
-          child: ElevatedButton(
-            onPressed: onTap,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFFBC07),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(13.0),
-              ),
-              minimumSize: Size(200.w, 50.h),
-              padding: EdgeInsets.symmetric(
-                horizontal: 30.w,
-                vertical: 10.h,
-              ),
-            ),
-            child: isLoading
-                ? CircularProgressIndicator(
-                    color: ColorConstants.kWhiteColor,
-                  )
-                : Text(
-                    'Book Now',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.sp,
-                      color: Colors.black,
-                    ),
-                  ),
-          ),
-        ),
-      ],
-    );
-  }
+
 }

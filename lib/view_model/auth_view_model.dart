@@ -23,9 +23,10 @@ class AuthViewModel with ChangeNotifier {
       dynamic response = await _authRepository.loginApi(data);
 
       if (response != null) {
-        // Assuming your response contains token and user data
+        // Assuming your response contains token, user data and role
         String token = response['token'];
         Map<String, dynamic> userData = response['user'];
+        String role = userData['role']; // Extract role from user data
 
         // Create a UserModel instance
         UserModel userModel = UserModel(
@@ -37,10 +38,21 @@ class AuthViewModel with ChangeNotifier {
         await userViewModel.saveUser(userModel);
 
         setLoading(false);
-        Navigator.pushNamedAndRemoveUntil(
-            context, RoutesNames.home, arguments: userModel, (route) => false);
-        // Navigator.pushReplacementNamed(context, RoutesNames.home,
-        //     arguments: userModel);
+
+        // Logging the navigation details
+        print("Role: $role");
+        print("Navigating to the appropriate screen based on role");
+
+        // Navigate based on role
+        if (role == 'driver') {
+          print("Navigating to DriverHome with userId: ${userModel.user?.id}");
+          Navigator.pushNamedAndRemoveUntil(
+              context, RoutesNames.driverHome, arguments: userModel.user?.id, (route) => false);
+        } else {
+          print("Navigating to Home");
+          Navigator.pushNamedAndRemoveUntil(
+              context, RoutesNames.home, arguments: userModel, (route) => false);
+        }
       } else {
         throw Exception('Login failed');
       }

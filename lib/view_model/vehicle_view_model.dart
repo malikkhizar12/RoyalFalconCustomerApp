@@ -20,35 +20,21 @@ class VehicleViewModel with ChangeNotifier {
   }
 
   Future<void> fetchVehicleCategories(BuildContext context) async {
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      // Open Hive box
+    try {
       var box = await Hive.openBox('vehicleCategories');
 
-      // Check if data exists in Hive
-      var cachedDubaiVehicles = box.get('dubai');
-      var cachedAbuDhabiVehicles = box.get('abuDhabi');
-
-      // If data exists, use it
-      if (cachedDubaiVehicles != null && cachedAbuDhabiVehicles != null) {
-        _dubaiVehicles = cachedDubaiVehicles;
-        _abuDhabiVehicles = cachedAbuDhabiVehicles;
-        setLoading(false);
-        return;
-      }
-
-      // Fetch Dubai vehicles
-      var dubaiResponse = await _vehicleRepository.getVehicleCategories('Dubai');
-      if (dubaiResponse != null && dubaiResponse['vehicleCategories'] != null) {
-        _dubaiVehicles = dubaiResponse['vehicleCategories'];
+      // Always fetch new data from API
+      var dubaiResponse = await _fetchVehicleData('Dubai');
+      if (dubaiResponse != null) {
+        _dubaiVehicles = dubaiResponse;
         box.put('dubai', _dubaiVehicles);
       }
 
-      // Fetch Abu Dhabi vehicles
-      var abuDhabiResponse = await _vehicleRepository.getVehicleCategories('Abu Dhabi');
-      if (abuDhabiResponse != null && abuDhabiResponse['vehicleCategories'] != null) {
-        _abuDhabiVehicles = abuDhabiResponse['vehicleCategories'];
+      var abuDhabiResponse = await _fetchVehicleData('Abu Dhabi');
+      if (abuDhabiResponse != null) {
+        _abuDhabiVehicles = abuDhabiResponse;
         box.put('abuDhabi', _abuDhabiVehicles);
       }
 
@@ -63,6 +49,18 @@ class VehicleViewModel with ChangeNotifier {
         ),
       );
     }
+  }
+
+  Future<List<dynamic>?> _fetchVehicleData(String location) async {
+    try {
+      var response = await _vehicleRepository.getVehicleCategories(location);
+      if (response != null && response['vehicleCategories'] != null) {
+        return response['vehicleCategories'];
+      }
+    } catch (e) {
+      print('Error fetching data for $location: $e');
+    }
+    return null;
   }
 
   List<dynamic> getVehiclesByLocation(String location) {

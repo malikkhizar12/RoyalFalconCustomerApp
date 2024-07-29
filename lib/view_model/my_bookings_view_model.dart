@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 import 'package:royal_falcon/utils/utils/utils.dart';
-import 'package:royal_falcon/view/my_bookings/my_booking.dart';
 import 'dart:convert';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 import '../model/my_bookings_model.dart';
@@ -58,17 +57,11 @@ class MyBookingsViewModel extends ChangeNotifier {
   }
 
   void filterBookings(String status) {
-    print('Filtering bookings with status: $status');
     if (status == 'All') {
-      filteredBookings =
-          List.from(_bookings); // Copy list to avoid direct reference
+      filteredBookings = List.from(_bookings); // Copy list to avoid direct reference
     } else {
-      filteredBookings = _bookings
-          .where(
-              (booking) => booking.status.toLowerCase() == status.toLowerCase())
-          .toList();
+      filteredBookings = _bookings.where((booking) => booking.status.toLowerCase() == status.toLowerCase()).toList();
     }
-    print('Filtered bookings count: ${filteredBookings.length}');
     notifyListeners(); // Notify listeners of the state change
   }
 
@@ -98,23 +91,20 @@ class MyBookingsViewModel extends ChangeNotifier {
       throw Exception('Token is empty or invalid');
     }
 
-    print('Fetching page $_currentPage');
     final response = await http.get(
-      Uri.parse('${Appurl.getBooking}?page=$_currentPage&limit=10'),
+      Uri.parse('${Appurl.getBooking}?page=$_currentPage&limit=10'), // Fetch fewer items per page
       headers: {
         'Content-Type': 'application/json',
         'Authorization': '$token',
       },
     );
 
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       List bookings = jsonResponse['bookings'];
-      List<Bookings> newBookings =
-          bookings.map((booking) => Bookings.fromJson(booking)).toList();
+      List<Bookings> newBookings = bookings.map((booking) => Bookings.fromJson(booking)).toList();
 
       if (replace) {
         _bookings = newBookings; // Replace the current data
@@ -122,12 +112,10 @@ class MyBookingsViewModel extends ChangeNotifier {
         _bookings.addAll(newBookings); // Append the new data
       }
 
-      _bookings.sort((a, b) => b.createdAt
-          .compareTo(a.createdAt)); // Sort by createdAt in descending order
+      _bookings.sort((a, b) => b.createdAt.compareTo(a.createdAt)); // Sort by createdAt in descending order
 
       _totalPages = jsonResponse['pagination']['totalPages'];
-      filterBookings(
-          _selectedFilter); // Update filtered bookings after fetching
+      filterBookings(_selectedFilter); // Update filtered bookings after fetching
 
       // Cache the bookings data locally
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -156,12 +144,9 @@ class MyBookingsViewModel extends ChangeNotifier {
     return _statuses[bookingId] ?? '';
   }
 
-  Future<void> makePayment(
-      BuildContext context, String bookingId, amountToPay) async {
+  Future<void> makePayment(BuildContext context, String bookingId, amountToPay) async {
     try {
-      // print(amountToPay);
-      paymentIntent = await createPaymentIntent(
-          amountToPay.toStringAsFixed(0), 'AED', bookingId);
+      paymentIntent = await createPaymentIntent(amountToPay.toStringAsFixed(0), 'AED', bookingId);
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent!['client_secret'],

@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/colors.dart';
 import 'package:intl/intl.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../model/my_bookings_model.dart';
 import '../widgets/appbarcustom.dart';
@@ -20,6 +22,7 @@ class BookingDetailsPage extends StatefulWidget {
 
 class _BookingDetailsPageState extends State<BookingDetailsPage> {
   Timer? _timer;
+  int _currentSlideIndex = 0;
 
   @override
   void initState() {
@@ -44,15 +47,12 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     print(
         "this is data${widget.booking.driver.driverDetails.attachVehicle.vehicleCategory.name}");
 
-    String formattedDate =
-        DateFormat('MMMM d').format(widget.booking.guests.first.pickUpDateTime);
-    String formattedTime =
-        DateFormat('h:mm a').format(widget.booking.guests.first.pickUpDateTime);
+    String formattedDate = DateFormat('MMMM d').format(widget.booking.guests.first.pickUpDateTime);
+    String formattedTime = DateFormat('h:mm a').format(widget.booking.guests.first.pickUpDateTime);
 
     String flightNo = widget.booking.guests.first.flightNo ?? "None";
     String flightTiming = widget.booking.guests.first.flightTiming != null
-        ? DateFormat('MMMM d, yyyy h:mm a')
-            .format(DateTime.parse(widget.booking.guests.first.flightTiming!))
+        ? DateFormat('MMMM d, yyyy h:mm a').format(DateTime.parse(widget.booking.guests.first.flightTiming!))
         : "None";
 
     return Scaffold(
@@ -69,12 +69,78 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.booking.guests.first.vehicleCategoryId !=
-                        null) ...[
+                    if (widget.booking.driver != null &&
+                        widget.booking.driver!.driverDetails.attachVehicle.vehicleImages.isNotEmpty) ...[
+                      CarouselSlider.builder(
+                        itemCount: widget.booking.driver!.driverDetails.attachVehicle.vehicleImages.length,
+                        options: CarouselOptions(
+                          height: 200.h,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: false,
+                          autoPlay: false,
+                          onPageChanged: (index, reason) {
+                            if (mounted) {
+                              setState(() {
+                                _currentSlideIndex = index;
+                              });
+                            }
+                          },
+                        ),
+                        itemBuilder: (context, index, realIndex) {
+                          final imageUrl = widget.booking.driver!.driverDetails.attachVehicle.vehicleImages[index];
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(10.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.r),
+                              child: Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(Icons.error, color: Colors.red);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 16.h),
+                      Center(
+                        child: AnimatedSmoothIndicator(
+                          activeIndex: _currentSlideIndex,
+                          count: widget.booking.driver!.driverDetails.attachVehicle.vehicleImages.length,
+                          effect: WormEffect(
+                            dotWidth: 10.w,
+                            dotHeight: 10.h,
+                            activeDotColor: Color(0xFFFFBC07),
+                            dotColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        widget.booking.guests.first.vehicleCategoryId!.name,
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                    ] else if (widget.booking.guests.first.vehicleCategoryId != null) ...[
                       Center(
                         child: Image.network(
-                          widget.booking.guests.first.vehicleCategoryId!
-                              .categoryVehicleImage,
+                          widget.booking.guests.first.vehicleCategoryId!.categoryVehicleImage,
                           width: double.infinity,
                           height: 200.h,
                           fit: BoxFit.cover,
@@ -169,42 +235,110 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFFFFBC07))),
                           SizedBox(height: 8.h),
-                          widget.booking.status == "assigned"
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.booking.driver.name,
+
+                          if (widget.booking.status == "assigned") ...[
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(16.h),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF404040),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Driver Information',
                                       style: TextStyle(
-                                          fontSize: 16.sp, color: Colors.white),
-                                    ),
-                                    Text(
-                                      widget.booking.driver.email,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFFFFBC07))),
+                                  SizedBox(height: 8.h),
+                                  widget.booking.driver != null
+                                      ? Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Name: ${widget.booking.driver!.name}',
+                                        style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.white),
+                                      ),
+                                      Text(
+                                        'Email: ${widget.booking.driver!.email}',
+                                        style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.white),
+                                      ),
+                                      Text(
+                                        'Phone: ${widget.booking.driver!.phoneNumber}',
+                                        style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  )
+                                      : Text('No Driver assigned yet',
                                       style: TextStyle(
-                                          fontSize: 16.sp, color: Colors.white),
-                                    ),
-                                    Text(
-                                      widget.booking.driver.phoneNumber,
+                                          fontSize: 16.sp,
+                                          color: Colors.white)),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(16.h),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF404040),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: widget.booking.driver != null &&
+                                  widget.booking.driver!.driverDetails
+                                      .attachVehicle.vehicleImages.isNotEmpty
+                                  ? Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text('Vehicle Information',
                                       style: TextStyle(
-                                          fontSize: 16.sp, color: Colors.white),
-                                    ),
-                                    Text(
-                                      widget.booking.driver.driverDetails
-                                          .attachVehicle.vehicleCategory.name,
-                                      style: TextStyle(
-                                          fontSize: 16.sp, color: Colors.white),
-                                    ),
-                                    Text(
-                                      widget.booking.driver.driverDetails
-                                          .attachVehicle.color,
-                                      style: TextStyle(
-                                          fontSize: 16.sp, color: Colors.white),
-                                    ),
-                                  ],
-                                )
-                              : Text('No Driver assigned yet',
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFFFFBC07))),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    'Category: ${widget.booking.driver!.driverDetails.attachVehicle.vehicleCategory.name}',
+                                    style: TextStyle(
+                                        fontSize: 16.sp,
+                                        color: Colors.white),
+                                  ),
+                                  Text(
+                                    'Plate Number: ${widget.booking.driver!.driverDetails.attachVehicle.plateNo}',
+                                    style: TextStyle(
+                                        fontSize: 16.sp,
+                                        color: Colors.white),
+                                  ),
+                                  Text(
+                                    'Color: ${widget.booking.driver!.driverDetails.attachVehicle.color}',
+                                    style: TextStyle(
+                                        fontSize: 16.sp,
+                                        color: Colors.white),
+                                  ),
+                                  SizedBox(height: 16.h),
+
+                                ],
+                              )
+                                  : Text('No Vehicle assigned yet',
                                   style: TextStyle(
-                                      fontSize: 16.sp, color: Colors.white)),
+                                      fontSize: 16.sp,
+                                      color: Colors.white)),
+                            ),
+                          ] else ...[
+                            Text('No Driver assigned yet',
+                                style: TextStyle(
+                                    fontSize: 16.sp, color: Colors.white)),
+                          ],
+
                           SizedBox(height: 16.h),
                           if (widget.booking.status.toLowerCase() ==
                               'payment pending')
@@ -220,9 +354,10 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                      Color(0xFFFFBC07), // Background color
+                                  Color(0xFFFFBC07), // Background color
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.r),
+                                    borderRadius:
+                                    BorderRadius.circular(10.r),
                                   ),
                                 ),
                                 child: Text(
@@ -243,7 +378,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 color: widget.booking.status.toLowerCase() ==
-                                        'pending'
+                                    'pending'
                                     ? Colors.orange
                                     : Colors.green,
                               ),
