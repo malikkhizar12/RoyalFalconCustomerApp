@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
@@ -215,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Handle "See All" tap
+                        Navigator.push(context, MaterialPageRoute(builder:(context) =>AllServices()));
                       },
                       child: Text(
                         "See All",
