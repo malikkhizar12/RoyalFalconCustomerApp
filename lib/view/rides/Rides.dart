@@ -108,7 +108,7 @@ class _RidesState extends State<Rides> {
                                 Consumer<VehicleViewModel>(
                                   builder: (context, vehicleViewModel, child) {
                                     if (vehicleViewModel.loading) {
-                                      return FullScreenShimmerLoading();
+                                      return CustomShimmerLoading();
                                     } else {
                                       var vehicles = vehicleViewModel.getVehiclesByLocation(selectedLocation);
                                       if (vehicles.isEmpty) {

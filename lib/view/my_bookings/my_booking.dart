@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -7,9 +6,9 @@ import 'package:royal_falcon/view/Rides/Rides.dart';
 import 'package:royal_falcon/view/my_bookings/widgets/filter_dropdown.dart';
 import 'package:royal_falcon/view_model/my_bookings_view_model.dart';
 import 'package:royal_falcon/view/widgets/appbarcustom.dart';
-
 import '../../model/my_bookings_model.dart';
 import 'booking_details_view.dart';
+
 
 class MyBookings extends StatefulWidget {
   const MyBookings({Key? key}) : super(key: key);
