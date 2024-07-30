@@ -9,8 +9,8 @@ class HomeScreenCategories extends StatelessWidget {
 
   const HomeScreenCategories({
     Key? key,
-     this.categoryTitle,
-     this.imagePath, // Pass the image path
+    this.categoryTitle,
+    this.imagePath, // Pass the image path
     this.onTap, // Pass the navigation action
   }) : super(key: key);
 
@@ -22,20 +22,30 @@ class HomeScreenCategories extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-              child: Image.asset(imagePath!, width: 77.w, height: 67.h), // Use the provided image
-            ),
-
-          Text(
-            categoryTitle!,
-            style: TextStyle(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
+            child: Image.asset(imagePath!, width: 77.w, height: 67.h), // Use the provided image
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (categoryTitle == 'Hourly Hire') ...[
+                Icon(
+                  Icons.access_time, // Use an appropriate icon
+                  color: Colors.red,
+                  size: 16.0,
+                ),
+                SizedBox(width: 4.0),
+              ],
+              Text(
+                categoryTitle!,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
           ),
         ],
       ),
-
     );
   }
 }
