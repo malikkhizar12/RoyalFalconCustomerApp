@@ -5,13 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
+import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import '../../view_model/rides_booking_form_view_model.dart';
 import '../widgets/custom_end_drawer.dart';
 import '../Rides/Rides.dart';
 import '../widgets/searchbar.dart';
-import '../widgets/shimmer_effect.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,11 +20,14 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late HomeScreenViewModel _homeScreenViewModel;
   late Future<void> _initializeDataFuture;
+  late AnimationController _animationController;
+  bool _isVisible = false;
+
   int _current = 0; // To track the current page
 
   @override
@@ -37,6 +40,28 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<VehicleViewModel>(context, listen: false)
           .fetchVehicleCategories(context);
     });
+
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _startAnimation();
+  }
+
+  void _startAnimation() {
+    Future.delayed(Duration(milliseconds: 300), () {
+      setState(() {
+        _isVisible = true;
+      });
+      _animationController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,17 +77,14 @@ class _HomeScreenState extends State<HomeScreen> {
         body: FutureBuilder<void>(
           future: _initializeDataFuture,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CustomShimmerLoading();
-            }
-            return _buildContent(context);
+            return _buildContent(context, snapshot.connectionState);
           },
         ),
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, ConnectionState connectionState) {
     return SingleChildScrollView(
       child: Stack(
         children: [
@@ -82,7 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
             child: Column(
-
               children: [
                 Container(
                   decoration: BoxDecoration(
@@ -124,84 +145,90 @@ class _HomeScreenState extends State<HomeScreen> {
                   fillcolor: Color(0xFFFFBC07),
                   textcolor: Colors.white,
                 ),
-                Consumer<VehicleViewModel>(
-                  builder: (context, vehicleViewModel, child) {
-                    if (vehicleViewModel.dubaiVehicles.isEmpty &&
-                        vehicleViewModel.abuDhabiVehicles.isEmpty) {
-                      return Center(child: Text('No vehicles available'));
-                    } else {
-                      final limitedVehicles =
-                      (vehicleViewModel.dubaiVehicles +
-                          vehicleViewModel.abuDhabiVehicles)
-                          .take(6)
-                          .toList();
-                      return Column(
-                        children: [
-                          CarouselSlider(
-                            options: CarouselOptions(
-                              height: 210.0.h,
-                              enlargeCenterPage: true,
-                              autoPlay: true,
-                              aspectRatio: 16 / 9,
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              enableInfiniteScroll: true,
-                              autoPlayAnimationDuration:
-                              Duration(milliseconds: 700),
-                              viewportFraction: 1.0,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _current = index;
-                                });
-                              },
-                            ),
-                            items: limitedVehicles.map<Widget>((vehicle) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.3),
-                                      blurRadius: 10,
-                                      spreadRadius: 2,
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    vehicle['categoryVehicleImage'],
-                                    fit: BoxFit.cover,
+                if (connectionState == ConnectionState.waiting)
+                  Container(
+                    height: 210.0.h,
+                    child: SmallShimmerLoading(),
+                  )
+                else
+                  Consumer<VehicleViewModel>(
+                    builder: (context, vehicleViewModel, child) {
+                      if (vehicleViewModel.dubaiVehicles.isEmpty &&
+                          vehicleViewModel.abuDhabiVehicles.isEmpty) {
+                        return Center(child: Text('No vehicles available'));
+                      } else {
+                        final limitedVehicles =
+                        (vehicleViewModel.dubaiVehicles +
+                            vehicleViewModel.abuDhabiVehicles)
+                            .take(6)
+                            .toList();
+                        return Column(
+                          children: [
+                            CarouselSlider(
+                              options: CarouselOptions(
+                                height: 210.0.h,
+                                enlargeCenterPage: true,
+                                autoPlay: true,
+                                aspectRatio: 16 / 9,
+                                autoPlayCurve: Curves.fastOutSlowIn,
+                                enableInfiniteScroll: true,
+                                autoPlayAnimationDuration:
+                                Duration(milliseconds: 700),
+                                viewportFraction: 1.0,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _current = index;
+                                  });
+                                },
+                              ),
+                              items: limitedVehicles.map<Widget>((vehicle) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        blurRadius: 10,
+                                        spreadRadius: 2,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(limitedVehicles.length,
-                                    (index) {
-                                  return Container(
-                                    width: 10.0,
-                                    height: 6.0,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 2.0),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.rectangle,
-                                      color: _current == index
-                                          ? Color(0xFFFFBC07)
-                                          : Color.fromRGBO(0, 0, 0, 0.4),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      vehicle['categoryVehicleImage'],
+                                      fit: BoxFit.cover,
                                     ),
-                                  );
-                                }),
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(limitedVehicles.length,
+                                      (index) {
+                                    return Container(
+                                      width: 10.0,
+                                      height: 6.0,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 2.0),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.rectangle,
+                                        color: _current == index
+                                            ? Color(0xFFFFBC07)
+                                            : Color.fromRGBO(0, 0, 0, 0.4),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
                 SizedBox(height: 10.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,7 +243,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder:(context) =>AllServices()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => AllServices()));
                       },
                       child: Text(
                         "See All",
@@ -229,30 +257,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: _buildCategoryChip(
-                        'Rides',
-                            () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Rides()),
-                        ),
-                        'images/car_image.png',
+                    _buildAnimatedCategoryChip(
+                      'Rides',
+                          () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => Rides()),
                       ),
+                      'images/car_image.png',
                     ),
-                    Expanded(
-                      child: _buildCategoryChip('Buses', () {
+                    _buildAnimatedCategoryChip(
+                      'Buses',
+                          () {
                         // Handle Buses tap
-                      }, 'images/dubai_safari.jpg'),
+                      },
+                      'images/dubai_safari.jpg',
                     ),
-                    Expanded(
-                      child: _buildCategoryChip('Getaway', () {
+                    _buildAnimatedCategoryChip(
+                      'Getaway',
+                          () {
                         // Handle Getaway tap
-                      }, 'images/rides_cover.png'),
+                      },
+                      'images/rides_cover.png',
                     ),
-                    Expanded(
-                      child: _buildCategoryChip('Passport', () {
+                    _buildAnimatedCategoryChip(
+                      'Passport',
+                          () {
                         // Handle Passport pro tap
-                      }, 'images/stay_local.png'),
+                      },
+                      'images/stay_local.png',
                     ),
                   ],
                 ),
@@ -274,32 +307,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 Consumer<VehicleViewModel>(
                   builder: (context, vehicleViewModel, child) {
                     return Container(
-                        height: 210.0.h,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            _buildServiceCard(
-                                'images/hourly_booking.webp',
-                                'Hourly Bookings',
-                                    () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          HourlyBooking()),
-                                )),
-                            _buildServiceCard('images/activities_image.webp',
-                                'Activities', () {}),
-                            _buildServiceCard('images/partner_up_image.webp',
-                                ' Partner Up ', () {}),
-                          ],
-                        ),
-                      );
-
+                      height: 210.0.h,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          _buildServiceCard(
+                              'images/hourly_booking.webp',
+                              'Hourly Bookings',
+                                  () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => HourlyBooking()),
+                              )),
+                          _buildServiceCard('images/activities_image.webp',
+                              'Activities', () {}),
+                          _buildServiceCard('images/partner_up_image.webp',
+                              ' Partner Up ', () {}),
+                        ],
+                      ),
+                    );
                   },
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAnimatedCategoryChip(
+      String label, VoidCallback onTap, String imageAsset) {
+    return Expanded(
+      child: AnimatedScale(
+        scale: _isVisible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 1300),
+        curve: Curves.easeInOut,
+        child: _buildCategoryChip(label, onTap, imageAsset),
       ),
     );
   }
