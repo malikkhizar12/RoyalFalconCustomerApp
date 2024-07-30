@@ -45,7 +45,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<MyBookingsViewModel>(context);
     print(
-        "this is data${widget.booking.driver.driverDetails.attachVehicle.vehicleCategory.name}");
+        "this is data${widget.booking.driver?.driverDetails.attachVehicle.vehicleCategory.name}");
 
     String formattedDate = DateFormat('MMMM d').format(widget.booking.guests.first.pickUpDateTime);
     String formattedTime = DateFormat('h:mm a').format(widget.booking.guests.first.pickUpDateTime);
