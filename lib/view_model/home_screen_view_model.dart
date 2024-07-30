@@ -22,7 +22,7 @@ class HomeScreenViewModel with ChangeNotifier {
     notifyListeners(); // Notify listeners only when data changes
   }
 
-  void initializeData(BuildContext context) async {
+   initializeData(BuildContext context) async {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     UserModel? userData = await userViewModel.getUser();
     if (userData != null) {

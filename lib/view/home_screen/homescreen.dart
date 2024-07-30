@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
-
 import '../../view_model/rides_booking_form_view_model.dart';
 import '../widgets/custom_end_drawer.dart';
 import '../Rides/Rides.dart';
+import '../widgets/searchbar.dart';
 import '../widgets/shimmer_effect.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,263 +23,319 @@ class _HomeScreenState extends State<HomeScreen> {
   String googleMapApiKey = dotenv.env['GOOGLE_API_KEY']!;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late HomeScreenViewModel _homeScreenViewModel;
+  late Future<void> _initializeDataFuture;
+  int _current = 0; // To track the current page
 
   @override
   void initState() {
     super.initState();
-    _homeScreenViewModel = Provider.of<HomeScreenViewModel>(context, listen: false);
-    _homeScreenViewModel.initializeData(context);
+    _homeScreenViewModel =
+        Provider.of<HomeScreenViewModel>(context, listen: false);
+    _initializeDataFuture = _homeScreenViewModel.initializeData(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<VehicleViewModel>(context, listen: false).fetchVehicleCategories(context);
+      Provider.of<VehicleViewModel>(context, listen: false)
+          .fetchVehicleCategories(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final RidesBookingFormViewModel model = RidesBookingFormViewModel(context, 0);
+    final RidesBookingFormViewModel model =
+    RidesBookingFormViewModel(context, 0);
 
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         endDrawer: CustomEndDrawer(),
         backgroundColor: const Color(0xFF22262A),
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Opacity(
-                opacity: 0.08,
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('images/home_background.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+        body: FutureBuilder<void>(
+          future: _initializeDataFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CustomShimmerLoading();
+            }
+            return _buildContent(context);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          Opacity(
+            opacity: 0.08,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/home_background.jpg'),
+                  fit: BoxFit.cover,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 10,
-                            spreadRadius: 2,
-                          ),
-                        ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
+            child: Column(
+
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 10,
+                        spreadRadius: 2,
                       ),
-                      margin: EdgeInsets.only(top: 15, bottom: 20),
-                      height: 60,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ],
+                  ),
+                  margin: EdgeInsets.only(top: 15, bottom: 20),
+                  height: 60,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image.asset('images/home_icon.png'),
+                      Row(
                         children: [
-                          Image.asset('images/home_icon.png'),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  // Handle notifications button press
-                                },
-                                icon: Image.asset('images/notificaton_icon.png'),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  _scaffoldKey.currentState?.openEndDrawer();
-                                },
-                                icon: Image.asset('images/menu_icon.png'),
-                              ),
-                            ],
+                          IconButton(
+                            onPressed: () {
+                              // Handle notifications button press
+                            },
+                            icon: Image.asset('images/notificaton_icon.png'),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _scaffoldKey.currentState?.openEndDrawer();
+                            },
+                            icon: Image.asset('images/menu_icon.png'),
                           ),
                         ],
                       ),
-                    ),
-                    Consumer<HomeScreenViewModel>(
-                      builder: (context, homeScreenViewModel, child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 20.h),
-                            Text(
-                              "Best For Your Comfort",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.sp),
-                            ),
-                            SizedBox(height: 20.h),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  _buildCategoryChip(
-                                      'Rides',
-                                          () => Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) => Rides()
-                                          )
-                                          )
-                                  ),
-                                  _buildCategoryChip('Buses', () {
-                                    // Handle Getaway tap
-                                  }),
-                                  _buildCategoryChip('Getaway', () {
-                                    // Handle Explore tap
-                                  }),
-                                  _buildCategoryChip('Passport pro', () {
-                                    // Handle Passport pro tap
-                                  }),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Consumer<VehicleViewModel>(
-                              builder: (context, vehicleViewModel, child) {
-                                if (vehicleViewModel.loading) {
-                                  return FullScreenShimmerLoading();
-                                } else if (vehicleViewModel.dubaiVehicles.isEmpty && vehicleViewModel.abuDhabiVehicles.isEmpty) {
-                                  return Center(child: Text('No vehicles available'));
-                                } else {
-                                  return CarouselSlider(
-                                    options: CarouselOptions(
-                                      height: 210.0.h,
-                                      enlargeCenterPage: true,
-                                      autoPlay: false,
-                                      aspectRatio: 16 / 9,
-                                      autoPlayCurve: Curves.fastOutSlowIn,
-                                      enableInfiniteScroll: true,
-                                      autoPlayAnimationDuration: Duration(milliseconds: 800),
-                                      viewportFraction: 0.8,
-                                    ),
-                                    items: (vehicleViewModel.dubaiVehicles + vehicleViewModel.abuDhabiVehicles)
-                                        .map<Widget>((vehicle) {
-                                      return Builder(
-                                        builder: (BuildContext context) {
-                                          return Container(
-                                            width: MediaQuery.of(context).size.width,
-                                            margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey,
-                                            ),
-                                            child: Image.network(vehicle['categoryVehicleImage'], fit: BoxFit.cover),
-                                          );
-                                        },
-                                      );
-                                    }).toList(),
-                                  );
-                                }
+                    ],
+                  ),
+                ),
+                ElevatedSearchBar(
+                  fillcolor: Color(0xFFFFBC07),
+                  textcolor: Colors.white,
+                ),
+                Consumer<VehicleViewModel>(
+                  builder: (context, vehicleViewModel, child) {
+                    if (vehicleViewModel.dubaiVehicles.isEmpty &&
+                        vehicleViewModel.abuDhabiVehicles.isEmpty) {
+                      return Center(child: Text('No vehicles available'));
+                    } else {
+                      final limitedVehicles =
+                      (vehicleViewModel.dubaiVehicles +
+                          vehicleViewModel.abuDhabiVehicles)
+                          .take(6)
+                          .toList();
+                      return Column(
+                        children: [
+                          CarouselSlider(
+                            options: CarouselOptions(
+                              height: 210.0.h,
+                              enlargeCenterPage: true,
+                              autoPlay: true,
+                              aspectRatio: 16 / 9,
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enableInfiniteScroll: true,
+                              autoPlayAnimationDuration:
+                              Duration(milliseconds: 700),
+                              viewportFraction: 1.0,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _current = index;
+                                });
                               },
                             ),
-                            SizedBox(height: 20.h),
-                            Center(
-                              child: SizedBox(
-                                width: 0.8.sw,
-                                height: 45.h,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [Colors.yellowAccent, Color(0xFFCF9D2C)],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
+                            items: limitedVehicles.map<Widget>((vehicle) {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
                                     ),
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                                  child: Center(
-                                    child: Text(
-                                      "Royal Falcon Limousine",
-                                      style: TextStyle(
-                                        color: Colors.black.withOpacity(0.6),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    vehicle['categoryVehicleImage'],
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(height: 20.h),
-                            Text(
-                              "Other Services",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.sp),
-                            ),
-                            SizedBox(height: 10.h),
-                            Consumer<VehicleViewModel>(
-                              builder: (context, vehicleViewModel, child) {
-                                if (vehicleViewModel.loading) {
-                                  return FullScreenShimmerLoading();
-                                } else {
+                              );
+                            }).toList(),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(limitedVehicles.length,
+                                    (index) {
                                   return Container(
-                                    height: 210.0.h,
-                                    child: ListView(
-                                      scrollDirection: Axis.horizontal,
-                                      children: [
-                                        _buildServiceCard('images/hourly_booking.webp', 'Hourly Bookings',() => Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) => HourlyBooking()
-                                            )
-                                        )),
-                                        _buildServiceCard('images/activities_image.webp', 'Activities',(){}),
-                                        _buildServiceCard('images/partner_up_image.webp', ' Partner Up ', (){}),
-                                      ],
+                                    width: 10.0,
+                                    height: 6.0,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 10.0, horizontal: 2.0),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.rectangle,
+                                      color: _current == index
+                                          ? Color(0xFFFFBC07)
+                                          : Color.fromRGBO(0, 0, 0, 0.4),
                                     ),
                                   );
-                                }
-                              },
-                            ),
-                          ],
-                        );
+                                }),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Categories",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.sp,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Handle "See All" tap
                       },
+                      child: Text(
+                        "See All",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildCategoryChip(
+                        'Rides',
+                            () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Rides()),
+                        ),
+                        'images/car_image.png',
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildCategoryChip('Buses', () {
+                        // Handle Buses tap
+                      }, 'images/dubai_safari.jpg'),
+                    ),
+                    Expanded(
+                      child: _buildCategoryChip('Getaway', () {
+                        // Handle Getaway tap
+                      }, 'images/rides_cover.png'),
+                    ),
+                    Expanded(
+                      child: _buildCategoryChip('Passport', () {
+                        // Handle Passport pro tap
+                      }, 'images/stay_local.png'),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Book Now",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.sp),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Consumer<VehicleViewModel>(
+                  builder: (context, vehicleViewModel, child) {
+                    return Container(
+                        height: 210.0.h,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            _buildServiceCard(
+                                'images/hourly_booking.webp',
+                                'Hourly Bookings',
+                                    () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          HourlyBooking()),
+                                )),
+                            _buildServiceCard('images/activities_image.webp',
+                                'Activities', () {}),
+                            _buildServiceCard('images/partner_up_image.webp',
+                                ' Partner Up ', () {}),
+                          ],
+                        ),
+                      );
+
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildCategoryChip(String label, VoidCallback onTap) {
+  Widget _buildCategoryChip(
+      String label, VoidCallback onTap, String imageAsset) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+      padding: const EdgeInsets.only(right: 0.0),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
+          width: 100.w, // Adjust width as needed
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              colors: [Colors.yellowAccent, Color(0xFFCF9D2C)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              ),
-            ],
+            color: Colors.transparent,
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Text(
-              label,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Image.asset(
+                  imageAsset,
+                  height: 70.h, // Adjust height as needed
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(height: 8.0),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ),
         ),
@@ -287,7 +343,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildServiceCard(String imagePath, String title, VoidCallback onTap) {
+  Widget _buildServiceCard(
+      String imagePath, String title, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
