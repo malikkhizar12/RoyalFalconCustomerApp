@@ -25,7 +25,9 @@ class BookingsAdapter extends TypeAdapter<Bookings> {
       status: fields[5] as String,
       createdAt: fields[6] as DateTime,
       updatedAt: fields[7] as DateTime,
+
       driver: fields[8] as Driver?,
+
     );
   }
 
