@@ -13,7 +13,10 @@ class VehicleCardViewModel extends ChangeNotifier {
         _pricePerHour = pricePerHour;
 
   int get hours => _hours;
-  int get price => _initialPrice + (_hours - 1) * _pricePerHour; // Initial price + extra hours * price per hour
+  int get price =>
+      _initialPrice +
+      (_hours - 1) *
+          _pricePerHour; // Initial price + extra hours * price per hour
   int get maxHours => _maxHours;
   DateTime get selectedDate => _selectedDate;
   TimeOfDay get selectedTime => _selectedTime;

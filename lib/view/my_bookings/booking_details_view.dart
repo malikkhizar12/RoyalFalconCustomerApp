@@ -47,12 +47,15 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     print(
         "this is data${widget.booking.driver?.driverDetails.attachVehicle.vehicleCategory.name}");
 
-    String formattedDate = DateFormat('MMMM d').format(widget.booking.guests.first.pickUpDateTime);
-    String formattedTime = DateFormat('h:mm a').format(widget.booking.guests.first.pickUpDateTime);
+    String formattedDate =
+        DateFormat('MMMM d').format(widget.booking.guests.first.pickUpDateTime);
+    String formattedTime =
+        DateFormat('h:mm a').format(widget.booking.guests.first.pickUpDateTime);
 
     String flightNo = widget.booking.guests.first.flightNo ?? "None";
     String flightTiming = widget.booking.guests.first.flightTiming != null
-        ? DateFormat('MMMM d, yyyy h:mm a').format(DateTime.parse(widget.booking.guests.first.flightTiming!))
+        ? DateFormat('MMMM d, yyyy h:mm a')
+            .format(DateTime.parse(widget.booking.guests.first.flightTiming!))
         : "None";
 
     return Scaffold(
@@ -70,9 +73,11 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (widget.booking.driver != null &&
-                        widget.booking.driver!.driverDetails.attachVehicle.vehicleImages.isNotEmpty) ...[
+                        widget.booking.driver!.driverDetails.attachVehicle
+                            .vehicleImages.isNotEmpty) ...[
                       CarouselSlider.builder(
-                        itemCount: widget.booking.driver!.driverDetails.attachVehicle.vehicleImages.length,
+                        itemCount: widget.booking.driver!.driverDetails
+                            .attachVehicle.vehicleImages.length,
                         options: CarouselOptions(
                           height: 200.h,
                           enlargeCenterPage: true,
@@ -87,7 +92,8 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                           },
                         ),
                         itemBuilder: (context, index, realIndex) {
-                          final imageUrl = widget.booking.driver!.driverDetails.attachVehicle.vehicleImages[index];
+                          final imageUrl = widget.booking.driver!.driverDetails
+                              .attachVehicle.vehicleImages[index];
                           return Container(
                             margin: EdgeInsets.symmetric(horizontal: 5.0),
                             decoration: BoxDecoration(
@@ -118,7 +124,8 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       Center(
                         child: AnimatedSmoothIndicator(
                           activeIndex: _currentSlideIndex,
-                          count: widget.booking.driver!.driverDetails.attachVehicle.vehicleImages.length,
+                          count: widget.booking.driver!.driverDetails
+                              .attachVehicle.vehicleImages.length,
                           effect: WormEffect(
                             dotWidth: 10.w,
                             dotHeight: 10.h,
@@ -137,10 +144,12 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                         ),
                       ),
                       SizedBox(height: 16.h),
-                    ] else if (widget.booking.guests.first.vehicleCategoryId != null) ...[
+                    ] else if (widget.booking.guests.first.vehicleCategoryId !=
+                        null) ...[
                       Center(
                         child: Image.network(
-                          widget.booking.guests.first.vehicleCategoryId!.categoryVehicleImage,
+                          widget.booking.guests.first.vehicleCategoryId!
+                              .categoryVehicleImage,
                           width: double.infinity,
                           height: 200.h,
                           fit: BoxFit.cover,
@@ -166,76 +175,121 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Pick-up Date & Time',
-                              style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFFBC07))),
-                          SizedBox(height: 8.h),
-                          Text('Pick-up Date: $formattedDate',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
-                          Text('Pick-up Time: $formattedTime',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
-                          SizedBox(height: 16.h),
-                          Text('Pick-up & Drop Off Location',
-                              style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFFBC07))),
+                          Text(
+                            'Pick-up Date & Time',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFFBC07),
+                            ),
+                          ),
                           SizedBox(height: 8.h),
                           Text(
-                              'Pick-up Location: ${widget.booking.guests.first.fromLocationName}',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
+                            'Pick-up Date: $formattedDate',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
                           Text(
-                              'Drop Off Location: ${widget.booking.guests.first.toLocationName}',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
+                            'Pick-up Time: $formattedTime',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
                           SizedBox(height: 16.h),
-                          Text('Baggage & People',
-                              style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFFBC07))),
+                          Text(
+                            'Pick-up & Drop Off Location',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFFBC07),
+                            ),
+                          ),
                           SizedBox(height: 8.h),
                           Text(
-                              '${widget.booking.guests.first.noOfBaggage} Baggage',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
+                            'Pick-up Location: ${widget.booking.guests.first.fromLocationName}',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
                           Text(
-                              '${widget.booking.guests.first.noOfPeople} People',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
+                            'Drop Off Location: ${widget.booking.guests.first.toLocationName}',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
                           SizedBox(height: 16.h),
-                          Text('Flight Number',
-                              style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFFBC07))),
+                          Text(
+                            'Baggage & People',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFFBC07),
+                            ),
+                          ),
                           SizedBox(height: 8.h),
-                          Text('Flight No: $flightNo',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
+                          Text(
+                            '${widget.booking.guests.first.noOfBaggage} Baggage',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            '${widget.booking.guests.first.noOfPeople} People',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
                           SizedBox(height: 16.h),
-                          Text('Flight Timing',
-                              style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFFBC07))),
+                          Text(
+                            'Flight Number',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFFBC07),
+                            ),
+                          ),
                           SizedBox(height: 8.h),
-                          Text('Flight Time: $flightTiming',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
+                          Text(
+                            'Flight No: $flightNo',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
                           SizedBox(height: 16.h),
-                          Text('Assigned Driver & Vehicle Detail',
-                              style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFFBC07))),
+                          Text(
+                            'Flight Timing',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFFBC07),
+                            ),
+                          ),
                           SizedBox(height: 8.h),
-
+                          Text(
+                            'Flight Time: $flightTiming',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          Text(
+                            'Assigned Driver & Vehicle Detail',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFFBC07),
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
                           if (widget.booking.status == "assigned") ...[
                             Container(
                               width: MediaQuery.of(context).size.width,
@@ -247,41 +301,50 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Driver Information',
-                                      style: TextStyle(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFFFFBC07))),
+                                  Text(
+                                    'Driver Information',
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFFFBC07),
+                                    ),
+                                  ),
                                   SizedBox(height: 8.h),
                                   widget.booking.driver != null
                                       ? Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Name: ${widget.booking.driver!.name}',
-                                        style: TextStyle(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Name: ${widget.booking.driver!.name}',
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Email: ${widget.booking.driver!.email}',
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Phone: ${widget.booking.driver!.phoneNumber}',
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Text(
+                                          'No Driver assigned yet',
+                                          style: TextStyle(
                                             fontSize: 16.sp,
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                        'Email: ${widget.booking.driver!.email}',
-                                        style: TextStyle(
-                                            fontSize: 16.sp,
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                        'Phone: ${widget.booking.driver!.phoneNumber}',
-                                        style: TextStyle(
-                                            fontSize: 16.sp,
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  )
-                                      : Text('No Driver assigned yet',
-                                      style: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: Colors.white)),
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 ],
                               ),
                             ),
@@ -294,51 +357,54 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: widget.booking.driver != null &&
-                                  widget.booking.driver!.driverDetails
-                                      .attachVehicle.vehicleImages.isNotEmpty
+                                      widget
+                                          .booking
+                                          .driver!
+                                          .driverDetails
+                                          .attachVehicle
+                                          .vehicleImages
+                                          .isNotEmpty
                                   ? Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Text('Vehicle Information',
-                                      style: TextStyle(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFFFFBC07))),
-                                  SizedBox(height: 8.h),
-                                  Text(
-                                    'Category: ${widget.booking.driver!.driverDetails.attachVehicle.vehicleCategory.name}',
-                                    style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: Colors.white),
-                                  ),
-                                  Text(
-                                    'Plate Number: ${widget.booking.driver!.driverDetails.attachVehicle.plateNo}',
-                                    style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: Colors.white),
-                                  ),
-                                  Text(
-                                    'Color: ${widget.booking.driver!.driverDetails.attachVehicle.color}',
-                                    style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: Colors.white),
-                                  ),
-                                  SizedBox(height: 16.h),
-
-                                ],
-                              )
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Vehicle Information',
+                                            style: TextStyle(
+                                                fontSize: 18.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xFFFFBC07))),
+                                        SizedBox(height: 8.h),
+                                        Text(
+                                          'Category: ${widget.booking.driver!.driverDetails.attachVehicle.vehicleCategory.name}',
+                                          style: TextStyle(
+                                              fontSize: 16.sp,
+                                              color: Colors.white),
+                                        ),
+                                        Text(
+                                          'Plate Number: ${widget.booking.driver!.driverDetails.attachVehicle.plateNo}',
+                                          style: TextStyle(
+                                              fontSize: 16.sp,
+                                              color: Colors.white),
+                                        ),
+                                        Text(
+                                          'Color: ${widget.booking.driver!.driverDetails.attachVehicle.color}',
+                                          style: TextStyle(
+                                              fontSize: 16.sp,
+                                              color: Colors.white),
+                                        ),
+                                        SizedBox(height: 16.h),
+                                      ],
+                                    )
                                   : Text('No Vehicle assigned yet',
-                                  style: TextStyle(
-                                      fontSize: 16.sp,
-                                      color: Colors.white)),
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: Colors.white)),
                             ),
                           ] else ...[
                             Text('No Driver assigned yet',
                                 style: TextStyle(
                                     fontSize: 16.sp, color: Colors.white)),
                           ],
-
                           SizedBox(height: 16.h),
                           if (widget.booking.status.toLowerCase() ==
                               'payment pending')
@@ -354,10 +420,9 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                  Color(0xFFFFBC07), // Background color
+                                      Color(0xFFFFBC07), // Background color
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(10.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
                                 ),
                                 child: Text(
@@ -378,7 +443,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 color: widget.booking.status.toLowerCase() ==
-                                    'pending'
+                                        'pending'
                                     ? Colors.orange
                                     : Colors.green,
                               ),

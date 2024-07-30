@@ -11,16 +11,15 @@ class AuthRepository {
           await _apiServices.getPostApiResponse(Appurl.loginUrl, data);
       return response;
     } catch (e) {
-      print('Login error in repository: $e');
-      print('Login error in repository: ${e.toString()}');
-
+      print('Login error in repository: ${e}');
       throw e; // Rethrow the exception for handling in ViewModel or UI
     }
   }
 
   Future<dynamic> signupApi(dynamic data) async {
     try {
-      dynamic response = await _apiServices.getPostApiResponse(Appurl.signupUrl, data);
+      dynamic response =
+          await _apiServices.getPostApiResponse(Appurl.signupUrl, data);
       return response;
     } catch (e) {
       print('Signup error in repository: $e');

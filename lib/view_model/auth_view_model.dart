@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:royal_falcon/model/user_model.dart';
@@ -23,11 +25,9 @@ class AuthViewModel with ChangeNotifier {
       dynamic response = await _authRepository.loginApi(data);
 
       if (response != null) {
-        // Assuming your response contains token, user data and role
         String token = response['token'];
         Map<String, dynamic> userData = response['user'];
         String role = userData['role']; // Extract role from user data
-
         // Create a UserModel instance
         UserModel userModel = UserModel(
           token: token,
@@ -47,35 +47,55 @@ class AuthViewModel with ChangeNotifier {
         if (role == 'driver') {
           print("Navigating to DriverHome with userId: ${userModel.user?.id}");
           Navigator.pushNamedAndRemoveUntil(
-              context, RoutesNames.driverHome, arguments: userModel.user?.id, (route) => false);
+              context,
+              RoutesNames.driverHome,
+              arguments: userModel.user?.id,
+              (route) => false);
         } else {
           print("Navigating to Home");
           Navigator.pushNamedAndRemoveUntil(
-              context, RoutesNames.home, arguments: userModel, (route) => false);
+              context,
+              RoutesNames.home,
+              arguments: userModel,
+              (route) => false);
         }
       } else {
         throw Exception('Login failed');
       }
     } catch (e) {
       setLoading(false);
-      print(e.toString().contains('message'));
-      Utils.errorMessage(e.toString(), context);
-      String errorMessage = 'Login failed: $e';
+      print("Check condition : ${e.toString().contains('message')}");
 
-      // Check for specific error messages
-      if (e.toString().contains('Invalid email')) {
-        errorMessage = 'Incorrect email';
-      } else if (e.toString().contains('Error During Communication')) {
-        errorMessage = 'Unauthorized User';
+      String errorMessage;
+      try {
+        var errorResponse = jsonDecode(e.toString());
+        print(errorResponse);
+        errorMessage = errorResponse['message'] ?? 'Login failed';
+      } catch (jsonError) {
+        errorMessage = 'Login failed: $e';
       }
 
+      Utils.errorMessage(errorMessage, context);
+
+      // setLoading(false);
+      // print(e.toString().contains('message'));
+      // Utils.errorMessage(e.toString(), context);
+      // String errorMessage = 'Login failed: $e';
+
+      // Check for specific error messages
+      // if (e.toString().contains('Invalid email')) {
+      //   errorMessage = 'Incorrect email';
+      // } else if (e.toString().contains('Error During Communication')) {
+      //   errorMessage = 'Unauthorized User';
+      // }
+
       // Show snackbar with appropriate error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text(errorMessage),
+      //     duration: const Duration(seconds: 3),
+      //   ),
+      // );
     }
   }
 
