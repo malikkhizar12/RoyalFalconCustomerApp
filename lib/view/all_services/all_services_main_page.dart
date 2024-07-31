@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import '../../utils/colors.dart';
 import '../../view_model/home_screen_view_model.dart';
 import '../Rides/Rides.dart';
 import '../rent_a_car/widgets/appbar.dart';
 import '../widgets/home_screen_categories.dart';
-import '../widgets/searchbar.dart';
+import '../widgets/search_bar_widget.dart';
 
 class AllServices extends StatefulWidget {
   const AllServices({super.key});
@@ -16,7 +17,8 @@ class AllServices extends StatefulWidget {
   _AllServicesState createState() => _AllServicesState();
 }
 
-class _AllServicesState extends State<AllServices> with TickerProviderStateMixin {
+class _AllServicesState extends State<AllServices>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   bool _isVisible = false;
 
@@ -59,7 +61,8 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                   height: 0.28.sh,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('images/hourly_booking_cover.png'), // Ensure you have this image in your assets
+                      image: AssetImage(
+                          'images/hourly_booking_cover.png'), // Ensure you have this image in your assets
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -69,12 +72,14 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                   child: Column(
                     children: [
                       const AppbarHourly(title: 'All Services'),
-                      SizedBox(height: 100.h), // Adjust the height as per your design
+                      SizedBox(
+                          height:
+                              100.h), // Adjust the height as per your design
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: ElevatedSearchBar(
-                          fillcolor: Color(0xFFFFBC07),
-                          textcolor: Colors.white,
+                          fillColor: Color(0xFFFFBC07),
+                          textColor: Colors.white,
                           hintText: "Search",
                         ),
                       ),
@@ -87,7 +92,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
                 width: 1.sw,
-                color: ColorConstants.backgroundColor,
+                color: AppColors.backgroundColor,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -101,7 +106,10 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.r),
                                   gradient: LinearGradient(
-                                    colors: [Color(0xFF3A3E41), Color(0xFF22262A)],
+                                    colors: [
+                                      Color(0xFF3A3E41),
+                                      Color(0xFF22262A)
+                                    ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
@@ -125,7 +133,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rides',
-                                                () => Navigator.of(context).push(
+                                            () => Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) => Rides(),
                                               ),
@@ -136,7 +144,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Getaway',
-                                                () {
+                                            () {
                                               // Handle Getaway tap
                                             },
                                             'images/getaway.png',
@@ -145,7 +153,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Explore',
-                                                () {
+                                            () {
                                               // Handle Explore tap
                                             },
                                             'images/explore.png',
@@ -159,7 +167,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Partner up',
-                                                () {
+                                            () {
                                               // Handle Partner up tap
                                             },
                                             'images/partner.png',
@@ -168,7 +176,12 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Passport pro',
-                                                () {
+                                            () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PassportProView()));
                                               // Handle Passport pro tap
                                             },
                                             'images/passport_pro.png',
@@ -195,7 +208,10 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.r),
                                   gradient: LinearGradient(
-                                    colors: [Color(0xFF3A3E41), Color(0xFF22262A)],
+                                    colors: [
+                                      Color(0xFF3A3E41),
+                                      Color(0xFF22262A)
+                                    ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
@@ -219,9 +235,10 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Hourly Hire',
-                                                () => Navigator.of(context).push(
+                                            () => Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) => HourlyBooking(),
+                                                builder: (context) =>
+                                                    HourlyBooking(),
                                               ),
                                             ),
                                             'images/wheels.png',
@@ -230,7 +247,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rent A Bus',
-                                                () {
+                                            () {
                                               // Handle Rent A Bus tap
                                             },
                                             'images/bus_image.png',
@@ -258,7 +275,8 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
     );
   }
 
-  Widget _buildAnimatedCategory(String label, VoidCallback onTap, String imageAsset) {
+  Widget _buildAnimatedCategory(
+      String label, VoidCallback onTap, String imageAsset) {
     return AnimatedScale(
       scale: _isVisible ? 1.0 : 0.0,
       duration: Duration(milliseconds: 1000),

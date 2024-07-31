@@ -36,7 +36,7 @@ class _SignupPageState extends State<SignupPage> {
     final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
-      backgroundColor: ColorConstants.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),

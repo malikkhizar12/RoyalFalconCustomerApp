@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
     final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
-      backgroundColor: ColorConstants.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -165,7 +165,7 @@ class _LoginState extends State<Login> {
                             authViewModel.loginApi(data, context);
                           },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.buttonColor),
+                            backgroundColor: MaterialStateProperty.all<Color>(AppColors.buttonColor),
                             padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             minimumSize: MaterialStateProperty.all<Size>(const Size(double.infinity, 48)),

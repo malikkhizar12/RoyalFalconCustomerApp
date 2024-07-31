@@ -9,7 +9,7 @@ class OtpVerification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: Container(
         margin: EdgeInsets.symmetric(vertical: 10.w, horizontal: 20.h),
         child: Column(

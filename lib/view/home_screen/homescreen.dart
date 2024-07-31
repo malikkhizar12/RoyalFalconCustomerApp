@@ -11,7 +11,7 @@ import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import '../../view_model/rides_booking_form_view_model.dart';
 import '../widgets/custom_end_drawer.dart';
 import '../Rides/Rides.dart';
-import '../widgets/searchbar.dart';
+import '../widgets/search_bar_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -142,8 +142,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 ElevatedSearchBar(
-                  fillcolor: Color(0xFFFFBC07),
-                  textcolor: Colors.white,
+                  fillColor: Color(0xFFFFBC07),
+                  textColor: Colors.white,
                 ),
                 if (connectionState == ConnectionState.waiting)
                   Container(
@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   margin: EdgeInsets.symmetric(horizontal: 5.0),
                                   decoration: BoxDecoration(
                                     color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10.r),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.3),
@@ -374,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   label,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16.sp,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,

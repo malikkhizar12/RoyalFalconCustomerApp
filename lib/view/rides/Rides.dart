@@ -42,7 +42,7 @@ class _RidesState extends State<Rides> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: ColorConstants.backgroundColor,
+        backgroundColor: AppColors.backgroundColor,
         key: scaffoldkey,
         endDrawer: CustomEndDrawer(),
         body: SingleChildScrollView(

@@ -5,7 +5,7 @@ import 'package:royal_falcon/view/Rides/location_buttons.dart';
 import 'package:royal_falcon/view/rent_a_car/widgets/appbar.dart';
 import 'package:royal_falcon/view/rent_a_car/widgets/confirm_booking_bottom_sheet.dart';
 import 'package:royal_falcon/view/rent_a_car/widgets/vehicle_card_hourly.dart';
-import '../widgets/searchbar.dart';
+import '../widgets/search_bar_widget.dart';
 
 class HourlyBooking extends StatefulWidget {
   const HourlyBooking({super.key});
@@ -49,8 +49,8 @@ class _HourlyBookingState extends State<HourlyBooking> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: ElevatedSearchBar(
-                          fillcolor: Color(0xFFFFBC07),
-                          textcolor: Colors.white,
+                          fillColor: Color(0xFFFFBC07),
+                          textColor: Colors.white,
                         ),
                       ),
                       // Add other widgets here if needed
@@ -62,7 +62,7 @@ class _HourlyBookingState extends State<HourlyBooking> {
             Expanded(
               child: Container(
                 width: 1.sw,
-                color: ColorConstants
+                color: AppColors
                     .backgroundColor, // Background color for the remaining space
                 child: SingleChildScrollView(
                   child: Column(

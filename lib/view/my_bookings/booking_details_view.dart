@@ -59,7 +59,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
         : "None";
 
     return Scaffold(
-      backgroundColor: ColorConstants.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
