@@ -20,7 +20,7 @@ class VehicleCardWithoutButton extends StatelessWidget {
         children: [
           Center(
             child: Image.asset(
-              'assets/assets/assets/images///hourly_booking_car.png',
+              'assets/images/hourly_booking_car.png',
               width: double.infinity,
               fit: BoxFit.cover,
             ),

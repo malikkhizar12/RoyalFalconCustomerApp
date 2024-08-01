@@ -46,14 +46,22 @@ class _LoginState extends State<Login> {
         children: [
           SingleChildScrollView(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              height: 1.sh,
+              width: 1.sw,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/company_logo.png'),
-                  Image.asset('assets/images/royal_falcon.png'),
+                  Image.asset(
+                    'assets/images/company_logo.png',
+                    width: 0.5.sw,
+                    height: 0.1.sh,
+                  ),
+                  Image.asset(
+                    'assets/images/royal_falcon.png',
+                    width: 0.6.sw,
+                    height: 0.2.sh,
+                  ),
                   SizedBox(height: 50.h),
                   Container(
                     alignment: Alignment.topLeft,
@@ -73,7 +81,7 @@ class _LoginState extends State<Login> {
                       focusNode: emailFocusNode,
                       decoration: InputDecoration(
                         hintText: 'Enter your email',
-                        hintStyle: const TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Colors.white, fontSize: 14.sp),
                         filled: true,
                         fillColor: const Color(0xFF1A1E23),
                         border: OutlineInputBorder(
@@ -84,7 +92,7 @@ class _LoginState extends State<Login> {
                       onFieldSubmitted: (_) {
                         Utils.fieldFocusChange(context, emailFocusNode, passwordFocusNode);
                       },
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontSize: 14.sp),
                       keyboardType: TextInputType.emailAddress,
                     ),
                   ),
@@ -112,10 +120,11 @@ class _LoginState extends State<Login> {
                           icon: Icon(
                             isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                             color: Colors.white,
+                            size: 18.sp,
                           ),
                         ),
                         hintText: 'Enter your password',
-                        hintStyle: const TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Colors.white, fontSize: 14.sp),
                         filled: true,
                         fillColor: const Color(0xFF1A1E23),
                         border: OutlineInputBorder(
@@ -123,30 +132,33 @@ class _LoginState extends State<Login> {
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontSize: 14.sp),
                     ),
                   ),
                   Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.only(bottom: 30.h, top: 10.h, right: 20.w, left: 20.w),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
+                    width: 1.sw,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40.0),
-                        topRight: Radius.circular(40.0),
+                        topLeft: Radius.circular(40.r),
+                        topRight: Radius.circular(40.r),
                       ),
-                      color: Color(0xFF0E1115), // Even darker color
+                      color: const Color(0xFF0E1115),
                     ),
                     child: Column(
                       children: [
-                        const Text('Or Sign up with', style: TextStyle(color: Colors.white)),
+                        Text(
+                          'Or Sign up with',
+                          style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                        ),
                         SizedBox(height: 30.h),
                         Container(
                           height: 50.h,
                           width: 50.w,
                           decoration: BoxDecoration(
                             color: const Color(0xFF1A1E23),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: IconButton(
                             onPressed: () {
@@ -168,10 +180,10 @@ class _LoginState extends State<Login> {
                             backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.buttonColor),
                             padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            minimumSize: MaterialStateProperty.all<Size>(const Size(double.infinity, 48)),
+                            minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 48.h)),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(13),
+                                borderRadius: BorderRadius.circular(13.r),
                               ),
                             ),
                           ),
@@ -210,13 +222,12 @@ class _LoginState extends State<Login> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
               },
-              child: const Text(
+              child: Text(
                 'Signup',
-                style:  TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.grey, fontSize: 14.sp),
               ),
             ),
           ),
-
         ],
       ),
     );

@@ -36,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final Set<Marker> _markers = {};
   final Set<Polyline> _polylines = {};
 
+  CameraPosition? _initialCameraPosition;
+
   @override
   void initState() {
     super.initState();
@@ -108,6 +110,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       }
 
       Position position = await Geolocator.getCurrentPosition();
+      setState(() {
+        _initialCameraPosition = CameraPosition(
+          target: LatLng(position.latitude, position.longitude),
+          zoom: 12.5,
+        );
+      });
       print("Current position: ${position.latitude}, ${position.longitude}");
     } catch (e) {
       print("Error in getting location: $e");
@@ -153,8 +161,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           Opacity(
             opacity: 0.08,
             child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              height: 1.sh,
+              width: 1.sw,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/home_background.jpg'),
@@ -164,39 +172,50 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
+            padding: EdgeInsets.only(right: 20.w, left: 20.w, top: 10.h),
             child: Column(
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.3),
-                        blurRadius: 10,
-                        spreadRadius: 2,
+                        blurRadius: 10.r,
+                        spreadRadius: 2.r,
                       ),
                     ],
                   ),
-                  margin: EdgeInsets.only(top: 15, bottom: 20),
-                  height: 60,
+                  margin: EdgeInsets.only(top: 15.h, bottom: 20.h),
+                  height: 60.h,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset('assets/images/home_icon.png'),
+                      Image.asset(
+                        'assets/images/home_icon.png',
+
+                      ),
                       Row(
                         children: [
                           IconButton(
                             onPressed: () {
                               // Handle notifications button press
                             },
-                            icon: Image.asset('assets/images/notificaton_icon.png'),
+                            icon: Image.asset(
+                              'assets/images/notificaton_icon.png',
+                              height: 30.h,
+                              width: 30.w,
+                            ),
                           ),
                           IconButton(
                             onPressed: () {
                               _scaffoldKey.currentState?.openEndDrawer();
                             },
-                            icon: Image.asset('assets/images/menu_icon.png'),
+                            icon: Image.asset(
+                              'assets/images/menu_icon.png',
+                              height: 30.h,
+                              width: 30.w,
+                            ),
                           ),
                         ],
                       ),
@@ -216,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   Consumer<VehicleViewModel>(
                     builder: (context, vehicleViewModel, child) {
                       if (vehicleViewModel.dubaiVehicles.isEmpty && vehicleViewModel.abuDhabiVehicles.isEmpty) {
-                        return Center(child: Text('No vehicles available'));
+                        return Center(child: Text('No vehicles available', style: TextStyle(color: Colors.white, fontSize: 14.sp)));
                       } else {
                         final limitedVehicles = (vehicleViewModel.dubaiVehicles + vehicleViewModel.abuDhabiVehicles)
                             .take(6)
@@ -241,21 +260,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ),
                               items: limitedVehicles.map<Widget>((vehicle) {
                                 return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  width: 1.sw,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0.w),
                                   decoration: BoxDecoration(
                                     color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10.r),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.3),
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
+                                        blurRadius: 10.r,
+                                        spreadRadius: 2.r,
                                       ),
                                     ],
                                   ),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10.r),
                                     child: Image.network(
                                       vehicle['categoryVehicleImage'],
                                       fit: BoxFit.cover,
@@ -268,9 +287,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: List.generate(limitedVehicles.length, (index) {
                                 return Container(
-                                  width: 10.0,
-                                  height: 6.0,
-                                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                                  width: 10.0.w,
+                                  height: 6.0.h,
+                                  margin: EdgeInsets.symmetric(vertical: 10.0.h, horizontal: 2.0.w),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
                                     color: _current == index
@@ -358,20 +377,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   height: 210.0.h,
                   child: LayoutBuilder(
                       builder: (context, constraints) {
-                        return GoogleMap(
+                        return _initialCameraPosition != null
+                            ? GoogleMap(
                           zoomControlsEnabled: false,
                           myLocationEnabled: true,
                           onMapCreated: (controller) {
                             _mapController = controller;
                             _setMapStyle(); // Ensure the map style is set after the controller is initialized
                           },
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(24.466667, 54.366669),
-                            zoom: 12.5,
-                          ),
+                          initialCameraPosition: _initialCameraPosition!,
                           markers: _markers,
                           polylines: _polylines,
-                        );
+                        )
+                            : Center(child: CircularProgressIndicator(color: Color(0xFFFFBC07),));
                       }
                   ),
                 ),
@@ -396,17 +414,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildCategoryChip(String label, VoidCallback onTap, String imageAsset) {
     return Padding(
-      padding: const EdgeInsets.only(right: 0.0),
+      padding: EdgeInsets.only(right: 10.0.w),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
           width: 100.w, // Adjust width as needed
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20.r),
             color: Colors.transparent,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0.r),
             child: Column(
               children: [
                 Image.asset(
@@ -415,12 +433,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(height: 8.0),
+                SizedBox(height: 8.0.h),
                 Text(
                   label,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16.sp,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,

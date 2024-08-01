@@ -19,7 +19,6 @@ import 'package:royal_falcon/view_model/profile_screen_view_model.dart';
 import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'model/driver_booking_model.dart';
 import 'model/my_bookings_model.dart';
