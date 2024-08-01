@@ -20,7 +20,7 @@ class RidePageCar {
     return [
       RidePageCar(
         name: 'Lexus ES 300H',
-        imageUrl: 'assets/images/lexus.png',
+        imageUrl: 'assets/assets/images/lexus.png',
         price: 100,
         baggage: 3,
         persons: 4,
@@ -28,7 +28,7 @@ class RidePageCar {
       ),
       RidePageCar(
         name: 'Mercedes Benz S Class',
-        imageUrl: 'assets/images/mercedes.png',
+        imageUrl: 'assets/assets/images/mercedes.png',
         price: 225,
         baggage: 3,
         persons: 4,
@@ -36,7 +36,7 @@ class RidePageCar {
       ),
       RidePageCar(
         name: 'Chevrolet Malibu',
-        imageUrl: 'assets/images/chevrolet.png',
+        imageUrl: 'assets/assets/images/chevrolet.png',
         price: 225,
         baggage: 3,
         persons: 4,

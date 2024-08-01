@@ -52,8 +52,8 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset('images/company_logo.png'),
-                  Image.asset('images/royal_falcon.png'),
+                  Image.asset('assets/images/company_logo.png'),
+                  Image.asset('assets/images/royal_falcon.png'),
                   SizedBox(height: 50.h),
                   Container(
                     alignment: Alignment.topLeft,
@@ -152,7 +152,7 @@ class _LoginState extends State<Login> {
                             onPressed: () {
                               // Handle Google login
                             },
-                            icon: Image.asset('images/google_logo.webp', width: 40.w, height: 40.h),
+                            icon: Image.asset('assets/images/google_logo.webp', width: 40.w, height: 40.h),
                           ),
                         ),
                         SizedBox(height: 30.h),

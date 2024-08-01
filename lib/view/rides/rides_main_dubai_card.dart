@@ -64,7 +64,7 @@ class RidesMainDubaiCard extends StatelessWidget {
                     errorBuilder: (context, error, stackTrace) {
                       print('Error loading image: $error'); // Log the error
                       return Image.asset(
-                        'images/car_image.png',
+                        'assets/images/car_image.png',
                         width: double.infinity,
                         height: 90.h, // Fixed height
                         fit: BoxFit.cover, // Adjust the fit as needed
@@ -72,7 +72,7 @@ class RidesMainDubaiCard extends StatelessWidget {
                     },
                   )
                       : Image.asset(
-                    'images/car_image.png',
+                    'assets/images/car_image.png',
                     width: double.infinity,
                     height: 90.h, // Fixed height
                     fit: BoxFit.cover, // Adjust the fit as needed

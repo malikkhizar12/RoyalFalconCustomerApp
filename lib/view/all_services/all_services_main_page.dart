@@ -59,7 +59,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                   height: 0.28.sh,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('images/hourly_booking_cover.png'), // Ensure you have this image in your assets
+                      image: AssetImage('assets/images/hourly_booking_cover.png'), // Ensure you have this image in your assets
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -130,7 +130,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                                 builder: (context) => Rides(),
                                               ),
                                             ),
-                                            'images/wheels.png',
+                                            'assets/images/wheels.png',
                                           ),
                                         ),
                                         Expanded(
@@ -139,7 +139,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                                 () {
                                               // Handle Getaway tap
                                             },
-                                            'images/getaway.png',
+                                            'assets/images/getaway.png',
                                           ),
                                         ),
                                         Expanded(
@@ -148,7 +148,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                                 () {
                                               // Handle Explore tap
                                             },
-                                            'images/explore.png',
+                                            'assets/images/explore.png',
                                           ),
                                         ),
                                       ],
@@ -162,7 +162,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                                 () {
                                               // Handle Partner up tap
                                             },
-                                            'images/partner.png',
+                                            'assets/images/partner.png',
                                           ),
                                         ),
                                         Expanded(
@@ -171,7 +171,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                                 () {
                                               // Handle Passport pro tap
                                             },
-                                            'images/passport_pro.png',
+                                            'assets/images/passport_pro.png',
                                           ),
                                         ),
                                         Spacer()
@@ -224,7 +224,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                                 builder: (context) => HourlyBooking(),
                                               ),
                                             ),
-                                            'images/wheels.png',
+                                            'assets/images/wheels.png',
                                           ),
                                         ),
                                         Expanded(
@@ -233,7 +233,7 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                                 () {
                                               // Handle Rent A Bus tap
                                             },
-                                            'images/bus_image.png',
+                                            'assets/images/bus_image.png',
                                           ),
                                         ),
                                         Spacer()

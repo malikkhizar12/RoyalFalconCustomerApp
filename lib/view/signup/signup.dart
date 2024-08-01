@@ -47,8 +47,8 @@ class _SignupPageState extends State<SignupPage> {
               Center(
                 child: Column(
                   children: [
-                    Image.asset('images/company_logo.png', height: 80),
-                    Image.asset('images/royal_falcon.png', height: 40),
+                    Image.asset('assets/images/company_logo.png', height: 80),
+                    Image.asset('assets/images/royal_falcon.png', height: 40),
                   ],
                 ),
               ),

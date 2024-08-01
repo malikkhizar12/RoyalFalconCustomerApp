@@ -25,7 +25,7 @@ class BookingType extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Image.asset('images/home_icon.png'),
+          Image.asset('assets/images/home_icon.png'),
           SizedBox(height: 20.h,),
           SizedBox(
             width: 283.w,

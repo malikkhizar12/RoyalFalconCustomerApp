@@ -41,14 +41,14 @@ class AppbarCustom extends StatelessWidget {
 
                 },
 
-                icon: Image.asset('images/about_icon.png'),
+                icon: Image.asset('assets/images/about_icon.png'),
               ),
               IconButton(
                 onPressed: () {
 
                 },
 
-                icon: Image.asset('images/heart_like.png'),
+                icon: Image.asset('assets/images/heart_like.png'),
               ),
             ],
           ),

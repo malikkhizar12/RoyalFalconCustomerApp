@@ -55,7 +55,7 @@ class _RidesState extends State<Rides> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'images/rides_cover.png',
+                        'assets/images/rides_cover.png',
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.fitWidth,
                       ),

@@ -33,7 +33,7 @@ class _HourlyBookingState extends State<HourlyBooking> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(
-                          'images/hourly_booking_cover.png'), // Ensure you have this image in your assets
+                          'assets/images/hourly_booking_cover.png'), // Ensure you have this image in your assets
                       fit: BoxFit.cover,
                     ),
                   ),

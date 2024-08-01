@@ -1,10 +1,13 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
-import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
@@ -29,16 +32,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool _isVisible = false;
 
   int _current = 0; // To track the current page
+  GoogleMapController? _mapController;
+  final Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
 
   @override
   void initState() {
     super.initState();
-    _homeScreenViewModel =
-        Provider.of<HomeScreenViewModel>(context, listen: false);
+    _homeScreenViewModel = Provider.of<HomeScreenViewModel>(context, listen: false);
     _initializeDataFuture = _homeScreenViewModel.initializeData(context);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<VehicleViewModel>(context, listen: false)
-          .fetchVehicleCategories(context);
+      _getLocation();
+      Provider.of<VehicleViewModel>(context, listen: false).fetchVehicleCategories(context);
     });
 
     _animationController = AnimationController(
@@ -47,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
 
     _startAnimation();
+    _addMarkers();
   }
 
   void _startAnimation() {
@@ -58,6 +65,62 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
+  void _addMarkers() {
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: MarkerId('vehicle1'),
+          position: LatLng(24.466667, 54.366669),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+        ),
+      );
+      _markers.add(
+        Marker(
+          markerId: MarkerId('vehicle2'),
+          position: LatLng(24.477667, 54.356669),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        ),
+      );
+    });
+  }
+
+  Future<void> _getLocation() async {
+    try {
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return Future.error('Location services are disabled.');
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return Future.error('Location permissions are denied');
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return Future.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+      }
+
+      Position position = await Geolocator.getCurrentPosition();
+      print("Current position: ${position.latitude}, ${position.longitude}");
+    } catch (e) {
+      print("Error in getting location: $e");
+    }
+  }
+
+  Future<void> _setMapStyle() async {
+    if (_mapController != null) {
+      final String style = await rootBundle.loadString('assets/map_style.json');
+      _mapController!.setMapStyle(style);
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -66,8 +129,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final RidesBookingFormViewModel model =
-    RidesBookingFormViewModel(context, 0);
+    final RidesBookingFormViewModel model = RidesBookingFormViewModel(context, 0);
 
     return SafeArea(
       child: Scaffold(
@@ -95,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('images/home_background.jpg'),
+                  image: AssetImage('assets/images/home_background.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -121,20 +183,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset('images/home_icon.png'),
+                      Image.asset('assets/images/home_icon.png'),
                       Row(
                         children: [
                           IconButton(
                             onPressed: () {
                               // Handle notifications button press
                             },
-                            icon: Image.asset('images/notificaton_icon.png'),
+                            icon: Image.asset('assets/images/notificaton_icon.png'),
                           ),
                           IconButton(
                             onPressed: () {
                               _scaffoldKey.currentState?.openEndDrawer();
                             },
-                            icon: Image.asset('images/menu_icon.png'),
+                            icon: Image.asset('assets/images/menu_icon.png'),
                           ),
                         ],
                       ),
@@ -153,13 +215,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 else
                   Consumer<VehicleViewModel>(
                     builder: (context, vehicleViewModel, child) {
-                      if (vehicleViewModel.dubaiVehicles.isEmpty &&
-                          vehicleViewModel.abuDhabiVehicles.isEmpty) {
+                      if (vehicleViewModel.dubaiVehicles.isEmpty && vehicleViewModel.abuDhabiVehicles.isEmpty) {
                         return Center(child: Text('No vehicles available'));
                       } else {
-                        final limitedVehicles =
-                        (vehicleViewModel.dubaiVehicles +
-                            vehicleViewModel.abuDhabiVehicles)
+                        final limitedVehicles = (vehicleViewModel.dubaiVehicles + vehicleViewModel.abuDhabiVehicles)
                             .take(6)
                             .toList();
                         return Column(
@@ -172,8 +231,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 aspectRatio: 16 / 9,
                                 autoPlayCurve: Curves.fastOutSlowIn,
                                 enableInfiniteScroll: true,
-                                autoPlayAnimationDuration:
-                                Duration(milliseconds: 700),
+                                autoPlayAnimationDuration: Duration(milliseconds: 700),
                                 viewportFraction: 1.0,
                                 onPageChanged: (index, reason) {
                                   setState(() {
@@ -186,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   width: MediaQuery.of(context).size.width,
                                   margin: EdgeInsets.symmetric(horizontal: 5.0),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey,
+                                    color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
@@ -208,21 +266,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(limitedVehicles.length,
-                                      (index) {
-                                    return Container(
-                                      width: 10.0,
-                                      height: 6.0,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 2.0),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        color: _current == index
-                                            ? Color(0xFFFFBC07)
-                                            : Color.fromRGBO(0, 0, 0, 0.4),
-                                      ),
-                                    );
-                                  }),
+                              children: List.generate(limitedVehicles.length, (index) {
+                                return Container(
+                                  width: 10.0,
+                                  height: 6.0,
+                                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: _current == index
+                                        ? Color(0xFFFFBC07)
+                                        : Color.fromRGBO(0, 0, 0, 0.4),
+                                  ),
+                                );
+                              }),
                             ),
                           ],
                         );
@@ -243,8 +299,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => AllServices()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => AllServices()));
                       },
                       child: Text(
                         "See All",
@@ -261,71 +316,64 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   children: [
                     _buildAnimatedCategoryChip(
                       'Rides',
-                          () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => Rides()),
-                      ),
-                      'images/car_image.png',
+                          () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Rides())),
+                      'assets/images/car_image.png',
                     ),
                     _buildAnimatedCategoryChip(
                       'Buses',
                           () {
                         // Handle Buses tap
                       },
-                      'images/dubai_safari.jpg',
+                      'assets/images/dubai_safari.jpg',
                     ),
                     _buildAnimatedCategoryChip(
                       'Getaway',
                           () {
                         // Handle Getaway tap
                       },
-                      'images/rides_cover.png',
+                      'assets/images/rides_cover.png',
                     ),
                     _buildAnimatedCategoryChip(
                       'Passport',
                           () {
                         // Handle Passport pro tap
                       },
-                      'images/stay_local.png',
+                      'assets/images/stay_local.png',
                     ),
                   ],
                 ),
                 SizedBox(height: 20.h),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Book Now",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.sp),
-                    ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Book Now",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.sp),
                   ),
                 ),
                 SizedBox(height: 10.h),
-                Consumer<VehicleViewModel>(
-                  builder: (context, vehicleViewModel, child) {
-                    return Container(
-                      height: 210.0.h,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _buildServiceCard(
-                              'images/hourly_booking.webp',
-                              'Hourly Bookings',
-                                  () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => HourlyBooking()),
-                              )),
-                          _buildServiceCard('images/activities_image.webp',
-                              'Activities', () {}),
-                          _buildServiceCard('images/partner_up_image.webp',
-                              ' Partner Up ', () {}),
-                        ],
-                      ),
-                    );
-                  },
+                Container(
+                  height: 210.0.h,
+                  child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return GoogleMap(
+                          zoomControlsEnabled: false,
+                          myLocationEnabled: true,
+                          onMapCreated: (controller) {
+                            _mapController = controller;
+                            _setMapStyle(); // Ensure the map style is set after the controller is initialized
+                          },
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(24.466667, 54.366669),
+                            zoom: 12.5,
+                          ),
+                          markers: _markers,
+                          polylines: _polylines,
+                        );
+                      }
+                  ),
                 ),
               ],
             ),
@@ -335,8 +383,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildAnimatedCategoryChip(
-      String label, VoidCallback onTap, String imageAsset) {
+  Widget _buildAnimatedCategoryChip(String label, VoidCallback onTap, String imageAsset) {
     return Expanded(
       child: AnimatedScale(
         scale: _isVisible ? 1.0 : 0.0,
@@ -347,8 +394,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCategoryChip(
-      String label, VoidCallback onTap, String imageAsset) {
+  Widget _buildCategoryChip(String label, VoidCallback onTap, String imageAsset) {
     return Padding(
       padding: const EdgeInsets.only(right: 0.0),
       child: GestureDetector(
@@ -383,51 +429,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildServiceCard(
-      String imagePath, String title, VoidCallback onTap) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: onTap,
-            child: Container(
-              width: 180.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 10,
-            left: 10,
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-                backgroundColor: Colors.black45,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

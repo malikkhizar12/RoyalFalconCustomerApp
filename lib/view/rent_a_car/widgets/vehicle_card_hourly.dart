@@ -30,7 +30,7 @@ class VehicleCard extends StatelessWidget {
         children: [
           Center(
             child: Image.asset(
-              'images/hourly_booking_car.png',
+              'assets/images/hourly_booking_car.png',
               width: double.infinity,
               fit: BoxFit.cover,
             ),

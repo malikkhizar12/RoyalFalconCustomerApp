@@ -178,7 +178,7 @@ class _MyBookingsState extends State<MyBookings> {
                                         color: Colors
                                             .white,
                                         child: Image.asset(
-                                            'images/lexus300.png'),
+                                            'assets/images/lexus300.png'),
                                       ),
                                       title: Column(
                                         crossAxisAlignment:
