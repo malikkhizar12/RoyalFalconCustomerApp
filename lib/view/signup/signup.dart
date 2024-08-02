@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/signup/widgets/phone_number_field.dart';
 import 'package:royal_falcon/view/signup/widgets/textfields.dart';
+import 'package:royal_falcon/view/widgets/button_widget.dart';
 import '../../utils/colors.dart';
 import '../../utils/utils/form_validator.dart';
 import '../../utils/utils/utils.dart';
@@ -25,7 +25,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   String selectedCountryCode = '+92';
   String? phoneNumberError;
   String? passwordError;
@@ -63,9 +64,11 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               SizedBox(height: 20.h),
-              buildTextField('Email Address', emailController, TextInputType.emailAddress),
+              buildTextField(
+                  'Email Address', emailController, TextInputType.emailAddress),
               SizedBox(height: 20.h),
-              SignupPhoneNumberField(controller: phoneController, label: 'Phone Number'),
+              SignupPhoneNumberField(
+                  controller: phoneController, label: 'Phone Number'),
               if (phoneNumberError != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -75,7 +78,9 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               SizedBox(height: 20.h),
-              buildTextField('Password', passwordController, TextInputType.visiblePassword, obscureText: true),
+              buildTextField(
+                  'Password', passwordController, TextInputType.visiblePassword,
+                  obscureText: true),
               if (passwordError != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -85,45 +90,64 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               SizedBox(height: 20.h),
-              buildTextField('Confirm Password', confirmPasswordController, TextInputType.visiblePassword, obscureText: true),
+              buildTextField('Confirm Password', confirmPasswordController,
+                  TextInputType.visiblePassword,
+                  obscureText: true),
               SizedBox(height: 35.h),
-              Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_validateForm()) {
-                        final fullPhoneNumber = '$selectedCountryCode${phoneController.text}';
-                        final data = {
-                          'name': nameController.text,
-                          'email': emailController.text,
-                          'phoneNumber': fullPhoneNumber,
-                          'password': passwordController.text,
-                        };
+              ButtonWidget(
+                title: "Sign Up",
+                onTap: () async {
+                  if (_validateForm()) {
+                    final fullPhoneNumber =
+                        '$selectedCountryCode${phoneController.text}';
+                    final data = {
+                      'name': nameController.text,
+                      'email': emailController.text,
+                      'phoneNumber': fullPhoneNumber,
+                      'password': passwordController.text,
+                    };
 
-                        bool success = await authViewModel.signupApi(data, context);
-                        if (success) {
-                          Navigator.pushNamedAndRemoveUntil(context, RoutesNames.login, (route) => false);
-                          Utils.flushBarMessage("Account Created Successfully", context);
-                        }
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFD700), // Button color
-                      padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 100.w),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: authViewModel.loading
-                        ? const Center(child: CircularProgressIndicator(color: Colors.white))
-                        : Text(
-                      'Sign Up',
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                  ),
-                ),
+                    bool success = await authViewModel.signupApi(data, context);
+                    if (success) {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, RoutesNames.login, (route) => false);
+                      Utils.flushBarMessage(
+                          "Account Created Successfully", context);
+                    }
+                  }
+                },
+                width: 1.sw,
+                height: 50.h,
+                isShadow: true,
+                isLoading: authViewModel.loading,
               ),
+              // Center(
+              //   child: SizedBox(
+              //     width: MediaQuery.of(context).size.width * 0.85,
+              //     child: ElevatedButton(
+              //       onPressed: () async {},
+              //       style: ElevatedButton.styleFrom(
+              //         backgroundColor: const Color(0xFFFFD700), // Button color
+              //         padding: EdgeInsets.symmetric(
+              //             vertical: 15.h, horizontal: 100.w),
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(10),
+              //         ),
+              //       ),
+              //       child: authViewModel.loading
+              //           ? const Center(
+              //               child:
+              //                   CircularProgressIndicator(color: Colors.white))
+              //           : Text(
+              //               'Sign Up',
+              //               style: TextStyle(
+              //                   fontSize: 18.sp,
+              //                   fontWeight: FontWeight.bold,
+              //                   color: Colors.black),
+              //             ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 40.h),
               Center(
                 child: RichText(
@@ -135,7 +159,8 @@ class _SignupPageState extends State<SignupPage> {
                         text: 'Login',
                         style: const TextStyle(
                           color: Colors.blue,
-                          decoration: TextDecoration.none, // Remove underline here
+                          decoration:
+                              TextDecoration.none, // Remove underline here
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
@@ -158,7 +183,8 @@ class _SignupPageState extends State<SignupPage> {
 
     setState(() {
       nameError = FormValidators.validateName(nameController.text.trim());
-      phoneNumberError = FormValidators.validatePhoneNumber(phoneController.text);
+      phoneNumberError =
+          FormValidators.validatePhoneNumber(phoneController.text);
       passwordError = FormValidators.validatePassword(passwordController.text);
 
       if (passwordController.text != confirmPasswordController.text) {
@@ -167,6 +193,9 @@ class _SignupPageState extends State<SignupPage> {
       }
     });
 
-    return isValid && nameError == null && phoneNumberError == null && passwordError == null;
+    return isValid &&
+        nameError == null &&
+        phoneNumberError == null &&
+        passwordError == null;
   }
 }
