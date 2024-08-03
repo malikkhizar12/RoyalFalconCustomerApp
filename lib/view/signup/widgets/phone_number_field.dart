@@ -62,6 +62,7 @@ class _PhoneNumberFieldState extends State<SignupPhoneNumberField> {
             child: TextField(
               controller: widget.controller,
               keyboardType: TextInputType.phone,
+              cursorColor: AppColors.buttonColor,
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(10),

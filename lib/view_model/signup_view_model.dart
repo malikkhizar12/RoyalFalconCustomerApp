@@ -12,8 +12,14 @@ class SignupViewModel extends ChangeNotifier {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  ValueNotifier<bool> passObscureText = ValueNotifier<bool>(true);
+  ValueNotifier<bool> confirmPassObscureText = ValueNotifier<bool>(true);
   String selectedCountryCode = '+92';
-  String? phoneNumberError, passwordError, nameError, emailError;
+  String? phoneNumberError,
+      passwordError,
+      nameError,
+      emailError,
+      confirmPasswordError;
 
   void setLoading(bool value) {
     _loading = value;
@@ -57,19 +63,23 @@ class SignupViewModel extends ChangeNotifier {
   }
 
   bool validateForm() {
-    bool isValid = true;
+    // bool isValid = true;
     nameError = FormValidators.validateName(nameController.text.trim());
     phoneNumberError = FormValidators.validatePhoneNumber(phoneController.text);
     passwordError = FormValidators.validatePassword(passwordController.text);
     emailError = FormValidators.validateEmail(emailController.text);
+    confirmPasswordError = FormValidators.validateConfirmPassword(
+        passwordController.text, confirmPasswordController.text);
+    print(confirmPasswordError);
+
     notifyListeners();
 
-    if (passwordController.text != confirmPasswordController.text) {
-      passwordError = 'Passwords do not match';
-      isValid = false;
-    }
+    // if (passwordController.text != confirmPasswordController.text) {
+    //   passwordError = 'Passwords do not match';
+    //   isValid = false;
+    // }
 
-    return isValid &&
+    return confirmPasswordError == null &&
         nameError == null &&
         emailError == null &&
         phoneNumberError == null &&

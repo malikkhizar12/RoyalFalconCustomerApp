@@ -6,13 +6,19 @@ class TextFieldWidget extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final TextInputType keyboardType;
-  final bool obscureText;
+  final bool obscureText, isPassword;
+  final VoidCallback? iconOnTap;
+  final Function(String)? onSubmitted;
+
   const TextFieldWidget({
     super.key,
     required this.hintText,
     required this.controller,
     required this.keyboardType,
     this.obscureText = false,
+    this.isPassword = false,
+    this.iconOnTap,
+    this.onSubmitted,
   });
 
   @override
@@ -46,7 +52,20 @@ class TextFieldWidget extends StatelessWidget {
           ),
           contentPadding:
               EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+          suffixIcon: isPassword
+              ? IconButton(
+                  onPressed: iconOnTap,
+                  icon: Icon(
+                    obscureText == false
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: AppColors.buttonColor,
+                  ),
+                )
+              : SizedBox(),
         ),
+        onTapOutside: (event) => FocusScope.of(context).unfocus(),
+        onSubmitted: onSubmitted,
       ),
     );
   }

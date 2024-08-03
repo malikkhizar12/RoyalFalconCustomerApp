@@ -118,10 +118,21 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   10.verticalSpace,
-                  TextFieldWidget(
+                  ValueListenableBuilder(
+                    valueListenable: model.passObscureText,
+                    builder: (BuildContext context, value, Widget? child) =>
+                        TextFieldWidget(
                       hintText: "***********",
                       controller: model.passwordController,
-                      keyboardType: TextInputType.text),
+                      keyboardType: TextInputType.text,
+                      isPassword: true,
+                      obscureText: model.passObscureText.value,
+                      iconOnTap: () {
+                        model.passObscureText.value =
+                            !model.passObscureText.value;
+                      },
+                    ),
+                  ),
                   10.verticalSpace,
                   if (model.passwordError != null)
                     Text(
@@ -138,10 +149,27 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   10.verticalSpace,
-                  TextFieldWidget(
+                  ValueListenableBuilder(
+                    valueListenable: model.confirmPassObscureText,
+                    builder: (BuildContext context, value, Widget? child) =>
+                        TextFieldWidget(
                       hintText: "***********",
                       controller: model.confirmPasswordController,
-                      keyboardType: TextInputType.text),
+                      keyboardType: TextInputType.text,
+                      isPassword: true,
+                      obscureText: model.confirmPassObscureText.value,
+                      iconOnTap: () {
+                        model.confirmPassObscureText.value =
+                            !model.confirmPassObscureText.value;
+                      },
+                    ),
+                  ),
+                  10.verticalSpace,
+                  if (model.confirmPasswordError != null)
+                    Text(
+                      model.confirmPasswordError!,
+                      style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                    ),
                   40.verticalSpace,
                   ButtonWidget(
                     title: "Sign Up",

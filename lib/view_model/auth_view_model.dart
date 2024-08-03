@@ -13,6 +13,12 @@ class AuthViewModel with ChangeNotifier {
   final AuthRepository _authRepository = AuthRepository();
   bool _loading = false;
   bool get loading => _loading;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+  ValueNotifier<bool> passObscureText = ValueNotifier<bool>(true);
+
 
   void setLoading(bool value) {
     _loading = value;
