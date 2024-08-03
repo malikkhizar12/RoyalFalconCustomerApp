@@ -89,6 +89,15 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(color: Colors.red, fontSize: 14.sp),
                     ),
                   10.verticalSpace,
+                  Text(
+                    'Phone Number',
+                    style: TextStyle(
+                      color: AppColors.kWhiteColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  10.verticalSpace,
                   SignupPhoneNumberField(
                     controller: model.phoneController,
                     label: 'Phone Number',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_falcon/utils/colors.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final String hintText;
@@ -28,12 +29,6 @@ class TextFieldWidget extends StatelessWidget {
             blurRadius: 7,
             offset: const Offset(0, 0),
           ),
-          // BoxShadow(
-          //   color: Colors.black.withOpacity(0.5),
-          //   spreadRadius: -5,
-          //   blurRadius: 10,
-          //   offset: const Offset(3, 3),
-          // ),
         ],
       ),
       padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -41,6 +36,7 @@ class TextFieldWidget extends StatelessWidget {
         controller: controller,
         keyboardType: keyboardType,
         obscureText: obscureText,
+        cursorColor: AppColors.buttonColor,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: hintText,

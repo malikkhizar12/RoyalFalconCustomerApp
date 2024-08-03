@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
+import 'package:royal_falcon/utils/colors.dart';
 
 class SignupPhoneNumberField extends StatefulWidget {
   final String label;
@@ -18,94 +19,66 @@ class _PhoneNumberFieldState extends State<SignupPhoneNumberField> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.label,
-          style: TextStyle(color: Colors.white, fontSize: 16.sp),
-        ),
-        SizedBox(height: 5.h),
-        Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A1E23),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.black, width: 0.7),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                spreadRadius: -5,
-                blurRadius: 10,
-                offset: const Offset(-3, -3),
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                spreadRadius: -5,
-                blurRadius: 10,
-                offset: const Offset(3, 3),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1E23),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.black, width: 0.7),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xff5E5B5B40).withOpacity(0.25),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 0),
           ),
-          child: Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 10.w),
-                child: DropdownButton<String>(
-                  dropdownColor: Colors.black,
-                  value: selectedCountryCode,
-                  items: <String>['+92', '+971', '+44'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value, style: const TextStyle(color: Colors.white)),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedCountryCode = newValue!;
-                    });
-                  },
-                  underline: const SizedBox(),
-                ),
-              ),
-              Expanded(
-                child: TextField(
-                  controller: widget.controller,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      if (value.length > 10) {
-                        phoneNumberError = 'Phone number cannot exceed 10 digits';
-                      } else {
-                        phoneNumberError = null;
-                      }
-                    });
-                  },
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Row(
+        children: [
+          DropdownButton<String>(
+            dropdownColor: AppColors.backgroundColor,
+            value: selectedCountryCode,
+            borderRadius: BorderRadius.circular(13.r),
+            items: <String>['+92', '+971', '+44'].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.white,
                   ),
                 ),
-              ),
-            ],
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedCountryCode = newValue!;
+              });
+            },
+            underline: const SizedBox(),
           ),
-        ),
-        if (phoneNumberError != null)
-          Padding(
-            padding: EdgeInsets.only(top: 5.h),
-            child: Text(
-              phoneNumberError!,
-              style: TextStyle(color: Colors.red, fontSize: 12.sp),
+          Expanded(
+            child: TextField(
+              controller: widget.controller,
+              keyboardType: TextInputType.phone,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10),
+              ],
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+              ),
             ),
           ),
-      ],
+        ],
+      ),
     );
   }
 }
