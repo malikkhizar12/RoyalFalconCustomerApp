@@ -1,34 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_falcon/utils/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SmallShimmerLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Column(
-            children: [
+    return Container(
+      width: 1.sw,
+      color:ColorConstants.backgroundColor, // Set the background color to black
+      child: Shimmer.fromColors(
+          baseColor: Colors.black.withOpacity(0.2),
+          highlightColor: Colors.grey.withOpacity(0.5), // Slightly lighter grey for highlight color
+        child: Column(
+          children: [
+            // First rectangle
+            Container(
+              width: double.infinity,
+              height: 210.0.h,
+              color: Colors.grey[800],
+            ),
 
-              SizedBox(height: 16.0),
-              Container(
-                width: double.infinity,
-                height: 100.0,
-                color: Colors.grey[300],
-              ),
-              SizedBox(height: 16.0),
-              // Smaller rectangles
-
-
-            ],
-          ),
+          ],
         ),
       ),
-
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
@@ -229,6 +230,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
                 if (connectionState == ConnectionState.waiting)
                   Container(
+                    color: ColorConstants.backgroundColor,
                     height: 210.0.h,
                     child: SmallShimmerLoading(),
                   )
@@ -264,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   width: 1.sw,
                                   margin: EdgeInsets.symmetric(horizontal: 5.0.w),
                                   decoration: BoxDecoration(
-                                    color: Colors.transparent,
+                                    color: ColorConstants.backgroundColor,
                                     borderRadius: BorderRadius.circular(10.r),
                                     boxShadow: [
                                       BoxShadow(
