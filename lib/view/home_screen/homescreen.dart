@@ -10,6 +10,7 @@ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
+import 'package:royal_falcon/view/rent_a_bus/bus_booking.dart';
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
@@ -343,10 +344,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                     _buildAnimatedCategoryChip(
                       'Buses',
-                          () {
-                        // Handle Buses tap
-                      },
-                      'assets/images/dubai_safari.jpg',
+                          () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => BusBooking())),
+
+                      'assets/images/bus_image.png',
                     ),
                     _buildAnimatedCategoryChip(
                       'Getaway',
@@ -470,35 +470,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       padding: EdgeInsets.only(right: 10.0.w),
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
-          width: 100.w, // Adjust width as needed
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.r),
-            color: Colors.transparent,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(8.0.r),
-            child: Column(
-              children: [
-                Image.asset(
-                  imageAsset,
-                  height: 70.h, // Adjust height as needed
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(height: 8.0.h),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
+        child: Column(
+          children: [
+            Container(
+
+              width: 100.w, // Adjust width as needed
+              decoration: BoxDecoration(
+                color: Colors.black,
+              ),
+              child: Column(
+                children: [
+                  Image.asset(
+                    imageAsset,
+                    height: 70.h, // Adjust height as needed
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+
+                ],
+              ),
             ),
-          ),
+            SizedBox(height: 8.0.h),
+            Text(
+              label,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15.sp,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );

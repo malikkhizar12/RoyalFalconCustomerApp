@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/rent_a_car/widgets/vehicle_card_hourly.dart';
 import '../../../utils/colors.dart';
 import '../../../view_model/hourly_card_view_model.dart';
-import '../hourly_confirmation.dart';
+import '../../rent_a_car/hourly_confirmation.dart';
 
 class ConfirmBookingBottomSheet {
   final String vehicleName;

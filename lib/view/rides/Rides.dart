@@ -88,7 +88,6 @@ class _RidesState extends State<Rides> {
                       ),
                       SizedBox(height: 30.h),
                       Container(
-                        constraints: BoxConstraints(maxHeight: 500.h), // Constrain the height
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                         decoration: const BoxDecoration(

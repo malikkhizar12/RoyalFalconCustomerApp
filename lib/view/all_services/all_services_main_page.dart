@@ -5,6 +5,7 @@ import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import '../../utils/colors.dart';
 import '../../view_model/home_screen_view_model.dart';
 import '../Rides/Rides.dart';
+import '../rent_a_bus/bus_booking.dart';
 import '../rent_a_car/widgets/appbar.dart';
 import '../widgets/home_screen_categories.dart';
 import '../widgets/searchbar.dart';
@@ -230,9 +231,8 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rent A Bus',
-                                                () {
-                                              // Handle Rent A Bus tap
-                                            },
+                                                () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => BusBooking())),
+
                                             'assets/images/bus_image.png',
                                           ),
                                         ),

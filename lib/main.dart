@@ -10,6 +10,7 @@ import 'package:royal_falcon/utils/routes/routes_names.dart';
 import 'package:royal_falcon/view/splash/splash_view.dart';
 import 'package:royal_falcon/view_model/airport_animation_view_model.dart';
 import 'package:royal_falcon/view_model/auth_view_model.dart';
+import 'package:royal_falcon/view_model/bus_booking_view_model.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/hourly_card_view_model.dart';
 import 'package:royal_falcon/view_model/map_view_model.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProfileScreenViewModel()),
         ChangeNotifierProvider(create: (_) => MapsViewModel()),
         ChangeNotifierProvider(create: (_) => MyBookingsViewModel()),
+        ChangeNotifierProvider(create: (_) => BusCardViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),

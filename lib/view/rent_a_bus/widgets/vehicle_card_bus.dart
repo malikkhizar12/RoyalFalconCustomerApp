@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../../view_model/bus_booking_view_model.dart';
 import '../../../view_model/hourly_card_view_model.dart';
 
-class VehicleCard extends StatelessWidget {
+class VehicleCardBus extends StatelessWidget {
   final Function(int) onBookNow;
   final bool showButton;
 
-  VehicleCard({required this.onBookNow, this.showButton = true, required int price});
+  VehicleCardBus({required this.onBookNow, this.showButton = true, required int price});
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<VehicleCardViewModel>(context);
+    final viewModel = Provider.of<BusCardViewModel>(context);
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -31,7 +32,7 @@ class VehicleCard extends StatelessWidget {
         children: [
           Center(
             child: Image.asset(
-              'assets/images/hourly_booking_car.png',
+              'assets/images/white_bus.png',
               width: double.infinity,
               fit: BoxFit.cover,
             ),
@@ -44,7 +45,7 @@ class VehicleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'SEDAN',
+                    'King Long Bus',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18.sp,
