@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
+import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
@@ -67,14 +68,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final RidesBookingFormViewModel model =
-    RidesBookingFormViewModel(context, 0);
+        RidesBookingFormViewModel(context, 0);
 
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        endDrawer: CustomEndDrawer(),
-        backgroundColor: const Color(0xFF22262A),
-        body: FutureBuilder<void>(
+    return Scaffold(
+      key: _scaffoldKey,
+      endDrawer: CustomEndDrawer(),
+      backgroundColor: const Color(0xFF22262A),
+      body: SafeArea(
+        child: FutureBuilder<void>(
           future: _initializeDataFuture,
           builder: (context, snapshot) {
             return _buildContent(context, snapshot.connectionState);
@@ -158,10 +159,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         return Center(child: Text('No vehicles available'));
                       } else {
                         final limitedVehicles =
-                        (vehicleViewModel.dubaiVehicles +
-                            vehicleViewModel.abuDhabiVehicles)
-                            .take(6)
-                            .toList();
+                            (vehicleViewModel.dubaiVehicles +
+                                    vehicleViewModel.abuDhabiVehicles)
+                                .take(6)
+                                .toList();
                         return Column(
                           children: [
                             CarouselSlider(
@@ -173,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 autoPlayCurve: Curves.fastOutSlowIn,
                                 enableInfiniteScroll: true,
                                 autoPlayAnimationDuration:
-                                Duration(milliseconds: 700),
+                                    Duration(milliseconds: 700),
                                 viewportFraction: 1.0,
                                 onPageChanged: (index, reason) {
                                   setState(() {
@@ -209,20 +210,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: List.generate(limitedVehicles.length,
-                                      (index) {
-                                    return Container(
-                                      width: 10.0,
-                                      height: 6.0,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 2.0),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        color: _current == index
-                                            ? Color(0xFFFFBC07)
-                                            : Color.fromRGBO(0, 0, 0, 0.4),
-                                      ),
-                                    );
-                                  }),
+                                  (index) {
+                                return Container(
+                                  width: 10.0,
+                                  height: 6.0,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 2.0),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: _current == index
+                                        ? Color(0xFFFFBC07)
+                                        : Color.fromRGBO(0, 0, 0, 0.4),
+                                  ),
+                                );
+                              }),
                             ),
                           ],
                         );
@@ -243,8 +244,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => AllServices()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AllServices()));
                       },
                       child: Text(
                         "See All",
@@ -261,29 +264,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   children: [
                     _buildAnimatedCategoryChip(
                       'Rides',
-                          () => Navigator.of(context).push(
+                      () => Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => Rides()),
                       ),
                       'images/car_image.png',
                     ),
                     _buildAnimatedCategoryChip(
                       'Buses',
-                          () {
+                      () {
                         // Handle Buses tap
                       },
                       'images/dubai_safari.jpg',
                     ),
                     _buildAnimatedCategoryChip(
                       'Getaway',
-                          () {
+                      () {
                         // Handle Getaway tap
                       },
                       'images/rides_cover.png',
                     ),
                     _buildAnimatedCategoryChip(
                       'Passport',
-                          () {
-                        // Handle Passport pro tap
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PassportProView()));
                       },
                       'images/stay_local.png',
                     ),
@@ -314,10 +320,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           _buildServiceCard(
                               'images/hourly_booking.webp',
                               'Hourly Bookings',
-                                  () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => HourlyBooking()),
-                              )),
+                              () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => HourlyBooking()),
+                                  )),
                           _buildServiceCard('images/activities_image.webp',
                               'Activities', () {}),
                           _buildServiceCard('images/partner_up_image.webp',
@@ -387,8 +393,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildServiceCard(
-      String imagePath, String title, VoidCallback onTap) {
+  Widget _buildServiceCard(String imagePath, String title, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(

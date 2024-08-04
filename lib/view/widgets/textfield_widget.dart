@@ -6,9 +6,12 @@ class TextFieldWidget extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final TextInputType keyboardType;
-  final bool obscureText, isPassword;
+  final bool obscureText, isPassword, isShadow;
   final VoidCallback? iconOnTap;
   final Function(String)? onSubmitted;
+  final Color backgroundColor;
+  final double borderRadius;
+  final int minLines, maxLines;
 
   const TextFieldWidget({
     super.key,
@@ -19,23 +22,32 @@ class TextFieldWidget extends StatelessWidget {
     this.isPassword = false,
     this.iconOnTap,
     this.onSubmitted,
+    this.isShadow = true,
+    this.backgroundColor = const Color(0xFF1A1E23),
+    this.borderRadius = 10,
+    this.minLines = 1,
+    this.maxLines = 1,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1E23),
-        borderRadius: BorderRadius.circular(10),
+        color: backgroundColor == Color(0xFF1A1E23)
+            ? Color(0xFF1A1E23)
+            : backgroundColor,
+        borderRadius: BorderRadius.circular(borderRadius.r),
         border: Border.all(color: Colors.black, width: 0.7),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xff5E5B5B40).withOpacity(0.25),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 0),
-          ),
-        ],
+        boxShadow: isShadow
+            ? [
+                BoxShadow(
+                  color: Color(0xff5E5B5B40).withOpacity(0.25),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 0),
+                ),
+              ]
+            : [],
       ),
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: TextField(
@@ -43,11 +55,26 @@ class TextFieldWidget extends StatelessWidget {
         keyboardType: keyboardType,
         obscureText: obscureText,
         cursorColor: AppColors.buttonColor,
-        style: const TextStyle(color: Colors.white),
+        minLines: minLines,
+        maxLines: maxLines,
+        style: TextStyle(
+          color: backgroundColor == Color(0xFF1A1E23)
+              ? AppColors.kWhiteColor
+              : AppColors.kBlackColor,
+          fontSize: 15.sp,
+          fontWeight: FontWeight.w400,
+        ),
         decoration: InputDecoration(
           hintText: hintText,
+          hintStyle: TextStyle(
+            color: backgroundColor == Color(0xFF1A1E23)
+                ? AppColors.kWhiteColor.withOpacity(0.6)
+                : Color(0xFF1A1E23),
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w400,
+          ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(borderRadius.r),
             borderSide: BorderSide.none,
           ),
           contentPadding:

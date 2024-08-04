@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_falcon/utils/colors.dart';
+import 'package:royal_falcon/view/passport_pro/passport_details.dart';
+import 'package:royal_falcon/view/passport_pro/widget/passport_pro_main_container_widget.dart';
+import 'package:royal_falcon/view/widgets/app_bar_widget.dart';
+import 'package:royal_falcon/view/widgets/button_widget.dart';
 import 'package:royal_falcon/view/widgets/search_bar_widget.dart';
 
 class PassportProView extends StatefulWidget {
@@ -15,33 +19,7 @@ class _PassportProViewState extends State<PassportProView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.kBlackColor,
-      appBar: AppBar(
-        title: Text(
-          "Passport Pro",
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 15.sp,
-            color: AppColors.kWhiteColor,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: AppColors.kBlackColor,
-        foregroundColor: AppColors.kPrimaryColor,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.share_outlined,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.favorite_border,
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBarWidget(title: "Passport Pro",),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -86,84 +64,29 @@ class _PassportProViewState extends State<PassportProView> {
                 vertical: 30.h,
               ),
               child: ListView.separated(
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 15.w,
-                        vertical: 15.h,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4.r),
-                        color: AppColors.kWhiteColor,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 175.h,
-                            width: 1.sw,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
-                            clipBehavior: Clip.hardEdge,
-                            child: Image.asset(
-                              'images/passport.png',
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          Text(
-                            "United Arab Emirates",
-                            style: TextStyle(
-                              fontSize: 17.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.kBlackColor,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: 140.w,
-                                height: 45.h,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return Icon(
-                                      Icons.star_rounded,
-                                      color: AppColors.kStarColor,
-                                    );
-                                  },
-                                  itemCount: 5,
-                                ),
-                              ),
-                              Text(
-                                "4.8 / 5",
-                                style: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.kBlackColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "150 Reviews",
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xff8C8A93),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(
-                        height: 30.h,
-                      ),
-                  itemCount: 5),
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PassportDetailsView(),),);
+                    },
+                    child: PassportProMainContainerWidget(
+                      numberOfVisa: "10k+ visa on R.Falcon",
+                      countryName: "United Arab Emirates",
+                      reviews: '140',
+                      amount: '400',
+                      ratings: 3,
+                      image: 'images/passport.png',
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 30.h,
+                ),
+                itemCount: 5,
+              ),
             ),
           ),
         ],
@@ -171,3 +94,4 @@ class _PassportProViewState extends State<PassportProView> {
     );
   }
 }
+
