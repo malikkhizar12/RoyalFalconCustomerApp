@@ -49,8 +49,8 @@ class _HourlyBookingState extends State<BusBooking> {
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: ElevatedSearchBar(
                           hintText: "Search",
-                          fillcolor: Color(0xFFFFBC07),
-                          textcolor: Colors.white,
+                          // fillcolor: Color(0xFFFFBC07),
+                          // textcolor: Colors.white,
                         ),
                       ),
                       // Add other widgets here if needed
@@ -62,7 +62,7 @@ class _HourlyBookingState extends State<BusBooking> {
             Expanded(
               child: Container(
                 width: 1.sw,
-                color: ColorConstants
+                color: AppColors
                     .backgroundColor, // Background color for the remaining space
                 child: SingleChildScrollView(
                   child: Column(

@@ -6,16 +6,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
-// <<<<<<< dev_usama
-// import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
-// import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
-// =======
+import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
 import 'package:royal_falcon/view/rent_a_bus/bus_booking.dart';
-// >>>>>>> main
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
@@ -49,12 +44,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _homeScreenViewModel = Provider.of<HomeScreenViewModel>(context, listen: false);
+    _homeScreenViewModel =
+        Provider.of<HomeScreenViewModel>(context, listen: false);
     _initializeDataFuture = _homeScreenViewModel.initializeData(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getLocation();
-      Provider.of<VehicleViewModel>(context, listen: false).fetchVehicleCategories(context);
+      Provider.of<VehicleViewModel>(context, listen: false)
+          .fetchVehicleCategories(context);
     });
 
     _animationController = AnimationController(
@@ -81,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Marker(
           markerId: MarkerId('vehicle1'),
           position: LatLng(24.466667, 54.366669),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
         ),
       );
       _markers.add(
@@ -145,7 +143,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final RidesBookingFormViewModel model = RidesBookingFormViewModel(context, 0);
+    final RidesBookingFormViewModel model =
+        RidesBookingFormViewModel(context, 0);
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: CustomEndDrawer(),
@@ -200,7 +199,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     children: [
                       Image.asset(
                         'assets/images/home_icon.png',
-
                       ),
                       Row(
                         children: [
@@ -235,15 +233,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
                 if (connectionState == ConnectionState.waiting)
                   Container(
-                    color: ColorConstants.backgroundColor,
+                    color: AppColors.backgroundColor,
                     height: 210.0.h,
                     child: SmallShimmerLoading(),
                   )
                 else
                   Consumer<VehicleViewModel>(
                     builder: (context, vehicleViewModel, child) {
-                      if (vehicleViewModel.dubaiVehicles.isEmpty && vehicleViewModel.abuDhabiVehicles.isEmpty) {
-                        return Center(child: Text('No vehicles available', style: TextStyle(color: Colors.white, fontSize: 14.sp)));
+                      if (vehicleViewModel.dubaiVehicles.isEmpty &&
+                          vehicleViewModel.abuDhabiVehicles.isEmpty) {
+                        return Center(
+                            child: Text('No vehicles available',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14.sp)));
                       } else {
 // <<<<<<< dev_usama
 //                         final limitedVehicles =
@@ -252,9 +254,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 //                                 .take(6)
 //                                 .toList();
 // =======
-                        final limitedVehicles = (vehicleViewModel.dubaiVehicles + vehicleViewModel.abuDhabiVehicles)
-                            .take(6)
-                            .toList();
+                        final limitedVehicles =
+                            (vehicleViewModel.dubaiVehicles +
+                                    vehicleViewModel.abuDhabiVehicles)
+                                .take(6)
+                                .toList();
 // >>>>>>> main
                         return Column(
                           children: [
@@ -270,7 +274,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 //                                 autoPlayAnimationDuration:
 //                                     Duration(milliseconds: 700),
 // =======
-                                autoPlayAnimationDuration: Duration(milliseconds: 700),
+                                autoPlayAnimationDuration:
+                                    Duration(milliseconds: 700),
 // >>>>>>> main
                                 viewportFraction: 1.0,
                                 onPageChanged: (index, reason) {
@@ -282,12 +287,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               items: limitedVehicles.map<Widget>((vehicle) {
                                 return Container(
                                   width: 1.sw,
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0.w),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 5.0.w),
                                   decoration: BoxDecoration(
 // <<<<<<< dev_usama
 //                                     color: Colors.grey,
 // =======
-                                    color: ColorConstants.backgroundColor,
+                                    color: AppColors.backgroundColor,
 // >>>>>>> main
                                     borderRadius: BorderRadius.circular(10.r),
                                     boxShadow: [
@@ -319,11 +325,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 //                                   margin: EdgeInsets.symmetric(
 //                                       vertical: 10.0, horizontal: 2.0),
 // =======
-                              children: List.generate(limitedVehicles.length, (index) {
+                              children: List.generate(limitedVehicles.length,
+                                  (index) {
                                 return Container(
                                   width: 10.0.w,
                                   height: 6.0.h,
-                                  margin: EdgeInsets.symmetric(vertical: 10.0.h, horizontal: 2.0.w),
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10.0.h, horizontal: 2.0.w),
 // >>>>>>> main
                                   decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
@@ -359,7 +367,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 //                             MaterialPageRoute(
 //                                 builder: (context) => AllServices()));
 // =======
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AllServices()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AllServices()));
 // >>>>>>> main
                       },
                       child: Text(
@@ -390,12 +401,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 //                       },
 //                       'images/dubai_safari.jpg',
 // =======
-                          () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Rides())),
+                      () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Rides())),
                       'assets/images/car_image.png',
                     ),
                     _buildAnimatedCategoryChip(
                       'Buses',
-                          () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => BusBooking())),
+                      () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => BusBooking())),
 
                       'assets/images/bus_image.png',
 // >>>>>>> main
@@ -467,21 +480,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           builder: (context, constraints) {
                             return _initialCameraPosition != null
                                 ? GoogleMap(
-                              zoomControlsEnabled: false,
-                              myLocationEnabled: true,
-                              onMapCreated: (controller) {
-                                _mapController = controller;
-                                _setMapStyle(); // Ensure the map style is set after the controller is initialized
-                              },
-                              initialCameraPosition: _initialCameraPosition!,
-                              markers: _markers,
-                              polylines: _polylines,
-                            )
+                                    zoomControlsEnabled: false,
+                                    myLocationEnabled: true,
+                                    onMapCreated: (controller) {
+                                      _mapController = controller;
+                                      _setMapStyle(); // Ensure the map style is set after the controller is initialized
+                                    },
+                                    initialCameraPosition:
+                                        _initialCameraPosition!,
+                                    markers: _markers,
+                                    polylines: _polylines,
+                                  )
                                 : Center(
-                              child: CircularProgressIndicator(
-                                color: Color(0xFFFFBC07),
-                              ),
-                            );
+                                    child: CircularProgressIndicator(
+                                      color: Color(0xFFFFBC07),
+                                    ),
+                                  );
                           },
                         ),
                       ),
@@ -500,18 +514,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             height: 50.h,
                             margin: EdgeInsets.symmetric(horizontal: 10.w),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white.withOpacity(0.5)),
+                              border: Border.all(
+                                  color: Colors.white.withOpacity(0.5)),
                               color: Colors.grey.withOpacity(0.9),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
-                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.w, vertical: 5.h),
                             child: Row(
                               children: [
                                 Icon(Icons.search, color: Colors.black),
                                 SizedBox(width: 10.w),
                                 Text(
                                   "Search Location",
-                                  style: TextStyle(color: Colors.black, fontSize: 16.sp),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16.sp),
                                 ),
                               ],
                             ),
@@ -522,7 +539,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
@@ -531,7 +547,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildAnimatedCategoryChip(String label, VoidCallback onTap, String imageAsset) {
+  Widget _buildAnimatedCategoryChip(
+      String label, VoidCallback onTap, String imageAsset) {
     return Expanded(
       child: AnimatedScale(
         scale: _isVisible ? 1.0 : 0.0,
@@ -542,7 +559,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCategoryChip(String label, VoidCallback onTap, String imageAsset) {
+  Widget _buildCategoryChip(
+      String label, VoidCallback onTap, String imageAsset) {
     return Padding(
       padding: EdgeInsets.only(right: 10.0.w),
       child: GestureDetector(
@@ -595,7 +613,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: Column(
           children: [
             Container(
-
               width: 100.w, // Adjust width as needed
 // >>>>>>> main
               decoration: BoxDecoration(
@@ -609,7 +626,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
-
                 ],
               ),
             ),

@@ -30,7 +30,7 @@ class ConfirmBookingBottomSheet {
                 curve: Curves.easeOut,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: ColorConstants.backgroundColor,
+                    color: AppColors.backgroundColor,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
