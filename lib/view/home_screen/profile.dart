@@ -10,7 +10,7 @@ import '../widgets/appbar.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
-  final AuthViewModel authViewModel= AuthViewModel();
+  final AuthViewModel authViewModel = AuthViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +54,10 @@ class ProfileScreen extends StatelessWidget {
                               : null,
                           child: viewModel.profileImagePath == null
                               ? Icon(
-                            Icons.person,
-                            size: 70,
-                            color: Colors.white,
-                          )
+                                  Icons.person,
+                                  size: 70,
+                                  color: Colors.white,
+                                )
                               : null,
                         ),
                         Positioned(
@@ -189,16 +189,19 @@ class ProfileScreen extends StatelessWidget {
                                       fillColor: Color(0xFF333639),
                                       border: OutlineInputBorder(),
                                       focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                     ),
                                     items: <String>['Male', 'Female', 'Other']
-                                        .map<DropdownMenuItem<String>>((String value) {
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(
                                           value,
-                                          style: const TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                       );
                                     }).toList(),
@@ -223,7 +226,8 @@ class ProfileScreen extends StatelessWidget {
                                       fillColor: Color(0xFF333639),
                                       border: OutlineInputBorder(),
                                       focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
                                       ),
                                     ),
                                     items: <String>[
@@ -233,12 +237,14 @@ class ProfileScreen extends StatelessWidget {
                                       'Australia',
                                       'Germany',
                                       'France'
-                                    ].map<DropdownMenuItem<String>>((String value) {
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(
                                           value,
-                                          style: const TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                       );
                                     }).toList(),
@@ -261,8 +267,8 @@ class ProfileScreen extends StatelessWidget {
                                             RoundedRectangleBorder(),
                                           ),
                                           backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              const Color(0xFFCC001E)),
+                                              MaterialStateProperty.all<Color>(
+                                                  const Color(0xFFCC001E)),
                                         ),
                                         child: Text(
                                           "Logout",
