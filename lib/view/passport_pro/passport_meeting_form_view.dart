@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_falcon/utils/colors.dart';
+import 'package:royal_falcon/view/passport_pro/passport_pro_success_view.dart';
 import 'package:royal_falcon/view/signup/widgets/phone_number_field.dart';
 import 'package:royal_falcon/view/widgets/app_bar_widget.dart';
 import 'package:royal_falcon/view/widgets/button_widget.dart';
@@ -237,7 +238,14 @@ class _PassportMeetingFormViewState extends State<PassportMeetingFormView> {
               30.verticalSpace,
               ButtonWidget(
                 title: "Apply Now",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PassportProSuccessView(),
+                    ),
+                  );
+                },
                 height: 48.h,
                 width: 1.sw,
                 borderRadius: 30,

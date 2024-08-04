@@ -60,7 +60,7 @@ class _PhoneNumberFieldState extends State<SignupPhoneNumberField> {
                 : widget.backgroundColor,
             value: selectedCountryCode,
             icon: Icon(
-              Icons.keyboard_arrow_down,
+              Icons.arrow_drop_down_outlined,
               color: widget.backgroundColor == Color(0xFF1A1E23)
                   ? AppColors.kWhiteColor.withOpacity(0.6)
                   : Color(0xFF1A1E23),

@@ -5,11 +5,13 @@ import 'package:royal_falcon/utils/colors.dart';
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? shareOnTap, favoriteOnTap;
+  final Color backgroundColor;
   const AppBarWidget({
     super.key,
     required this.title,
     this.shareOnTap,
     this.favoriteOnTap,
+    this.backgroundColor = Colors.black,
   });
 
   @override
@@ -24,7 +26,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      backgroundColor: AppColors.kBlackColor,
+      backgroundColor: backgroundColor == Colors.black
+          ? AppColors.kBlackColor
+          : backgroundColor,
       foregroundColor: AppColors.kPrimaryColor,
       scrolledUnderElevation: 0,
       actions: [
