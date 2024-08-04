@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/view/partner_up/partner_up_view.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import '../../utils/colors.dart';
 import '../../view_model/home_screen_view_model.dart';
@@ -160,9 +161,11 @@ class _AllServicesState extends State<AllServices> with TickerProviderStateMixin
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Partner up',
-                                                () {
-                                              // Handle Partner up tap
-                                            },
+                                                () => Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => PartnerUpView(),
+                                              ),
+                                            ),
                                             'assets/images/partner.png',
                                           ),
                                         ),
