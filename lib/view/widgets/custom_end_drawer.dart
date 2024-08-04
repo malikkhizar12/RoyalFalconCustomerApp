@@ -1,13 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/routes/routes_names.dart';
+import 'package:royal_falcon/view/driver_panel/home_screen/driver_profile/driver_profile_screen.dart';
+import 'package:royal_falcon/view/home_screen/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../view_model/auth_view_model.dart';
-import '../driver_panel/home_screen/driver_profile/driver_profile_screen.dart';
-import '../home_screen/profile.dart';
 
 class CustomEndDrawer extends StatelessWidget {
   CustomEndDrawer({
@@ -66,14 +65,18 @@ class CustomEndDrawer extends StatelessWidget {
                           children: [
                             buildMenuItem('Profile', () {
                               if (userDetails['role'] == 'driver') {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DriverProfileScreen()));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        DriverProfileScreen()));
                               } else {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ProfileScreen()));
                               }
                             }),
                             if (userDetails['role'] != 'driver')
                               buildMenuItem('My Booking', () {
-                                Navigator.pushNamed(context, RoutesNames.myBookings);
+                                Navigator.pushNamed(
+                                    context, RoutesNames.myBookings);
                               }),
                           ],
                         );
@@ -137,7 +140,8 @@ class CustomEndDrawer extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 40.w),
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color?>(const Color(0xFFFFBC07)),
+                  backgroundColor:
+                      WidgetStateProperty.all<Color?>(const Color(0xFFFFBC07)),
                 ),
                 onPressed: () {
                   authViewModel.logout(context);

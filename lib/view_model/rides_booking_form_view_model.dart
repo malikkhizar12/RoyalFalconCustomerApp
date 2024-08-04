@@ -23,7 +23,6 @@ class RidesBookingFormViewModel extends ChangeNotifier {
   double amountToPay = 0.0;
   bool isLoading = false;
   final UserViewModel userViewModel = UserViewModel();
-  final MyBookingsViewModel myBookingsViewModel = MyBookingsViewModel();
 
   void setLoading(bool value) {
     isLoading = value;

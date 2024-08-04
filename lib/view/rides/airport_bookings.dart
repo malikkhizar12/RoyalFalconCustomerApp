@@ -37,7 +37,7 @@ class _AirportBookingsState extends State<AirportBookings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: Column(
         children: [
           const SizedBox(height: 16),

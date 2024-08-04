@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'RFL',
             theme: ThemeData.dark().copyWith(
-              scaffoldBackgroundColor: ColorConstants.backgroundColor,
+              scaffoldBackgroundColor: AppColors.backgroundColor,
               textTheme:
               GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
                   .apply(bodyColor: Colors.white),

@@ -5,7 +5,7 @@ class FormValidators {
     final RegExp nameRegExp = RegExp(r'^[a-zA-Z]{4,}$');
 
     if (!nameRegExp.hasMatch(value)) {
-      return 'Name must contain only alphabets and have minimum 4 characters';
+      return 'Name must contain only alphabets and have a minimum of 4 characters';
     }
 
     return null;
@@ -27,9 +27,22 @@ class FormValidators {
     return null;
   }
 
-  static String? validateConfirmPassword(String password, String confirmPassword) {
+  static String? validateConfirmPassword(
+      String password, String confirmPassword) {
     if (password != confirmPassword) {
       return 'Passwords do not match';
+    }
+
+    return null;
+  }
+
+  static String? validateEmail(String value) {
+    final RegExp emailRegExp = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$',
+    );
+
+    if (!emailRegExp.hasMatch(value)) {
+      return 'Enter a valid email address';
     }
 
     return null;

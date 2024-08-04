@@ -36,7 +36,7 @@ class Utils {
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: ColorConstants.kWhiteColor,
+          color: AppColors.kWhiteColor,
           fontFamily: 'Monstreal',
         ),
       ),
@@ -53,7 +53,7 @@ class Utils {
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: ColorConstants.kWhiteColor,
+          color: AppColors.kWhiteColor,
           fontFamily: 'Monstreal',
         ),
       ),

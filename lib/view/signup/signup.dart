@@ -1,16 +1,13 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/signup/widgets/phone_number_field.dart';
-import 'package:royal_falcon/view/signup/widgets/textfields.dart';
+import 'package:royal_falcon/view/widgets/button_widget.dart';
+import 'package:royal_falcon/view/widgets/textfields.dart';
+import 'package:royal_falcon/view_model/signup_view_model.dart';
 import '../../utils/colors.dart';
-import '../../utils/utils/form_validator.dart';
 import '../../utils/utils/utils.dart';
-import '../login/login.dart';
-import '../../view_model/auth_view_model.dart';
 import '../../utils/routes/routes_names.dart';
 
 class SignupPage extends StatefulWidget {
@@ -21,152 +18,238 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  String selectedCountryCode = '+92';
-  String? phoneNumberError;
-  String? passwordError;
-  String? nameError;
-
   @override
   Widget build(BuildContext context) {
-    final authViewModel = Provider.of<AuthViewModel>(context);
-
     return Scaffold(
-      backgroundColor: ColorConstants.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 60.h),
-              Center(
-                child: Column(
-                  children: [
-                    Image.asset('assets/images/company_logo.png', height: 80),
-                    Image.asset('assets/images/royal_falcon.png', height: 40),
-                  ],
-                ),
-              ),
-              SizedBox(height: 40.h),
-              buildTextField('Full Name', nameController, TextInputType.text),
-              if (nameError != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    nameError!,
-                    style: TextStyle(color: Colors.red, fontSize: 14.sp),
+// <<<<<<< dev_usama
+          child: ChangeNotifierProvider(
+            create: (BuildContext context) => SignupViewModel(),
+            child: Consumer<SignupViewModel>(
+              builder: (BuildContext context, model, Widget? child) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 60.h),
+                  Center(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'images/company_logo.png',
+                          height: 80,
+                        ),
+                        Image.asset(
+                          'images/royal_falcon.png',
+                          height: 40,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              SizedBox(height: 20.h),
-              buildTextField('Email Address', emailController, TextInputType.emailAddress),
-              SizedBox(height: 20.h),
-              SignupPhoneNumberField(controller: phoneController, label: 'Phone Number'),
-              if (phoneNumberError != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    phoneNumberError!,
-                    style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                  SizedBox(height: 40.h),
+                  Text(
+                    'Full Name',
+                    style: TextStyle(
+                      color: AppColors.kWhiteColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              SizedBox(height: 20.h),
-              buildTextField('Password', passwordController, TextInputType.visiblePassword, obscureText: true),
-              if (passwordError != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    passwordError!,
-                    style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                  10.verticalSpace,
+                  TextFieldWidget(
+                    hintText: "Name",
+                    controller: model.nameController,
+                    keyboardType: TextInputType.text,
                   ),
-                ),
-              SizedBox(height: 20.h),
-              buildTextField('Confirm Password', confirmPasswordController, TextInputType.visiblePassword, obscureText: true),
-              SizedBox(height: 35.h),
-              Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_validateForm()) {
-                        final fullPhoneNumber = '$selectedCountryCode${phoneController.text}';
+                  10.verticalSpace,
+                  if (model.nameError != null)
+                    Text(
+                      model.nameError!,
+                      style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                    ),
+                  10.verticalSpace,
+                  Text(
+                    'Email',
+                    style: TextStyle(
+                      color: AppColors.kWhiteColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  10.verticalSpace,
+                  TextFieldWidget(
+                    hintText: "Email Address",
+                    controller: model.emailController,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  10.verticalSpace,
+                  if (model.emailError != null)
+                    Text(
+                      model.emailError!,
+                      style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                    ),
+                  10.verticalSpace,
+                  Text(
+                    'Phone Number',
+                    style: TextStyle(
+                      color: AppColors.kWhiteColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  10.verticalSpace,
+                  SignupPhoneNumberField(
+                    controller: model.phoneController,
+                    label: 'Phone Number',
+                  ),
+                  10.verticalSpace,
+                  if (model.phoneNumberError != null)
+                    Text(
+                      model.phoneNumberError!,
+                      style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                    ),
+                  10.verticalSpace,
+                  Text(
+                    'Password',
+                    style: TextStyle(
+                      color: AppColors.kWhiteColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+// =======
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               SizedBox(height: 60.h),
+//               Center(
+//                 child: Column(
+//                   children: [
+//                     Image.asset('assets/images/company_logo.png', height: 80),
+//                     Image.asset('assets/images/royal_falcon.png', height: 40),
+//                   ],
+//                 ),
+//               ),
+//               SizedBox(height: 40.h),
+//               buildTextField('Full Name', nameController, TextInputType.text),
+//               if (nameError != null)
+//                 Padding(
+//                   padding: const EdgeInsets.only(top: 8.0),
+//                   child: Text(
+//                     nameError!,
+//                     style: TextStyle(color: Colors.red, fontSize: 14.sp),
+// >>>>>>> main
+                  ),
+                  10.verticalSpace,
+                  ValueListenableBuilder(
+                    valueListenable: model.passObscureText,
+                    builder: (BuildContext context, value, Widget? child) =>
+                        TextFieldWidget(
+                      hintText: "***********",
+                      controller: model.passwordController,
+                      keyboardType: TextInputType.text,
+                      isPassword: true,
+                      obscureText: model.passObscureText.value,
+                      iconOnTap: () {
+                        model.passObscureText.value =
+                            !model.passObscureText.value;
+                      },
+                    ),
+                  ),
+                  10.verticalSpace,
+                  if (model.passwordError != null)
+                    Text(
+                      model.passwordError!,
+                      style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                    ),
+                  10.verticalSpace,
+                  Text(
+                    'Confirm Password',
+                    style: TextStyle(
+                      color: AppColors.kWhiteColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  10.verticalSpace,
+                  ValueListenableBuilder(
+                    valueListenable: model.confirmPassObscureText,
+                    builder: (BuildContext context, value, Widget? child) =>
+                        TextFieldWidget(
+                      hintText: "***********",
+                      controller: model.confirmPasswordController,
+                      keyboardType: TextInputType.text,
+                      isPassword: true,
+                      obscureText: model.confirmPassObscureText.value,
+                      iconOnTap: () {
+                        model.confirmPassObscureText.value =
+                            !model.confirmPassObscureText.value;
+                      },
+                    ),
+                  ),
+                  10.verticalSpace,
+                  if (model.confirmPasswordError != null)
+                    Text(
+                      model.confirmPasswordError!,
+                      style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                    ),
+                  40.verticalSpace,
+                  ButtonWidget(
+                    title: "Sign Up",
+                    onTap: () async {
+                      if (model.validateForm()) {
+                        final fullPhoneNumber =
+                            '${model.selectedCountryCode}${model.phoneController.text}';
                         final data = {
-                          'name': nameController.text,
-                          'email': emailController.text,
+                          'name': model.nameController.text,
+                          'email': model.emailController.text,
                           'phoneNumber': fullPhoneNumber,
-                          'password': passwordController.text,
+                          'password': model.passwordController.text,
                         };
 
-                        bool success = await authViewModel.signupApi(data, context);
+                        bool success = await model.signupApi(data, context);
                         if (success) {
-                          Navigator.pushNamedAndRemoveUntil(context, RoutesNames.login, (route) => false);
-                          Utils.flushBarMessage("Account Created Successfully", context);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, RoutesNames.login, (route) => false);
+                          Utils.flushBarMessage(
+                              "Account Created Successfully", context);
                         }
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFD700), // Button color
-                      padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 100.w),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    width: 1.sw,
+                    height: 50.h,
+                    isShadow: true,
+                    isLoading: model.loading,
+                  ),
+                  SizedBox(height: 40.h),
+                  Center(
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Have An Account? ',
+                        style: const TextStyle(color: Colors.grey),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Login',
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              decoration:
+                                  TextDecoration.none, // Remove underline here
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.pop(context);
+                              },
+                          ),
+                        ],
                       ),
                     ),
-                    child: authViewModel.loading
-                        ? const Center(child: CircularProgressIndicator(color: Colors.white))
-                        : Text(
-                      'Sign Up',
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
                   ),
-                ),
+                ],
               ),
-              SizedBox(height: 40.h),
-              Center(
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Have An Account? ',
-                    style: const TextStyle(color: Colors.grey),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: 'Login',
-                        style: const TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.none, // Remove underline here
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.pop(context);
-                          },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
-  }
-
-  bool _validateForm() {
-    bool isValid = true;
-
-    setState(() {
-      nameError = FormValidators.validateName(nameController.text.trim());
-      phoneNumberError = FormValidators.validatePhoneNumber(phoneController.text);
-      passwordError = FormValidators.validatePassword(passwordController.text);
-
-      if (passwordController.text != confirmPasswordController.text) {
-        passwordError = 'Passwords do not match';
-        isValid = false;
-      }
-    });
-
-    return isValid && nameError == null && phoneNumberError == null && passwordError == null;
   }
 }

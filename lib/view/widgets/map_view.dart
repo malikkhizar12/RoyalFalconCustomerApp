@@ -33,11 +33,11 @@ class _MapsScreenState extends State<MapsScreen> {
       appBar: AppBar(
         title: Text(
           "Select Location",
-          style: TextStyle(fontSize: 18.sp, color: ColorConstants.kWhiteColor),
+          style: TextStyle(fontSize: 18.sp, color: AppColors.kWhiteColor),
         ),
         centerTitle: true,
-        backgroundColor: ColorConstants.backgroundColor,
-        foregroundColor: ColorConstants.kWhiteColor,
+        backgroundColor: AppColors.backgroundColor,
+        foregroundColor: AppColors.kWhiteColor,
         // actions: [
         //   TextButton(
         //     onPressed: _confirmLocation,
@@ -81,7 +81,7 @@ class _MapsScreenState extends State<MapsScreen> {
                   onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        ColorConstants.buttonColor),
+                        AppColors.buttonColor),
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                         EdgeInsets.zero),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,

@@ -107,7 +107,7 @@ class SummarySection extends StatelessWidget {
             ),
             child: isLoading
                 ? CircularProgressIndicator(
-              color: ColorConstants.kWhiteColor,
+              color: AppColors.kWhiteColor,
             )
                 : Text(
               'Book Now',

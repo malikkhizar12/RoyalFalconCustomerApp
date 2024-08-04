@@ -14,7 +14,7 @@ class DriverProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: ColorConstants.backgroundColor,
+        backgroundColor: AppColors.backgroundColor,
         body: Consumer<UserViewModel>(
           builder: (context, userViewModel, child) {
             return FutureBuilder<Driver?>(

@@ -40,7 +40,7 @@ class _MyBookingsState extends State<MyBookings> {
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
-                          color: ColorConstants.backgroundColor,
+                          color: AppColors.backgroundColor,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(50),
                             topRight: Radius.circular(50),

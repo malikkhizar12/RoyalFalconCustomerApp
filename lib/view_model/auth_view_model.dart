@@ -13,6 +13,12 @@ class AuthViewModel with ChangeNotifier {
   final AuthRepository _authRepository = AuthRepository();
   bool _loading = false;
   bool get loading => _loading;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+  ValueNotifier<bool> passObscureText = ValueNotifier<bool>(true);
+
 
   void setLoading(bool value) {
     _loading = value;
@@ -99,41 +105,6 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 
-  Future<bool> signupApi(Map<String, String> data, BuildContext context) async {
-    try {
-      setLoading(true);
-      dynamic response = await _authRepository.signupApi(data);
-      print('Signup response: $response'); // Debugging log
-      setLoading(false);
-      return response != null;
-    } catch (e) {
-      setLoading(false);
-      print('Signup error: $e'); // Debugging log
-      if (e.toString().contains('email already exists')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Email already exists'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      } else if (e.toString().contains('Error in creating user')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Phone number already exists'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Signup failed: $e'),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      }
-      return false;
-    }
-  }
 
   Future<void> logout(BuildContext context) async {
     try {
@@ -143,4 +114,5 @@ class AuthViewModel with ChangeNotifier {
       print('Logout error: $e'); // Handle any logout errors
     }
   }
+
 }
