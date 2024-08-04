@@ -6,6 +6,7 @@ import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import '../../utils/colors.dart';
 import '../../view_model/home_screen_view_model.dart';
 import '../Rides/Rides.dart';
+import '../rent_a_bus/bus_booking.dart';
 import '../rent_a_car/widgets/appbar.dart';
 import '../widgets/home_screen_categories.dart';
 import '../widgets/searchbar.dart';
@@ -61,8 +62,12 @@ class _AllServicesState extends State<AllServices>
                   height: 0.28.sh,
                   decoration: BoxDecoration(
                     image: DecorationImage(
+
                       image: AssetImage(
                           'images/hourly_booking_cover.png'), // Ensure you have this image in your assets
+// =======
+//                       image: AssetImage('assets/images/hourly_booking_cover.png'), // Ensure you have this image in your assets
+// >>>>>>> main
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -138,7 +143,7 @@ class _AllServicesState extends State<AllServices>
                                                 builder: (context) => Rides(),
                                               ),
                                             ),
-                                            'images/wheels.png',
+                                            'assets/images/wheels.png',
                                           ),
                                         ),
                                         Expanded(
@@ -147,7 +152,7 @@ class _AllServicesState extends State<AllServices>
                                             () {
                                               // Handle Getaway tap
                                             },
-                                            'images/getaway.png',
+                                            'assets/images/getaway.png',
                                           ),
                                         ),
                                         Expanded(
@@ -156,7 +161,7 @@ class _AllServicesState extends State<AllServices>
                                             () {
                                               // Handle Explore tap
                                             },
-                                            'images/explore.png',
+                                            'assets/images/explore.png',
                                           ),
                                         ),
                                       ],
@@ -167,10 +172,19 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Partner up',
-                                            () {
-                                              // Handle Partner up tap
-                                            },
-                                            'images/partner.png',
+// <<<<<<< dev_usama
+//                                             () {
+//                                               // Handle Partner up tap
+//                                             },
+//                                             'images/partner.png',
+// =======
+                                                () => Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => PartnerUpView(),
+                                              ),
+                                            ),
+                                            'assets/images/partner.png',
+// >>>>>>> main
                                           ),
                                         ),
                                         Expanded(
@@ -184,7 +198,7 @@ class _AllServicesState extends State<AllServices>
                                                           PassportProView()));
                                               // Handle Passport pro tap
                                             },
-                                            'images/passport_pro.png',
+                                            'assets/images/passport_pro.png',
                                           ),
                                         ),
                                         Spacer()
@@ -241,16 +255,22 @@ class _AllServicesState extends State<AllServices>
                                                     HourlyBooking(),
                                               ),
                                             ),
-                                            'images/wheels.png',
+                                            'assets/images/wheels.png',
                                           ),
                                         ),
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rent A Bus',
-                                            () {
-                                              // Handle Rent A Bus tap
-                                            },
-                                            'images/bus_image.png',
+// <<<<<<< dev_usama
+//                                             () {
+//                                               // Handle Rent A Bus tap
+//                                             },
+//                                             'images/bus_image.png',
+// =======
+                                                () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => BusBooking())),
+
+                                            'assets/images/bus_image.png',
+// >>>>>>> main
                                           ),
                                         ),
                                         Spacer()

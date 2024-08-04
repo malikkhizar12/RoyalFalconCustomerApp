@@ -1,58 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomShimmerLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Column(
-            children: [
-              SizedBox(height: 36.0),
-
-              // First rectangle
-              Container(
-                width: double.infinity,
-                height: 100.0,
-                color: Colors.grey[300],
+    return Container(
+      width: 1.sw,
+      padding: EdgeInsets.all(16.0.w),
+      child: Shimmer.fromColors(
+        baseColor: Colors.black.withOpacity(0.2),
+        highlightColor: Colors.grey,
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 36.0.h),
+                  // First rectangle
+                  Container(
+                    width: double.infinity,
+                    height: 80.0.h,
+                    color: Colors.grey[300],
+                  ),
+                  SizedBox(height: 16.0.h),
+                  // Smaller rectangles
+                  Container(
+                    width: double.infinity,
+                    height: 20.0.h,
+                    color: Colors.grey[300],
+                  ),
+                  SizedBox(height: 16.0.h),
+                  // Second rectangle
+                  Container(
+                    width: double.infinity,
+                    height: 20.0.h,
+                    color: Colors.grey[300],
+                  ),
+                  SizedBox(height: 16.0.h),
+                  // Smaller rectangle at the bottom
+                  Container(
+                    width: double.infinity,
+                    height: 40.0.h,
+                    color: Colors.grey[300],
+                  ),
+                ],
               ),
-              SizedBox(height: 16.0),
-              // Smaller rectangles
-              Container(
-                width: double.infinity,
-                height: 200.0,
-                color: Colors.grey[300],
+            ),
+            SizedBox(width: 15.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 36.0.h),
+                  // First rectangle
+                  Container(
+                    width: double.infinity,
+                    height: 80.0.h,
+                    color: Colors.grey[300],
+                  ),
+                  SizedBox(height: 16.0.h),
+                  // Smaller rectangles
+                  Container(
+                    width: double.infinity,
+                    height: 20.0.h,
+                    color: Colors.grey[300],
+                  ),
+                  SizedBox(height: 16.0.h),
+                  // Second rectangle
+                  Container(
+                    width: double.infinity,
+                    height: 20.0.h,
+                    color: Colors.grey[300],
+                  ),
+                  SizedBox(height: 16.0.h),
+                  // Smaller rectangle at the bottom
+                  Container(
+                    width: double.infinity,
+                    height: 40.0.h,
+                    color: Colors.grey[300],
+                  ),
+                ],
               ),
-              SizedBox(height: 8.0),
-              Container(
-                width: double.infinity,
-                height: 50.0,
-                color: Colors.grey[300],
-              ),
-              SizedBox(height: 16.0),
-              // Second rectangle
-              Container(
-                width: double.infinity,
-                height: 200.0,
-                color: Colors.grey[300],
-              ),
-              SizedBox(height: 16.0),
-              // Smaller rectangle at the bottom
-              Container(
-                width: double.infinity,
-                height: 100.0,
-                color: Colors.grey[300],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-
     );
   }
 }

@@ -18,7 +18,7 @@ class DubaiListModel {
   static List<DubaiListModel> getDubaiRides() {
     return [
       DubaiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Lexus ES 300H',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -26,7 +26,7 @@ class DubaiListModel {
         price: '100 AED',
       ),
       DubaiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Mercedes Benz S Class',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -34,7 +34,7 @@ class DubaiListModel {
         price: '225 AED',
       ),
       DubaiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Chevrolet Malibu',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -42,7 +42,7 @@ class DubaiListModel {
         price: '225 AED',
       ),
       DubaiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Toyota Previa',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -50,7 +50,7 @@ class DubaiListModel {
         price: '200 AED',
       ),
       DubaiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Toyota Previa',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -58,7 +58,7 @@ class DubaiListModel {
         price: '200 AED',
       ),
       DubaiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Toyota Previa',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -66,7 +66,7 @@ class DubaiListModel {
         price: '200 AED',
       ),
       DubaiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Toyota Previa',
         starRating: 4.8,
         totalRatings: 4.8,

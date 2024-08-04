@@ -45,7 +45,7 @@ class ElevatedSearchBar extends StatelessWidget {
                   right: 18.w, // Adjusted padding on the right for the icon
                 ),
                 child: Image.asset(
-                  'images/search_icon.png',
+                  'assets/images/search_icon.png',
                   height: 23.h,
                   width: 23.w,
                   color: textColor,

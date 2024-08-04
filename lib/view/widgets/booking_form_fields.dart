@@ -51,7 +51,7 @@ class CustomFormField extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                    suffixIcon: Image.asset('images/calender_icon.png',
+                    suffixIcon: Image.asset('assets/images/calender_icon.png',
                       color: Color(0xFFCF9D2C),
                     ),
                   ),

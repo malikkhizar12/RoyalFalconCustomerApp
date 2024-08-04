@@ -47,6 +47,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   photo_view: ^0.15.0
   google_fonts: ^4.0.4
+  geolocator: ^12.0.0
 
 
 dev_dependencies:
@@ -69,11 +70,12 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   assets:
-    - images/
-    - images/profile_image.png
-    - images/Explore_now.jpg
-    - images/splashIcon.png
+    - assets/images/
+    - assets/images/profile_image.png
+    - assets/images/Explore_now.jpg
+    - assets/images/splashIcon.png
     - .env
+    - assets/map_style.json
 
   # https://flutter.dev/assets-and-images/#resolution-aware
 

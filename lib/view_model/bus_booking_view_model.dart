@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class VehicleCardViewModel extends ChangeNotifier {
+class BusCardViewModel extends ChangeNotifier {
   int _hours = 1;
   final int _pricePerHour;
   final int _initialPrice;
@@ -8,7 +8,7 @@ class VehicleCardViewModel extends ChangeNotifier {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay(hour: 3, minute: 0);
 
-  VehicleCardViewModel({int initialPrice = 100, int pricePerHour = 25})
+  BusCardViewModel({int initialPrice = 400, int pricePerHour = 50})
       : _initialPrice = initialPrice,
         _pricePerHour = pricePerHour;
 

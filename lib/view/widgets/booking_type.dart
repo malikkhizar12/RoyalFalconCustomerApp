@@ -16,10 +16,8 @@ class BookingType extends StatelessWidget {
           color: const Color(0xFF22272B)),
       child: Column(
         children: [
-          Image.asset('images/home_icon.png'),
-          SizedBox(
-            height: 20.h,
-          ),
+          Image.asset('assets/images/home_icon.png'),
+          SizedBox(height: 20.h,),
           SizedBox(
             width: 283.w,
             child: ElevatedButton(

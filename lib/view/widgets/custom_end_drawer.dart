@@ -42,7 +42,7 @@ class CustomEndDrawer extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            Image.asset('images/home_icon.png'),
+            Image.asset('assets/images/home_icon.png'),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -175,7 +175,7 @@ class CustomEndDrawer extends StatelessWidget {
               fontSize: 16.sp,
             ),
           ),
-          Image.asset('images/nav_arrow_right.png'),
+          Image.asset('assets/images/nav_arrow_right.png'),
         ],
       ),
     );

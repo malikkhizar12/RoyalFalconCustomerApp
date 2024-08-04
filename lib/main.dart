@@ -10,6 +10,7 @@ import 'package:royal_falcon/utils/routes/routes_names.dart';
 import 'package:royal_falcon/view/splash/splash_view.dart';
 import 'package:royal_falcon/view_model/airport_animation_view_model.dart';
 import 'package:royal_falcon/view_model/auth_view_model.dart';
+import 'package:royal_falcon/view_model/bus_booking_view_model.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/hourly_card_view_model.dart';
 import 'package:royal_falcon/view_model/map_view_model.dart';
@@ -19,15 +20,12 @@ import 'package:royal_falcon/view_model/profile_screen_view_model.dart';
 import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'model/driver_booking_model.dart';
 import 'model/my_bookings_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  // FirebaseMessaging.instance;
   await dotenv.load(fileName: '.env');
   Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
   await Stripe.instance.applySettings();
@@ -45,7 +43,6 @@ void main() async {
   Hive.registerAdapter(PaginationAdapter());
 
   await Hive.openBox<DriverBookingData>('driverBookingDataBox');
-
   await Hive.openBox<Bookings>('bookingsBox');
   await Hive.openBox('vehicleCategoriesBox');
 
@@ -69,8 +66,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => VehicleViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileScreenViewModel()),
         ChangeNotifierProvider(create: (_) => MapsViewModel()),
-        ChangeNotifierProvider(
-            create: (_) => MyBookingsViewModel()), // Add this line
+        ChangeNotifierProvider(create: (_) => MyBookingsViewModel()),
+        ChangeNotifierProvider(create: (_) => BusCardViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
@@ -83,9 +80,8 @@ class MyApp extends StatelessWidget {
             theme: ThemeData.dark().copyWith(
               scaffoldBackgroundColor: AppColors.backgroundColor,
               textTheme:
-                  GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-                      .apply(bodyColor: Colors.white),
-              // canvasColor: secondaryColor,
+              GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+                  .apply(bodyColor: Colors.white),
             ),
             home: SplashScreen(),
             onGenerateRoute: Routes.generateRoute,

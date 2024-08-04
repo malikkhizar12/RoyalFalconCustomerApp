@@ -18,7 +18,7 @@ class AbuDhabiListModel {
   static List<AbuDhabiListModel> getAbuDhabiRides() {
     return [
       AbuDhabiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Toyota Camry',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -26,7 +26,7 @@ class AbuDhabiListModel {
         price: '150 AED',
       ),
       AbuDhabiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'BMW X5',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -34,7 +34,7 @@ class AbuDhabiListModel {
         price: '275 AED',
       ),
       AbuDhabiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Audi A6',
         starRating: 4.8,
         totalRatings: 4.8,
@@ -42,14 +42,14 @@ class AbuDhabiListModel {
         price: '250 AED',
       ),
       AbuDhabiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Nissan Altima',
         starRating: 4.8,
         totalRatings: 4.8,
         totalReviews: 150,
         price: '175 AED',
       ),AbuDhabiListModel(
-        imageUrl: 'images/car_image.png',
+        imageUrl: 'assets/images/car_image.png',
         name: 'Nissan Altima',
         starRating: 4.8,
         totalRatings: 4.8,

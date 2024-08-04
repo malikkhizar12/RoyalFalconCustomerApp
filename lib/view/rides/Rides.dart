@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import 'package:royal_falcon/view/rides/rides_main_dubai_card.dart';
-
 import '../../utils/colors.dart';
 import '../widgets/booking_type.dart';
 import '../widgets/custom_end_drawer.dart';
@@ -38,7 +37,6 @@ class _RidesState extends State<Rides> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
 
     return SafeArea(
       child: Scaffold(
@@ -55,7 +53,7 @@ class _RidesState extends State<Rides> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'images/rides_cover.png',
+                        'assets/images/rides_cover.png',
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.fitWidth,
                       ),
@@ -89,67 +87,60 @@ class _RidesState extends State<Rides> {
                         ),
                       ),
                       SizedBox(height: 30.h),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF35383B),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF35383B),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Explore More Popular Cars",
+                              style: TextStyle(color: Colors.white, fontSize: 25.sp),
                             ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Explore More Popular Cars",
-                                  style: TextStyle(color: Colors.white, fontSize: 25.sp),
-                                ),
-                                SizedBox(height: 8.h),
-                                Consumer<VehicleViewModel>(
-                                  builder: (context, vehicleViewModel, child) {
-                                    if (vehicleViewModel.loading) {
-                                      return CustomShimmerLoading();
-                                    } else {
-                                      var vehicles = vehicleViewModel.getVehiclesByLocation(selectedLocation);
-                                      if (vehicles.isEmpty) {
-                                        return Center(child: Text('No Vehicle for this Location', style: TextStyle(color: Colors.white)));
-                                      } else {
-                                        return GridView.builder(
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            childAspectRatio: width > 392
-                                                ? 0.60
-                                                : (width > 350
-                                                ? 0.57
-                                                : (width < 313
-                                                ? 0.45
-                                                : 0.53)), // Adjust aspect ratio as needed
-                                          ),
-                                          itemCount: vehicles.length,
-                                          itemBuilder: (context, index) {
-                                            final category = vehicles[index];
-                                            print('Category Data: $category'); // Debug print
-                                            return RidesMainDubaiCard(
-                                              name: category['name'],
-                                              imageUrl: category['categoryVehicleImage'],
-                                              price: category['minimumAmount'].toDouble(),
-                                              baggage: category['noOfBaggage'],
-                                              persons: category['noOfPeople'],
-                                              rating: 4.0,
-                                              id: category['_id'], // Assuming a default rating, adjust as needed
-                                            );
-                                          },
+                            SizedBox(height: 8.h),
+                            Consumer<VehicleViewModel>(
+                              builder: (context, vehicleViewModel, child) {
+                                if (vehicleViewModel.loading) {
+                                  return CustomShimmerLoading();
+                                } else {
+                                  var vehicles = vehicleViewModel.getVehiclesByLocation(selectedLocation);
+                                  if (vehicles.isEmpty) {
+                                    return Center(child: Text('No Vehicle for this Location', style: TextStyle(color: Colors.white)));
+                                  } else {
+                                    return GridView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: width > 392
+                                            ? 0.60
+                                            : (width > 350
+                                            ? 0.57
+                                            : (width < 313 ? 0.45 : 0.53)), // Adjust aspect ratio as needed
+                                      ),
+                                      itemCount: vehicles.length,
+                                      itemBuilder: (context, index) {
+                                        final category = vehicles[index];
+                                        print('Category Data: $category'); // Debug print
+                                        return RidesMainDubaiCard(
+                                          name: category['name'],
+                                          imageUrl: category['categoryVehicleImage'],
+                                          price: category['minimumAmount'].toDouble(),
+                                          baggage: category['noOfBaggage'],
+                                          persons: category['noOfPeople'],
+                                          rating: 4.0,
+                                          id: category['_id'], // Assuming a default rating, adjust as needed
                                         );
-                                      }
-                                    }
-                                  },
-                                ),
-                              ],
+                                      },
+                                    );
+                                  }
+                                }
+                              },
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -157,7 +148,7 @@ class _RidesState extends State<Rides> {
                     top: width > 435 ? MediaQuery.of(context).size.height * 0.26 : MediaQuery.of(context).size.height * 0.18,
                     left: 0,
                     right: 0,
-                    child: const Center(
+                    child: Center(
                       child: BookingType(),
                     ),
                   ),
