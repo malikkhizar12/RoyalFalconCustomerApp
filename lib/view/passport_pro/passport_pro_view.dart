@@ -5,7 +5,7 @@ import 'package:royal_falcon/view/passport_pro/passport_details.dart';
 import 'package:royal_falcon/view/passport_pro/widget/passport_pro_main_container_widget.dart';
 import 'package:royal_falcon/view/widgets/app_bar_widget.dart';
 import 'package:royal_falcon/view/widgets/button_widget.dart';
-import 'package:royal_falcon/view/widgets/search_bar_widget.dart';
+import 'package:royal_falcon/view/widgets/searchbar.dart';
 
 class PassportProView extends StatefulWidget {
   const PassportProView({super.key});

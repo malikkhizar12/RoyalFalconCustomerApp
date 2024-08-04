@@ -5,7 +5,7 @@ import 'package:royal_falcon/view/Rides/location_buttons.dart';
 import 'package:royal_falcon/view/rent_a_car/widgets/appbar.dart';
 import 'package:royal_falcon/view/rent_a_car/widgets/confirm_booking_bottom_sheet.dart';
 import 'package:royal_falcon/view/rent_a_car/widgets/vehicle_card_hourly.dart';
-import '../widgets/search_bar_widget.dart';
+import '../widgets/searchbar.dart';
 
 class HourlyBooking extends StatefulWidget {
   const HourlyBooking({super.key});

@@ -12,7 +12,7 @@ import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import '../../view_model/rides_booking_form_view_model.dart';
 import '../widgets/custom_end_drawer.dart';
 import '../Rides/Rides.dart';
-import '../widgets/search_bar_widget.dart';
+import '../widgets/searchbar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

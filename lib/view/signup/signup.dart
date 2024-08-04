@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/view/signup/widgets/phone_number_field.dart';
 import 'package:royal_falcon/view/widgets/button_widget.dart';
-import 'package:royal_falcon/view/widgets/textfield_widget.dart';
+import 'package:royal_falcon/view/widgets/textfields.dart';
 import 'package:royal_falcon/view_model/signup_view_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/utils/utils.dart';

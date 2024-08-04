@@ -8,7 +8,7 @@ import '../../view_model/home_screen_view_model.dart';
 import '../Rides/Rides.dart';
 import '../rent_a_car/widgets/appbar.dart';
 import '../widgets/home_screen_categories.dart';
-import '../widgets/search_bar_widget.dart';
+import '../widgets/searchbar.dart';
 
 class AllServices extends StatefulWidget {
   const AllServices({super.key});
