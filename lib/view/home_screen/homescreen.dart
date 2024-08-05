@@ -20,6 +20,7 @@ import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import '../../view_model/rides_booking_form_view_model.dart';
+import '../passport_pro/passport_pro_view.dart';
 import '../widgets/custom_end_drawer.dart';
 import '../Rides/Rides.dart';
 import '../widgets/searchbar.dart';
@@ -235,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
                 if (connectionState == ConnectionState.waiting)
                   Container(
-                    color: ColorConstants.backgroundColor,
+                    color: AppColors.backgroundColor,
                     height: 210.0.h,
                     child: SmallShimmerLoading(),
                   )
@@ -287,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 // <<<<<<< dev_usama
 //                                     color: Colors.grey,
 // =======
-                                    color: ColorConstants.backgroundColor,
+                                    color: AppColors.backgroundColor,
 // >>>>>>> main
                                     borderRadius: BorderRadius.circular(10.r),
                                     boxShadow: [

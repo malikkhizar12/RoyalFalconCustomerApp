@@ -6,6 +6,7 @@ import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import '../../utils/colors.dart';
 import '../../view_model/home_screen_view_model.dart';
 import '../Rides/Rides.dart';
+import '../partner_up/partner_up_view.dart';
 import '../rent_a_bus/bus_booking.dart';
 import '../rent_a_car/widgets/appbar.dart';
 import '../widgets/home_screen_categories.dart';

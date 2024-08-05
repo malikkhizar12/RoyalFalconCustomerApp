@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/colors.dart';
+import 'package:royal_falcon/view/rent_a_bus/widgets/confirm_booking_bottom_sheet.dart';
 import 'package:royal_falcon/view/rent_a_bus/widgets/vehicle_card_bus.dart';
 import 'package:royal_falcon/view/rent_a_car/widgets/appbar.dart';
-import 'package:royal_falcon/view/rent_a_car/widgets/confirm_booking_bottom_sheet.dart';
 import '../../view_model/bus_booking_view_model.dart';
 import '../widgets/searchbar.dart';
 import '../../../view_model/hourly_card_view_model.dart';
@@ -49,8 +49,8 @@ class _HourlyBookingState extends State<BusBooking> {
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: ElevatedSearchBar(
                           hintText: "Search",
-                          fillcolor: Color(0xFFFFBC07),
-                          textcolor: Colors.white,
+                          fillColor: Color(0xFFFFBC07),
+                          textColor: Colors.white,
                         ),
                       ),
                       // Add other widgets here if needed
@@ -62,7 +62,7 @@ class _HourlyBookingState extends State<BusBooking> {
             Expanded(
               child: Container(
                 width: 1.sw,
-                color: ColorConstants
+                color: AppColors
                     .backgroundColor, // Background color for the remaining space
                 child: SingleChildScrollView(
                   child: Column(
@@ -80,7 +80,7 @@ class _HourlyBookingState extends State<BusBooking> {
                             builder: (context, viewModel, child) {
                               return VehicleCardBus(
                                 onBookNow: (price) {
-                                  ConfirmBookingBottomSheet(
+                                  ConfirmBusBookingBottomSheet(
                                     vehicleName: 'King Long Bus',
                                     price: price,
                                   ).show(context);

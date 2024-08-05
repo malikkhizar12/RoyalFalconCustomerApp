@@ -27,7 +27,7 @@ class ConfirmationPage extends StatelessWidget {
     final TextEditingController hourlyUserEmail =TextEditingController();
     final TextEditingController hourlyUserPhone =TextEditingController();
     return Scaffold(
-      backgroundColor: ColorConstants.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
 
       body: Column(
         children: [

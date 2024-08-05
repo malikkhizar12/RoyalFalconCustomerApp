@@ -78,7 +78,7 @@ class _PassportProViewState extends State<PassportProView> {
                       reviews: '140',
                       amount: '400',
                       ratings: 3,
-                      image: 'images/passport.png',
+                      image: 'assets/images/passport.png',
                     ),
                   );
                 },

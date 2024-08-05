@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:royal_falcon/view/rent_a_car/widgets/vehicle_card_hourly.dart';
+import 'package:royal_falcon/view/rent_a_bus/widgets/vehicle_card_bus.dart';
 import '../../../utils/colors.dart';
+import '../../../view_model/bus_booking_view_model.dart';
 import '../../../view_model/hourly_card_view_model.dart';
 import '../../rent_a_car/hourly_confirmation.dart';
 
-class ConfirmBookingBottomSheet {
+class ConfirmBusBookingBottomSheet {
   final String vehicleName;
   final int price;
 
-  ConfirmBookingBottomSheet({required this.vehicleName, required this.price});
+  ConfirmBusBookingBottomSheet({required this.vehicleName, required this.price});
 
   void show(BuildContext context) {
     showModalBottomSheet(
@@ -19,8 +20,8 @@ class ConfirmBookingBottomSheet {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return ChangeNotifierProvider(
-          create: (_) => VehicleCardViewModel(initialPrice: price),
-          child: Consumer<VehicleCardViewModel>(
+          create: (_) => BusCardViewModel(initialPrice: price),
+          child: Consumer<BusCardViewModel>(
             builder: (context, viewModel, child) {
               return AnimatedPadding(
                 padding: MediaQuery
@@ -30,7 +31,7 @@ class ConfirmBookingBottomSheet {
                 curve: Curves.easeOut,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: ColorConstants.backgroundColor,
+                    color: AppColors.backgroundColor,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
@@ -55,7 +56,7 @@ class ConfirmBookingBottomSheet {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            VehicleCard(
+                            VehicleCardBus(
                               showButton: false,
                               // Hide button in bottom sheet
                               onBookNow: (price) {},
@@ -223,7 +224,7 @@ class ConfirmBookingBottomSheet {
   }
 
   Widget _buildTimeChip(BuildContext context, String label,
-      VehicleCardViewModel viewModel, TimeOfDay time) {
+      BusCardViewModel viewModel, TimeOfDay time) {
     return GestureDetector(
       onTap: () {
         viewModel.setTime(time);

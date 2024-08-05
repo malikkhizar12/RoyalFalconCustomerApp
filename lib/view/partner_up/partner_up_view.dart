@@ -53,7 +53,7 @@ class _PartnerUpViewState extends State<PartnerUpView> with TickerProviderStateM
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: ColorConstants.backgroundColor,
+                  color: AppColors.backgroundColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(32),
                     topRight: Radius.circular(32),
