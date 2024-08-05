@@ -25,7 +25,6 @@ class _SignupPageState extends State<SignupPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-// <<<<<<< dev_usama
           child: ChangeNotifierProvider(
             create: (BuildContext context) => SignupViewModel(),
             child: Consumer<SignupViewModel>(
@@ -37,11 +36,11 @@ class _SignupPageState extends State<SignupPage> {
                     child: Column(
                       children: [
                         Image.asset(
-                          'images/company_logo.png',
+                          'assets/images/company_logo.png',
                           height: 80,
                         ),
                         Image.asset(
-                          'images/royal_falcon.png',
+                          'assets/images/royal_falcon.png',
                           height: 40,
                         ),
                       ],
@@ -117,28 +116,6 @@ class _SignupPageState extends State<SignupPage> {
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
                     ),
-// =======
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               SizedBox(height: 60.h),
-//               Center(
-//                 child: Column(
-//                   children: [
-//                     Image.asset('assets/images/company_logo.png', height: 80),
-//                     Image.asset('assets/images/royal_falcon.png', height: 40),
-//                   ],
-//                 ),
-//               ),
-//               SizedBox(height: 40.h),
-//               buildTextField('Full Name', nameController, TextInputType.text),
-//               if (nameError != null)
-//                 Padding(
-//                   padding: const EdgeInsets.only(top: 8.0),
-//                   child: Text(
-//                     nameError!,
-//                     style: TextStyle(color: Colors.red, fontSize: 14.sp),
-// >>>>>>> main
                   ),
                   10.verticalSpace,
                   ValueListenableBuilder(
@@ -244,6 +221,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ),
                   ),
+                  40.verticalSpace,
                 ],
               ),
             ),
