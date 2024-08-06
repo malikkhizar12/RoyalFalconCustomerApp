@@ -29,11 +29,15 @@ class NetworkApiServices extends BaseApiServices {
         },
         body: jsonEncode(data),
       ).timeout(const Duration(seconds: 20));
+      print("Response Status : ${response.statusCode}");
+      print("Response Body : ${response.body}");
       responseJson =
           returnResponse(response);
+      print("Response json : ${responseJson}");
     } on SocketException {
       throw FetchDataException("No internet Connection");
     }
+    print("weqwewew$responseJson");
     return responseJson;
   }
 

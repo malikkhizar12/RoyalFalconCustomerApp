@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_falcon/config/location_permission_request.dart';
 import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
 import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final Set<Polyline> _polylines = {};
 
   CameraPosition? _initialCameraPosition;
+  Position? currentPosition;
 
   @override
   void initState() {
@@ -49,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _initializeDataFuture = _homeScreenViewModel.initializeData(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getLocation();
+      // _getLocation();
       Provider.of<VehicleViewModel>(context, listen: false)
           .fetchVehicleCategories(context);
     });
@@ -61,8 +63,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     _startAnimation();
     _addMarkers();
+    LocationPermissionRequest.getLocation();
+    getCurrentLocation();
+
   }
 
+  void getCurrentLocation()async{
+    print("sadasds");
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+
+    currentPosition = await Geolocator.getCurrentPosition(
+
+    );
+    print("______________________________");
+    print("dsfdjfndfjdfdakfnadfjdafnfkadnfdaj$currentPosition");
+    print("______________________________");
+
+  }
   void _startAnimation() {
     Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
@@ -92,41 +112,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
-  Future<void> _getLocation() async {
-    try {
-      bool serviceEnabled;
-      LocationPermission permission;
-
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        return Future.error('Location services are disabled.');
-      }
-
-      permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return Future.error('Location permissions are denied');
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        return Future.error(
-            'Location permissions are permanently denied, we cannot request permissions.');
-      }
-
-      Position position = await Geolocator.getCurrentPosition();
-      setState(() {
-        _initialCameraPosition = CameraPosition(
-          target: LatLng(position.latitude, position.longitude),
-          zoom: 13,
-        );
-      });
-      print("Current position: ${position.latitude}, ${position.longitude}");
-    } catch (e) {
-      print("Error in getting location: $e");
-    }
-  }
 
   Future<void> _setMapStyle() async {
     if (_mapController != null) {

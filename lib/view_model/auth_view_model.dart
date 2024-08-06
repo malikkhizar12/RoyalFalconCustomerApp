@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:royal_falcon/model/user_model.dart';
 import 'package:royal_falcon/repository/auth_repository.dart';
@@ -8,7 +6,7 @@ import 'package:royal_falcon/view_model/user_view_model.dart';
 import 'package:royal_falcon/utils/utils/utils.dart';
 import '../utils/routes/routes_names.dart';
 
-class AuthViewModel with ChangeNotifier {
+class AuthViewModel extends ChangeNotifier {
   final UserViewModel userViewModel = UserViewModel();
   final AuthRepository _authRepository = AuthRepository();
   bool _loading = false;
@@ -18,7 +16,6 @@ class AuthViewModel with ChangeNotifier {
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
   ValueNotifier<bool> passObscureText = ValueNotifier<bool>(true);
-
 
   void setLoading(bool value) {
     _loading = value;
@@ -65,13 +62,13 @@ class AuthViewModel with ChangeNotifier {
               arguments: userModel,
               (route) => false);
         }
+        emailController.clear();
+        passwordController.clear();
       } else {
         throw Exception('Login failed');
       }
     } catch (e) {
       setLoading(false);
-      print("Check condition : ${e.toString().contains('message')}");
-
       String errorMessage;
       try {
         var errorResponse = jsonDecode(e.toString());
@@ -80,31 +77,9 @@ class AuthViewModel with ChangeNotifier {
       } catch (jsonError) {
         errorMessage = 'Login failed: $e';
       }
-
       Utils.errorMessage(errorMessage, context);
-
-      // setLoading(false);
-      // print(e.toString().contains('message'));
-      // Utils.errorMessage(e.toString(), context);
-      // String errorMessage = 'Login failed: $e';
-
-      // Check for specific error messages
-      // if (e.toString().contains('Invalid email')) {
-      //   errorMessage = 'Incorrect email';
-      // } else if (e.toString().contains('Error During Communication')) {
-      //   errorMessage = 'Unauthorized User';
-      // }
-
-      // Show snackbar with appropriate error message
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text(errorMessage),
-      //     duration: const Duration(seconds: 3),
-      //   ),
-      // );
     }
   }
-
 
   Future<void> logout(BuildContext context) async {
     try {
@@ -114,5 +89,4 @@ class AuthViewModel with ChangeNotifier {
       print('Logout error: $e'); // Handle any logout errors
     }
   }
-
 }
