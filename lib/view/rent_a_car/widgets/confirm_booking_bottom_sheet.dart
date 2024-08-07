@@ -9,8 +9,9 @@ import '../hourly_confirmation.dart';
 class ConfirmBookingBottomSheet {
   final String vehicleName;
   final int price;
+  final int SelectedHours;
 
-  ConfirmBookingBottomSheet({required this.vehicleName, required this.price});
+  ConfirmBookingBottomSheet(this.SelectedHours, {required this.vehicleName, required this.price});
 
   void show(BuildContext context) {
     showModalBottomSheet(
@@ -19,7 +20,7 @@ class ConfirmBookingBottomSheet {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return ChangeNotifierProvider(
-          create: (_) => VehicleCardViewModel(initialPrice: price),
+          create: (_) => VehicleCardViewModel(initialPrice: price,bookingType: BookingType.fullDay),
           child: Consumer<VehicleCardViewModel>(
             builder: (context, viewModel, child) {
               return AnimatedPadding(
@@ -56,11 +57,13 @@ class ConfirmBookingBottomSheet {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             VehicleCard(
+                              showPriceButton: false,
+                              maxHours: 10,
+                              isHalfDay: false,
+                              isFullDay: false,
                               showButton: false,
-                              // Hide button in bottom sheet
                               onBookNow: (price) {},
-                              // Dummy function since button is hidden
-                              price: viewModel.price, // Use the dynamic price
+                              price: viewModel.price, vehicleName: 'Sedan', // Use the dynamic price
                             ),
                             Divider(color: Colors.grey),
                             SizedBox(height: 10.h),

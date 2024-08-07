@@ -29,7 +29,7 @@ class _PassportDetailsViewState extends State<PassportDetailsView> {
                 width: 1.sw,
                 height: 340.h,
                 child: Image.asset(
-                  "assets/images/passport.png",
+                  "assets/images/dubai_passport.webp",
                   fit: BoxFit.fill,
                 ),
               ),

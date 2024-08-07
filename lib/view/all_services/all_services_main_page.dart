@@ -65,7 +65,7 @@ class _AllServicesState extends State<AllServices>
                     image: DecorationImage(
 
                       image: AssetImage(
-                          'images/hourly_booking_cover.png'), // Ensure you have this image in your assets
+                          'assets/images/hourly_booking_cover.png'), // Ensure you have this image in your assets
 // =======
 //                       image: AssetImage('assets/images/hourly_booking_cover.png'), // Ensure you have this image in your assets
 // >>>>>>> main
@@ -144,7 +144,7 @@ class _AllServicesState extends State<AllServices>
                                                 builder: (context) => Rides(),
                                               ),
                                             ),
-                                            'assets/images/wheels.png',
+                                            'assets/images/white_lexus.png',
                                           ),
                                         ),
                                         Expanded(
@@ -262,16 +262,10 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rent A Bus',
-// <<<<<<< dev_usama
-//                                             () {
-//                                               // Handle Rent A Bus tap
-//                                             },
-//                                             'images/bus_image.png',
-// =======
+
                                                 () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => BusBooking())),
 
-                                            'assets/images/bus_image.png',
-// >>>>>>> main
+                                            'assets/images/Golden_bus.png',
                                           ),
                                         ),
                                         Spacer()

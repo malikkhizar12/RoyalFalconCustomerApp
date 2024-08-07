@@ -75,27 +75,39 @@ class BookingsCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      truncateLocation(pickUpLocation),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      width: 0.5.sw, // Adjust width to prevent overflow
+                      child: Text(
+                        truncateLocation(pickUpLocation),
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Ensure text doesn't overflow
                       ),
                     ),
                     SizedBox(height: 6.h),
-                    Text(
-                      truncateLocation(dropOffLocation),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      width: 0.5.sw, // Adjust width to prevent overflow
+                      child: Text(
+                        truncateLocation(dropOffLocation),
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Ensure text doesn't overflow
                       ),
                     ),
                     SizedBox(height: 6.h),
-                    Text(
-                      formatDateTime(pickUpDateTime),
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey,
+                    Container(
+                      width: 0.5.sw, // Adjust width to prevent overflow
+                      child: Text(
+                        formatDateTime(pickUpDateTime),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: Colors.grey,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Ensure text doesn't overflow
                       ),
                     ),
                   ],

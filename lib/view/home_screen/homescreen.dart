@@ -6,20 +6,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
-// <<<<<<< dev_usama
-// import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
-// import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
-// =======
 import 'package:royal_falcon/view/rent_a_bus/bus_booking.dart';
-// >>>>>>> main
+import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
-import '../../view_model/rides_booking_form_view_model.dart';
 import '../passport_pro/passport_pro_view.dart';
 import '../widgets/custom_end_drawer.dart';
 import '../Rides/Rides.dart';
@@ -146,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final RidesBookingFormViewModel model = RidesBookingFormViewModel(context, 0);
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: CustomEndDrawer(),
@@ -231,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 ElevatedSearchBar(
+                  hintText: "Search Services",
                   fillColor: Color(0xFFFFBC07),
                   textColor: Colors.white,
                 ),
@@ -246,17 +240,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       if (vehicleViewModel.dubaiVehicles.isEmpty && vehicleViewModel.abuDhabiVehicles.isEmpty) {
                         return Center(child: Text('No vehicles available', style: TextStyle(color: Colors.white, fontSize: 14.sp)));
                       } else {
-// <<<<<<< dev_usama
-//                         final limitedVehicles =
-//                             (vehicleViewModel.dubaiVehicles +
-//                                     vehicleViewModel.abuDhabiVehicles)
-//                                 .take(6)
-//                                 .toList();
-// =======
+
                         final limitedVehicles = (vehicleViewModel.dubaiVehicles + vehicleViewModel.abuDhabiVehicles)
                             .take(6)
                             .toList();
-// >>>>>>> main
                         return Column(
                           children: [
                             CarouselSlider(
@@ -267,12 +254,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 aspectRatio: 16 / 9,
                                 autoPlayCurve: Curves.fastOutSlowIn,
                                 enableInfiniteScroll: true,
-// <<<<<<< dev_usama
-//                                 autoPlayAnimationDuration:
-//                                     Duration(milliseconds: 700),
-// =======
+
                                 autoPlayAnimationDuration: Duration(milliseconds: 700),
-// >>>>>>> main
                                 viewportFraction: 1.0,
                                 onPageChanged: (index, reason) {
                                   setState(() {
@@ -285,11 +268,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   width: 1.sw,
                                   margin: EdgeInsets.symmetric(horizontal: 5.0.w),
                                   decoration: BoxDecoration(
-// <<<<<<< dev_usama
-//                                     color: Colors.grey,
-// =======
+
                                     color: AppColors.backgroundColor,
-// >>>>>>> main
                                     borderRadius: BorderRadius.circular(10.r),
                                     boxShadow: [
                                       BoxShadow(
@@ -311,21 +291,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-// <<<<<<< dev_usama
-//                               children: List.generate(limitedVehicles.length,
-//                                   (index) {
-//                                 return Container(
-//                                   width: 10.0,
-//                                   height: 6.0,
-//                                   margin: EdgeInsets.symmetric(
-//                                       vertical: 10.0, horizontal: 2.0),
-// =======
+
                               children: List.generate(limitedVehicles.length, (index) {
                                 return Container(
                                   width: 10.0.w,
                                   height: 6.0.h,
                                   margin: EdgeInsets.symmetric(vertical: 10.0.h, horizontal: 2.0.w),
-// >>>>>>> main
                                   decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
                                     color: _current == index
@@ -354,14 +325,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                     GestureDetector(
                       onTap: () {
-// <<<<<<< dev_usama
-//                         Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (context) => AllServices()));
-// =======
+
                         Navigator.push(context, MaterialPageRoute(builder: (context) => AllServices()));
-// >>>>>>> main
                       },
                       child: Text(
                         "See All",
@@ -371,41 +336,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+
                   ],
                 ),
+                SizedBox(height: 5.h,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildAnimatedCategoryChip(
                       'Rides',
-// <<<<<<< dev_usama
-//                       () => Navigator.of(context).push(
-//                         MaterialPageRoute(builder: (context) => Rides()),
-//                       ),
-//                       'images/car_image.png',
-//                     ),
-//                     _buildAnimatedCategoryChip(
-//                       'Buses',
-//                       () {
-//                         // Handle Buses tap
-//                       },
-//                       'images/dubai_safari.jpg',
-// =======
+
                           () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Rides())),
-                      'assets/images/car_image.png',
+                      'assets/images/rides_icon.png',
                     ),
                     _buildAnimatedCategoryChip(
                       'Buses',
                           () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => BusBooking())),
 
-                      'assets/images/bus_image.png',
-// >>>>>>> main
+                      'assets/images/bus_icon.png',
                     ),
                     _buildAnimatedCategoryChip(
-                      'Getaway',
-                      () {
-                        // Handle Getaway tap
-                      },
+                      'Hourly Hire',
+                          () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HourlyBooking())),
+
                       'assets/images/rides_cover.png',
                     ),
                     _buildAnimatedCategoryChip(
@@ -416,7 +369,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             MaterialPageRoute(
                                 builder: (context) => PassportProView()));
                       },
-                      'assets/images/stay_local.png',
+                      'assets/images/passport_icon.jpg',
                     ),
                   ],
                 ),
@@ -432,27 +385,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 SizedBox(height: 10.h),
-// <<<<<<< dev_usama
-//                 Consumer<VehicleViewModel>(
-//                   builder: (context, vehicleViewModel, child) {
-//                     return Container(
-//                       height: 210.0.h,
-//                       child: ListView(
-//                         scrollDirection: Axis.horizontal,
-//                         children: [
-//                           _buildServiceCard(
-//                               'images/hourly_booking.webp',
-//                               'Hourly Bookings',
-//                               () => Navigator.of(context).push(
-//                                     MaterialPageRoute(
-//                                         builder: (context) => HourlyBooking()),
-//                                   )),
-//                           _buildServiceCard('images/activities_image.webp',
-//                               'Activities', () {}),
-//                           _buildServiceCard('images/partner_up_image.webp',
-//                               ' Partner Up ', () {}),
-//                         ],
-// =======
+
                 Container(
                   height: 210.0.h,
                   child: Stack(
@@ -518,7 +451,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-// >>>>>>> main
                       ),
                     ],
                   ),
@@ -548,65 +480,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       padding: EdgeInsets.only(right: 10.0.w),
       child: GestureDetector(
         onTap: onTap,
-// <<<<<<< dev_usama
-//         child: Container(
-//           width: 100.w, // Adjust width as needed
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(20),
-//             color: Colors.transparent,
-//           ),
-//           child: Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Column(
-//               children: [
-//                 Image.asset(
-//                   imageAsset,
-//                   height: 70.h, // Adjust height as needed
-//                   width: double.infinity,
-//                   fit: BoxFit.cover,
-//                 ),
-//                 SizedBox(height: 8.0),
-//                 Text(
-//                   label,
-//                   style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 15.sp,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                   textAlign: TextAlign.center,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
 
-//   Widget _buildServiceCard(String imagePath, String title, VoidCallback onTap) {
-//     return Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: Stack(
-//         children: [
-//           GestureDetector(
-//             onTap: onTap,
-//             child: Container(
-//               width: 180.w,
-// =======
         child: Column(
           children: [
             Container(
-
+              height: 70.h,
               width: 100.w, // Adjust width as needed
-// >>>>>>> main
               decoration: BoxDecoration(
                 color: Colors.black,
+                borderRadius: BorderRadius.circular(18)
               ),
               child: Column(
                 children: [
                   Image.asset(
+                    height: 70.h,
                     imageAsset,
-                    height: 70.h, // Adjust height as needed
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),

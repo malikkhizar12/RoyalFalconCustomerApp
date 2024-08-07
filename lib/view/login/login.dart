@@ -37,10 +37,10 @@ class _LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'images/company_logo.png',
+                      'assets/images/company_logo.png',
                     ),
                     Image.asset(
-                      'images/royal_falcon.png',
+                      'assets/images/royal_falcon.png',
                     ),
                     SizedBox(height: 50.h),
                     Padding(
@@ -179,10 +179,7 @@ class _LoginState extends State<Login> {
                                   model.emailFocusNode,
                                   model.passwordFocusNode);
                             },
-// <<<<<<< dev_usama
-// =======
-//                             icon: Image.asset('assets/images/google_logo.webp', width: 40.w, height: 40.h),
-// >>>>>>> main
+
                           ),
                           20.verticalSpace,
                           Text(
@@ -223,7 +220,7 @@ class _LoginState extends State<Login> {
                           topLeft: Radius.circular(40.0),
                           topRight: Radius.circular(40.0),
                         ),
-// <<<<<<< dev_usama
+
                         color: Color(0xFF0E1115), // Even darker color
                       ),
                       child: Column(
@@ -267,7 +264,7 @@ class _LoginState extends State<Login> {
                                 // Handle Google login
                               },
                               icon: Image.asset(
-                                'images/google_logo.webp',
+                                'assets/images/google_logo.webp',
                                 width: 40.w,
                                 height: 40.h,
                               ),

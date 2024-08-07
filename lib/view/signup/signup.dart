@@ -25,7 +25,6 @@ class _SignupPageState extends State<SignupPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-// <<<<<<< dev_usama
           child: ChangeNotifierProvider(
             create: (BuildContext context) => SignupViewModel(),
             child: Consumer<SignupViewModel>(
@@ -37,11 +36,11 @@ class _SignupPageState extends State<SignupPage> {
                     child: Column(
                       children: [
                         Image.asset(
-                          'images/company_logo.png',
+                          'assets/images/company_logo.png',
                           height: 80,
                         ),
                         Image.asset(
-                          'images/royal_falcon.png',
+                          'assets/images/royal_falcon.png',
                           height: 40,
                         ),
                       ],

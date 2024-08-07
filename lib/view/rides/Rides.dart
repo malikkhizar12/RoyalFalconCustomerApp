@@ -125,6 +125,7 @@ class _RidesState extends State<Rides> {
                                         final category = vehicles[index];
                                         print('Category Data: $category'); // Debug print
                                         return RidesMainDubaiCard(
+                                          city: selectedLocation,
                                           name: category['name'],
                                           imageUrl: category['categoryVehicleImage'],
                                           price: category['minimumAmount'].toDouble(),

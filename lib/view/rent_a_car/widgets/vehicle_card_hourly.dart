@@ -4,14 +4,33 @@ import 'package:provider/provider.dart';
 import '../../../view_model/hourly_card_view_model.dart';
 
 class VehicleCard extends StatelessWidget {
+  final String vehicleName;
+  final int price;
+  final int maxHours;
+  final int? selectedHours;
+  final bool isFullDay;
+  final bool isHalfDay;
   final Function(int) onBookNow;
   final bool showButton;
+  final bool showPriceButton;
 
-  VehicleCard({required this.onBookNow, this.showButton = true, required int price});
+  VehicleCard({
+    required this.vehicleName,
+    required this.price,
+    this.maxHours = 10,
+    this.isFullDay = false,
+    this.isHalfDay = false,
+    required this.onBookNow,
+    this.showButton = true,
+    this.selectedHours, required this.showPriceButton,
+  });
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<VehicleCardViewModel>(context);
+
+    // Use selectedHours if provided, otherwise fallback to viewModel.hours
+    final hours = selectedHours ?? viewModel.hours;
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -35,7 +54,7 @@ class VehicleCard extends StatelessWidget {
               width: double.infinity,
               fit: BoxFit.cover,
             ),
-          ), // Replace with your car image
+          ),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,7 +63,7 @@ class VehicleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'SEDAN',
+                    vehicleName,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18.sp,
@@ -67,39 +86,51 @@ class VehicleCard extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.remove_circle, color: Colors.white),
-                        onPressed: viewModel.decrementHours,
-                      ),
-                      Text(
-                        '${viewModel.hours} Hour',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.add_circle, color: Color(0xFFFFBC07)),
-                        onPressed: viewModel.incrementHours,
-                      ),
-                    ],
-                  ),
+                  if (!isFullDay && !isHalfDay && showPriceButton)
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.remove_circle, color: Colors.white),
+                          onPressed: viewModel.hours > 0 ? viewModel.decrementHours : null,
+                        ),
+                        Text(
+                          '${hours} Hour${hours > 1 ? 's' : ''}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add_circle, color: Color(0xFFFFBC07)),
+                          onPressed: viewModel.hours < maxHours ? viewModel.incrementHours : null,
+                        ),
+                      ],
+                    ),
+                  if (isFullDay)
+                    Text(
+                      '10 Hours',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  if (isHalfDay)
+                    Text(
+                      '5 Hours',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   Text(
-                    'AED ${viewModel.price}',  // Use the dynamic price
+                    'AED $price',
                     style: TextStyle(
                       color: Color(0xFFFFBC07),
                       fontWeight: FontWeight.bold,
                       fontSize: 18.sp,
                     ),
                   ),
-                  Text(
-                    'Max ${viewModel.maxHours} Hours',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  if (!isFullDay && !isHalfDay && showPriceButton)
+                    Text(
+                      'Max ${viewModel.maxHours} Hours',
+                      style: TextStyle(color: Colors.white),
+                    ),
                 ],
-              )
+              ),
             ],
           ),
-          if (showButton) // Conditionally show the button
+          if (showButton)
             SizedBox(height: 20),
           if (showButton)
             Center(
@@ -107,10 +138,10 @@ class VehicleCard extends StatelessWidget {
                 width: 0.4.sw,
                 child: ElevatedButton(
                   onPressed: () {
-                    onBookNow(viewModel.price); // Pass the dynamic price
+                    onBookNow(price);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFFFBC07), // Background color
+                    backgroundColor: Color(0xFFFFBC07),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
