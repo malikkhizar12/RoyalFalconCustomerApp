@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/colors.dart';
+import 'package:royal_falcon/view/widgets/button_widget.dart';
 import 'package:royal_falcon/view/widgets/loading_widget.dart';
 import 'package:royal_falcon/view_model/search_location_book_ride_view_model.dart';
 import 'package:search_map_place_updated/search_map_place_updated.dart';
@@ -36,7 +37,7 @@ class _SearchLocationAndBookRideViewState
                   : Stack(
                       children: [
                         GoogleMap(
-                          zoomControlsEnabled: false,
+                          zoomControlsEnabled: true,
                           myLocationEnabled: true,
                           onMapCreated: (controller) {
                             model.mapController = controller;
@@ -50,6 +51,25 @@ class _SearchLocationAndBookRideViewState
                           ),
                           markers: model.markers,
                           polylines: model.polyLines,
+                          onTap: (LatLng position) async {
+                            if (model.isSelectingPickup) {
+                              model.currentLatitude = position.latitude;
+                              model.currentLongitude = position.longitude;
+                              model.addMarker(position, "PickUp Location");
+                              model.isSelectingPickup = false;
+                            } else {
+                              model.dropOffLatitude = position.latitude;
+                              model.dropOffLongitude = position.longitude;
+                              model.addMarker(position, "DropOff Location");
+                              model.getPolyLinePoints(
+                                  model.currentLatitude!,
+                                  model.currentLongitude!,
+                                  model.dropOffLatitude!,
+                                  model.dropOffLongitude!);
+                              model.zoomOutToFitPolyline();
+                            }
+                            setState(() {});
+                          },
                         ),
                         Positioned(
                           left: 0,
@@ -63,7 +83,7 @@ class _SearchLocationAndBookRideViewState
                                   hasClearButton: true,
                                   iconColor: AppColors.kPrimaryColor,
                                   placeType: PlaceType.address,
-                                  bgColor: Color(0xFF1C1F23),
+                                  bgColor: AppColors.backgroundColor,
                                   textColor: Colors.grey,
                                   placeholder: model.currentAddress == null
                                       ? "Search pickup location"
@@ -106,7 +126,7 @@ class _SearchLocationAndBookRideViewState
                                   hasClearButton: true,
                                   iconColor: AppColors.kPrimaryColor,
                                   placeType: PlaceType.address,
-                                  bgColor: Color(0xFF1C1F23),
+                                  bgColor: AppColors.backgroundColor,
                                   textColor: Colors.grey,
                                   placeholder: "Search dropoff location",
                                   apiKey: model.googleMapApiKey,
@@ -123,17 +143,17 @@ class _SearchLocationAndBookRideViewState
                                     );
                                     // if (model.currentLatitude != null ||
                                     //     model.currentLongitude != null) {
-                                      model.getPolyLinePoints(
-                                          model.currentLatitude!,
-                                          model.currentLongitude!,
-                                          model.dropOffLatitude!,
-                                          model.dropOffLongitude!);
-                                      // model.addPolyline(
-                                      //     LatLng(model.currentLatitude!,
-                                      //         model.currentLongitude!),
-                                      //     LatLng(model.dropOffLatitude!,
-                                      //         model.dropOffLongitude!));
-                                      model.zoomOutToFitPolyline();
+                                    model.getPolyLinePoints(
+                                        model.currentLatitude!,
+                                        model.currentLongitude!,
+                                        model.dropOffLatitude!,
+                                        model.dropOffLongitude!);
+                                    // model.addPolyline(
+                                    //     LatLng(model.currentLatitude!,
+                                    //         model.currentLongitude!),
+                                    //     LatLng(model.dropOffLatitude!,
+                                    //         model.dropOffLongitude!));
+                                    model.zoomOutToFitPolyline();
                                     // }
                                     setState(() {});
                                   },
@@ -141,6 +161,69 @@ class _SearchLocationAndBookRideViewState
                               ],
                             ),
                           ),
+                        ),
+                        DraggableScrollableSheet(
+                          initialChildSize: model.isExpanded ? 0.4 : 0.2,
+                          minChildSize: model.isExpanded ? 0.4 : 0.2,
+                          maxChildSize: model.isExpanded ? 0.5 : 0.2,
+                          builder: (BuildContext context,
+                              ScrollController scrollController) {
+                            return Container(
+                              color: AppColors.cardBackground,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20.w, vertical: 20.h),
+                              child: ListView(
+                                controller: scrollController,
+                                children: [
+                                  Container(
+                                    width: 1.sw,
+                                    height: 50.h,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(5.r),
+                                        color: AppColors.backgroundColor),
+                                    alignment: Alignment.centerLeft,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20.w),
+                                    child: Text(
+                                      "Time",
+                                      style: TextStyle(
+                                        color: AppColors.kWhiteColor,
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  20.verticalSpace,
+                                  ButtonWidget(
+                                    title: model.isExpanded
+                                        ? "Change Location"
+                                        : "Confirm Location",
+                                    onTap: model.toggleSheet,
+                                    borderRadius: 5,
+                                  ),
+                                  if (model.isExpanded) ...[
+                                    20.verticalSpace,
+                                    Container(
+                                      height: 200.h,
+                                      width: 1.sw,
+                                      color: AppColors.kBlackColor,
+                                      child: Center(
+                                        child: Text(
+                                          'Cars Listview',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    // Add more widgets here for the content inside the draggable sheet
+                                  ],
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

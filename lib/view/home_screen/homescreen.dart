@@ -70,11 +70,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   void getCurrentLocation() async {
     print("sadasds");
-    final LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 100,
-    );
-
     currentPosition = await Geolocator.getCurrentPosition();
     print("______________________________");
     print("dsfdjfndfjdfdakfnadfjdafnfkadnfdaj$currentPosition");

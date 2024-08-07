@@ -19,6 +19,14 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
   Set<Polyline> polyLines = {};
   List<Placemark>? placeMarks;
   String? currentAddress;
+  bool isExpanded = false;
+  bool isSelectingPickup = true;
+
+
+  void toggleSheet() {
+      isExpanded = !isExpanded;
+    notifyListeners();
+  }
 
   void getCurrentLocation() async {
     currentPosition = await Geolocator.getCurrentPosition(
