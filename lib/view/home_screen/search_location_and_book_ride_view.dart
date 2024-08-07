@@ -49,7 +49,7 @@ class _SearchLocationAndBookRideViewState
                             zoom: 14,
                           ),
                           markers: model.markers,
-                          // polylines: _polylines,
+                          polylines: model.polyLines,
                         ),
                         Positioned(
                           left: 0,
@@ -86,11 +86,16 @@ class _SearchLocationAndBookRideViewState
                                         "PickUp Location");
                                     if (model.dropOffLatitude != null ||
                                         model.dropOffLongitude != null) {
-                                      model.addPolyline(
-                                          LatLng(model.currentLatitude!,
-                                              model.currentLongitude!),
-                                          LatLng(model.dropOffLatitude!,
-                                              model.dropOffLongitude!));
+                                      // model.addPolyline(
+                                      //     LatLng(model.currentLatitude!,
+                                      //         model.currentLongitude!),
+                                      //     LatLng(model.dropOffLatitude!,
+                                      //         model.dropOffLongitude!));
+                                      model.getPolyLinePoints(
+                                          model.currentLatitude!,
+                                          model.currentLongitude!,
+                                          model.dropOffLatitude!,
+                                          model.dropOffLongitude!);
                                       model.zoomOutToFitPolyline();
                                     }
                                     setState(() {});
@@ -116,15 +121,20 @@ class _SearchLocationAndBookRideViewState
                                       pickUpLocation?.coordinates,
                                       "DropOff Location",
                                     );
-                                    if (model.currentLatitude != null ||
-                                        model.currentLongitude != null) {
-                                      model.addPolyline(
-                                          LatLng(model.currentLatitude!,
-                                              model.currentLongitude!),
-                                          LatLng(model.dropOffLatitude!,
-                                              model.dropOffLongitude!));
+                                    // if (model.currentLatitude != null ||
+                                    //     model.currentLongitude != null) {
+                                      model.getPolyLinePoints(
+                                          model.currentLatitude!,
+                                          model.currentLongitude!,
+                                          model.dropOffLatitude!,
+                                          model.dropOffLongitude!);
+                                      // model.addPolyline(
+                                      //     LatLng(model.currentLatitude!,
+                                      //         model.currentLongitude!),
+                                      //     LatLng(model.dropOffLatitude!,
+                                      //         model.dropOffLongitude!));
                                       model.zoomOutToFitPolyline();
-                                    }
+                                    // }
                                     setState(() {});
                                   },
                                 ),

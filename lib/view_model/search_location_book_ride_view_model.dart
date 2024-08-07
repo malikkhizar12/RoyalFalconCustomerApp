@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -29,7 +31,7 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
     Placemark place = placeMarks![0];
     currentAddress =
         "${place.name}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
-
+    addMarker(LatLng(currentLatitude!, currentLongitude!), "PickUp Location");
     notifyListeners();
   }
 
@@ -62,17 +64,52 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addPolyline(LatLng start, LatLng end) {
+  Future<void> getPolyLinePoints(curLat, curLong, desLat, desLong) async {
+    List<LatLng> polyCoordinates = [];
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleMapApiKey,
+      PointLatLng(curLat, curLong),
+      PointLatLng(desLat, desLong),
+      travelMode: TravelMode.driving,
+    );
+    if (result.points.isNotEmpty) {
+      for (var element in result.points) {
+        polyCoordinates.add(LatLng(element.latitude, element.longitude));
+        print(element);
+      }
+      addPolyline(polyCoordinates);
+    } else {
+      if (kDebugMode) {
+        print("Error message : ${result.errorMessage}");
+      }
+    }
+    // return polyCoordinates;
+  }
+
+  void addPolyline(List<LatLng> polyCoordinates) {
     final polyline = Polyline(
       polylineId: PolylineId("polyline"),
-      points: [start, end],
+      points: polyCoordinates,
       color: AppColors.kBlackColor,
       width: 5,
     );
     polyLines.add(polyline);
-    print(polyLines.length);
+    print(polyline);
     notifyListeners();
   }
+
+  // void addPolyline(LatLng start, LatLng end) {
+  //   final polyline = Polyline(
+  //     polylineId: PolylineId("polyline"),
+  //     points: [start, end],
+  //     color: AppColors.kBlackColor,
+  //     width: 5,
+  //   );
+  //   polyLines.add(polyline);
+  //   print(polyLines.length);
+  //   notifyListeners();
+  // }
 
   void zoomOutToFitPolyline() {
     LatLngBounds bounds;
