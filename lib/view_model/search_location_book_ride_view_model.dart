@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:royal_falcon/utils/colors.dart';
@@ -14,6 +15,8 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
   GoogleMapController? mapController;
   Set<Marker> markers = {};
   Set<Polyline> polyLines = {};
+  List<Placemark>? placeMarks;
+  String? currentAddress;
 
   void getCurrentLocation() async {
     currentPosition = await Geolocator.getCurrentPosition(
@@ -21,6 +24,12 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
     );
     currentLatitude = currentPosition?.latitude;
     currentLongitude = currentPosition?.longitude;
+    placeMarks =
+        await placemarkFromCoordinates(currentLatitude!, currentLongitude!);
+    Placemark place = placeMarks![0];
+    currentAddress =
+        "${place.name}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
+
     notifyListeners();
   }
 

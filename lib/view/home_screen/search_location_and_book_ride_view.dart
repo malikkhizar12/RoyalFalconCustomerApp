@@ -65,7 +65,9 @@ class _SearchLocationAndBookRideViewState
                                   placeType: PlaceType.address,
                                   bgColor: Color(0xFF1C1F23),
                                   textColor: Colors.grey,
-                                  placeholder: "Search pickup location",
+                                  placeholder: model.currentAddress == null
+                                      ? "Search pickup location"
+                                      : model.currentAddress!,
                                   apiKey: model.googleMapApiKey,
                                   onSelected: (Place place) async {
                                     Geolocation? pickUpLocation =
@@ -91,23 +93,7 @@ class _SearchLocationAndBookRideViewState
                                               model.dropOffLongitude!));
                                       model.zoomOutToFitPolyline();
                                     }
-                                    setState(() {
-                                      // pickUpLatitude =
-                                      //     pickUpLocation?.coordinates.latitude;
-                                      // pickUpLongitude =
-                                      //     pickUpLocation?.coordinates.longitude;
-                                      // pickupLocationName =
-                                      //     place.description ?? '';
-                                    });
-                                    // if (dropOffLatitude != null ||
-                                    //     dropOffLongitude != null) {
-                                    //   model.getTravelTime(
-                                    //     pickUpLatitude!,
-                                    //     pickUpLongitude!,
-                                    //     dropOffLatitude!,
-                                    //     dropOffLongitude!,
-                                    //   );
-                                    // }
+                                    setState(() {});
                                   },
                                 ),
                                 20.verticalSpace,
@@ -130,35 +116,16 @@ class _SearchLocationAndBookRideViewState
                                       pickUpLocation?.coordinates,
                                       "DropOff Location",
                                     );
-                                    // animateCameraToPosition(position);
-
                                     if (model.currentLatitude != null ||
                                         model.currentLongitude != null) {
                                       model.addPolyline(
                                           LatLng(model.currentLatitude!,
                                               model.currentLongitude!),
                                           LatLng(model.dropOffLatitude!,
-                                              model.dropOffLongitude!)
-                                      );
+                                              model.dropOffLongitude!));
                                       model.zoomOutToFitPolyline();
                                     }
-                                    setState(() {
-                                      // pickUpLatitude =
-                                      //     pickUpLocation?.coordinates.latitude;
-                                      // pickUpLongitude =
-                                      //     pickUpLocation?.coordinates.longitude;
-                                      // pickupLocationName =
-                                      //     place.description ?? '';
-                                    });
-                                    // if (dropOffLatitude != null ||
-                                    //     dropOffLongitude != null) {
-                                    //   model.getTravelTime(
-                                    //     pickUpLatitude!,
-                                    //     pickUpLongitude!,
-                                    //     dropOffLatitude!,
-                                    //     dropOffLongitude!,
-                                    //   );
-                                    // }
+                                    setState(() {});
                                   },
                                 ),
                               ],
