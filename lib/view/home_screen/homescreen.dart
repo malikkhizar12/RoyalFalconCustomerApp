@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:royal_falcon/config/location_permission_request.dart';
 import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
+import 'package:royal_falcon/view/home_screen/search_location_and_book_ride_view.dart';
 import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
 import 'package:royal_falcon/view/rent_a_bus/bus_booking.dart';
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
@@ -65,24 +66,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _addMarkers();
     LocationPermissionRequest.getLocation();
     getCurrentLocation();
-
   }
 
-  void getCurrentLocation()async{
+  void getCurrentLocation() async {
     print("sadasds");
     final LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: 100,
     );
 
-    currentPosition = await Geolocator.getCurrentPosition(
-
-    );
+    currentPosition = await Geolocator.getCurrentPosition();
     print("______________________________");
     print("dsfdjfndfjdfdakfnadfjdafnfkadnfdaj$currentPosition");
     print("______________________________");
-
   }
+
   void _startAnimation() {
     Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
@@ -111,7 +109,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       );
     });
   }
-
 
   Future<void> _setMapStyle() async {
     if (_mapController != null) {
@@ -450,78 +447,85 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 //                               ' Partner Up ', () {}),
 //                         ],
 // =======
-                Container(
-                  height: 210.0.h,
-                  child: Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => SearchLocationPage()), // Replace SearchLocationPage with your desired page
-                          // );
-                        },
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return _initialCameraPosition != null
-                                ? GoogleMap(
-                                    zoomControlsEnabled: false,
-                                    myLocationEnabled: true,
-                                    onMapCreated: (controller) {
-                                      _mapController = controller;
-                                      _setMapStyle(); // Ensure the map style is set after the controller is initialized
-                                    },
-                                    initialCameraPosition:
-                                        _initialCameraPosition!,
-                                    markers: _markers,
-                                    polylines: _polylines,
-                                  )
-                                : Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color(0xFFFFBC07),
-                                    ),
-                                  );
-                          },
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 10.h,
-                        left: 10.w,
-                        right: 10.w,
-                        child: GestureDetector(
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => SearchLocationPage()), // Replace SearchLocationPage with your desired page
-                            // );
-                          },
-                          child: Container(
-                            height: 50.h,
-                            margin: EdgeInsets.symmetric(horizontal: 10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.white.withOpacity(0.5)),
-                              color: Colors.grey.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 5.h),
-                            child: Row(
-                              children: [
-                                Icon(Icons.search, color: Colors.black),
-                                SizedBox(width: 10.w),
-                                Text(
-                                  "Search Location",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 16.sp),
+                InkWell(
+                  onTap: () {
+                    print("sdsad");
+                  },
+                  child: Container(
+                    color: AppColors.kBlackColor,
+                    height: 210.0.h,
+                    child: Stack(
+                      children: [
+                        currentPosition != null
+                            ? GoogleMap(
+                                zoomControlsEnabled: false,
+                                myLocationEnabled: true,
+                                onMapCreated: (controller) {
+                                  _mapController = controller;
+                                  _setMapStyle(); // Ensure the map style is set after the controller is initialized
+                                },
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(currentPosition!.latitude,
+                                      currentPosition!.longitude),
+                                  zoom: 13,
                                 ),
-                              ],
+                                markers: _markers,
+                                polylines: _polylines,
+                                onTap: (latLng) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          SearchLocationAndBookRideView(
+                                      ),
+                                    ), // Replace SearchLocationPage with your desired page
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(0xFFFFBC07),
+                                ),
+                              ),
+                        Positioned(
+                          bottom: 10.h,
+                          left: 10.w,
+                          right: 10.w,
+                          child: GestureDetector(
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(builder: (context) => SearchLocationPage()), // Replace SearchLocationPage with your desired page
+                              // );
+                            },
+                            child: Container(
+                              height: 50.h,
+                              margin: EdgeInsets.symmetric(horizontal: 10.w),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.white.withOpacity(0.5)),
+                                color: Colors.grey.withOpacity(0.9),
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 5.h),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.search, color: Colors.black),
+                                  SizedBox(width: 10.w),
+                                  Text(
+                                    "Search Location",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 16.sp),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
+                          // >>>>>>> main
                         ),
-// >>>>>>> main
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
