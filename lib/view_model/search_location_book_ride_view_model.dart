@@ -20,11 +20,10 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
   List<Placemark>? placeMarks;
   String? currentAddress;
   bool isExpanded = false;
-  bool isSelectingPickup = true;
-
+  bool isSelectingPickup = true, isCarSelected = false;
 
   void toggleSheet() {
-      isExpanded = !isExpanded;
+    isExpanded = !isExpanded;
     notifyListeners();
   }
 

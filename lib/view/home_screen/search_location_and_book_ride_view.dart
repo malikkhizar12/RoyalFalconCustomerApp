@@ -163,9 +163,21 @@ class _SearchLocationAndBookRideViewState
                           ),
                         ),
                         DraggableScrollableSheet(
-                          initialChildSize: model.isExpanded ? 0.4 : 0.2,
-                          minChildSize: model.isExpanded ? 0.4 : 0.2,
-                          maxChildSize: model.isExpanded ? 0.5 : 0.2,
+                          initialChildSize: model.isCarSelected
+                              ? 0.2
+                              : model.isExpanded
+                                  ? 0.5
+                                  : 0.2,
+                          minChildSize: model.isCarSelected
+                              ? 0.2
+                              : model.isExpanded
+                                  ? 0.5
+                                  : 0.2,
+                          maxChildSize: model.isCarSelected
+                              ? 0.2
+                              : model.isExpanded
+                                  ? 0.5
+                                  : 0.2,
                           builder: (BuildContext context,
                               ScrollController scrollController) {
                             return Container(
@@ -196,29 +208,59 @@ class _SearchLocationAndBookRideViewState
                                   ),
                                   20.verticalSpace,
                                   ButtonWidget(
-                                    title: model.isExpanded
-                                        ? "Change Location"
-                                        : "Confirm Location",
+                                    title: model.isCarSelected
+                                        ? "Book Car"
+                                        : model.isExpanded
+                                            ? "Change Location"
+                                            : "Confirm Location",
                                     onTap: model.toggleSheet,
                                     borderRadius: 5,
                                   ),
                                   if (model.isExpanded) ...[
                                     20.verticalSpace,
+                                    Text("Select Car Type"),
+                                    20.verticalSpace,
                                     Container(
                                       height: 200.h,
                                       width: 1.sw,
-                                      color: AppColors.kBlackColor,
                                       child: Center(
-                                        child: Text(
-                                          'Cars Listview',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.sp,
-                                          ),
+                                        child: ListView.separated(
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                model.isCarSelected = true;
+                                                model.isExpanded = false;
+                                                setState(() {});
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      AppColors.backgroundColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.r),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Image.asset(
+                                                      "assets/images/car_image.png",
+                                                    ),
+                                                    10.verticalSpace,
+                                                    Text("Car Image"),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          itemCount: 6,
+                                          separatorBuilder:
+                                              (BuildContext context,
+                                                      int index) =>
+                                                  20.horizontalSpace,
                                         ),
                                       ),
                                     ),
-                                    // Add more widgets here for the content inside the draggable sheet
                                   ],
                                 ],
                               ),
