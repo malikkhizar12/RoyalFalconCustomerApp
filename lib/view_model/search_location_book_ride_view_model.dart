@@ -18,7 +18,7 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
   Set<Marker> markers = {};
   Set<Polyline> polyLines = {};
   List<Placemark>? placeMarks;
-  String? currentAddress,dropOffAddress;
+  String? currentAddress, dropOffAddress;
   bool isExpanded = false;
   bool isSelectingPickup = true, isCarSelected = false;
 
@@ -31,6 +31,7 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
     currentPosition = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+    notifyListeners();
     currentLatitude = currentPosition?.latitude;
     currentLongitude = currentPosition?.longitude;
     currentAddress =
