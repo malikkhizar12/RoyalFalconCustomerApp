@@ -56,11 +56,17 @@ class _SearchLocationAndBookRideViewState
                               model.currentLatitude = position.latitude;
                               model.currentLongitude = position.longitude;
                               model.addMarker(position, "PickUp Location");
+                              model.currentAddress =
+                                  await model.getLocationAddress(
+                                      position.latitude, position.longitude);
                               model.isSelectingPickup = false;
                             } else {
                               model.dropOffLatitude = position.latitude;
                               model.dropOffLongitude = position.longitude;
                               model.addMarker(position, "DropOff Location");
+                              model.dropOffAddress =
+                                  await model.getLocationAddress(
+                                      position.latitude, position.longitude);
                               model.getPolyLinePoints(
                                   model.currentLatitude!,
                                   model.currentLongitude!,
@@ -128,7 +134,9 @@ class _SearchLocationAndBookRideViewState
                                   placeType: PlaceType.address,
                                   bgColor: AppColors.backgroundColor,
                                   textColor: Colors.grey,
-                                  placeholder: "Search dropoff location",
+                                  placeholder: model.dropOffAddress == null
+                                      ? "Search dropoff location"
+                                      : model.dropOffAddress!,
                                   apiKey: model.googleMapApiKey,
                                   onSelected: (Place place) async {
                                     Geolocation? pickUpLocation =

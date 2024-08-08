@@ -18,7 +18,7 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
   Set<Marker> markers = {};
   Set<Polyline> polyLines = {};
   List<Placemark>? placeMarks;
-  String? currentAddress;
+  String? currentAddress,dropOffAddress;
   bool isExpanded = false;
   bool isSelectingPickup = true, isCarSelected = false;
 
@@ -33,13 +33,16 @@ class SearchLocationBookRideViewModel extends ChangeNotifier {
     );
     currentLatitude = currentPosition?.latitude;
     currentLongitude = currentPosition?.longitude;
-    placeMarks =
-        await placemarkFromCoordinates(currentLatitude!, currentLongitude!);
-    Placemark place = placeMarks![0];
     currentAddress =
-        "${place.name}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
+        await getLocationAddress(currentLatitude!, currentLongitude!);
     addMarker(LatLng(currentLatitude!, currentLongitude!), "PickUp Location");
     notifyListeners();
+  }
+
+  Future<String> getLocationAddress(latitude, longitude) async {
+    placeMarks = await placemarkFromCoordinates(latitude, longitude);
+    Placemark place = placeMarks![0];
+    return "${place.name}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
   }
 
   void setCurrentPosition(Position position) {
