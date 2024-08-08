@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_falcon/view/partner_up/widgets/partner_up_form.dart';
 import 'package:royal_falcon/view/widgets/appbarcustom.dart';
 
 class PartnerUpDetails extends StatelessWidget {
@@ -100,7 +101,15 @@ class PartnerUpDetails extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            // Add contact action here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PartnerUpFormView(
+
+                                ),
+                              ),
+                            );
+
                           },
                           child: Text(
                             "Contact Us",
