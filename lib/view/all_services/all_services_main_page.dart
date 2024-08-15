@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:royal_falcon/view/partner_up/partner_up_view.dart';
+// <<<<<<< dev_usama
+// import 'package:royal_falcon/view/partner_up/partner_up_view.dart';
+// =======
+// import 'package:royal_falcon/utils/app_themes.dart';
+// >>>>>>> main
 import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
+import 'package:royal_falcon/view_model/app_theme_vmodel.dart';
 import '../../utils/colors.dart';
 import '../../view_model/home_screen_view_model.dart';
 import '../Rides/Rides.dart';
+import '../partner_up/partner_up_view.dart';
 import '../rent_a_bus/bus_booking.dart';
 import '../rent_a_car/widgets/appbar.dart';
 import '../widgets/home_screen_categories.dart';
@@ -54,7 +60,7 @@ class _AllServicesState extends State<AllServices>
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.backgroundColor,
         body: Column(
           children: [
             Stack(
@@ -63,12 +69,8 @@ class _AllServicesState extends State<AllServices>
                   height: 0.28.sh,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-
                       image: AssetImage(
-                          'images/hourly_booking_cover.png'), // Ensure you have this image in your assets
-// =======
-//                       image: AssetImage('assets/images/hourly_booking_cover.png'), // Ensure you have this image in your assets
-// >>>>>>> main
+                          'assets/images/hourly_booking_cover.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -78,9 +80,7 @@ class _AllServicesState extends State<AllServices>
                   child: Column(
                     children: [
                       const AppbarHourly(title: 'All Services'),
-                      SizedBox(
-                          height:
-                              100.h), // Adjust the height as per your design
+                      SizedBox(height: 100.h), // Adjust the height as per your design
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: ElevatedSearchBar(
@@ -98,7 +98,7 @@ class _AllServicesState extends State<AllServices>
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
                 width: 1.sw,
-                color: AppColors.backgroundColor,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -111,22 +111,8 @@ class _AllServicesState extends State<AllServices>
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.r),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFF3A3E41),
-                                      Color(0xFF22262A)
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
+                                  gradient: Theme.of(context).customContainerGradient,
+                                  boxShadow: Theme.of(context).customBoxShadow,
                                 ),
                                 height: 286,
                                 width: 1.sw,
@@ -139,18 +125,18 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rides',
-                                            () => Navigator.of(context).push(
+                                                () => Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) => Rides(),
                                               ),
                                             ),
-                                            'assets/images/wheels.png',
+                                            'assets/images/white_lexus.png',
                                           ),
                                         ),
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Getaway',
-                                            () {
+                                                () {
                                               // Handle Getaway tap
                                             },
                                             'assets/images/getaway.png',
@@ -159,7 +145,7 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Explore',
-                                            () {
+                                                () {
                                               // Handle Explore tap
                                             },
                                             'assets/images/explore.png',
@@ -173,25 +159,18 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Partner up',
-// <<<<<<< dev_usama
-//                                             () {
-//                                               // Handle Partner up tap
-//                                             },
-//                                             'images/partner.png',
-// =======
                                                 () => Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) => PartnerUpView(),
                                               ),
                                             ),
                                             'assets/images/partner.png',
-// >>>>>>> main
                                           ),
                                         ),
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Passport pro',
-                                            () {
+                                                () {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -222,22 +201,8 @@ class _AllServicesState extends State<AllServices>
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.r),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFF3A3E41),
-                                      Color(0xFF22262A)
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
+                                  gradient: Theme.of(context).customContainerGradient,
+                                  boxShadow: Theme.of(context).customBoxShadow,
                                 ),
                                 height: 186,
                                 width: 1.sw,
@@ -250,7 +215,7 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Hourly Hire',
-                                            () => Navigator.of(context).push(
+                                                () => Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     HourlyBooking(),
@@ -262,16 +227,12 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rent A Bus',
-// <<<<<<< dev_usama
-//                                             () {
-//                                               // Handle Rent A Bus tap
-//                                             },
-//                                             'images/bus_image.png',
-// =======
-                                                () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => BusBooking())),
-
-                                            'assets/images/bus_image.png',
-// >>>>>>> main
+                                                () => Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => BusBooking(),
+                                              ),
+                                            ),
+                                            'assets/images/Golden_bus.png',
                                           ),
                                         ),
                                         Spacer()

@@ -35,13 +35,19 @@ class _LoginState extends State<Login> {
                   children: [
                     Image.asset(
                       'assets/images/company_logo.png',
-                      width: 0.5.sw,
-                      height: 0.1.sh,
+// <<<<<<< dev_usama
+//                       width: 0.5.sw,
+//                       height: 0.1.sh,
+//                     ),
+//                     Image.asset(
+//                       'assets/images/royal_falcon.png',
+//                       width: 0.6.sw,
+//                       height: 0.2.sh,
+// =======
                     ),
                     Image.asset(
                       'assets/images/royal_falcon.png',
-                      width: 0.6.sw,
-                      height: 0.2.sh,
+// >>>>>>> main
                     ),
                     SizedBox(height: 50.h),
                     Padding(
@@ -130,9 +136,10 @@ class _LoginState extends State<Login> {
                                 // Handle Google login
                               },
                               icon: Image.asset(
-                                  'assets/images/google_logo.webp',
-                                  width: 40.w,
-                                  height: 40.h),
+                                'assets/images/google_logo.webp',
+                                width: 40.w,
+                                height: 40.h,
+                              ),
                             ),
                           ),
                           SizedBox(height: 30.h),

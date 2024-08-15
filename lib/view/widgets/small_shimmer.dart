@@ -8,7 +8,7 @@ class SmallShimmerLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 1.sw,
-      color: AppColors.backgroundColor, // Set the background color to black
+      color:AppColors.backgroundColor, // Set the background color to black
       child: Shimmer.fromColors(
         baseColor: Colors.black.withOpacity(0.2),
         highlightColor: Colors.grey

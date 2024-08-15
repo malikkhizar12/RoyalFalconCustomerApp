@@ -29,7 +29,7 @@ class _AirportBookingsState extends State<AirportBookings> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RidesBookingForm(price: parsedPrice, isFromAirportBooking: true, id: id),
+        builder: (context) => RidesBookingForm(price: parsedPrice, isFromAirportBooking: true, id: id, city: selectedLocation,),
       ),
     );
   }

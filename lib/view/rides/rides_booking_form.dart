@@ -12,6 +12,7 @@ import '../widgets/appbarcustom.dart';
 import '../widgets/build_summary_booking_section.dart';
 
 class RidesBookingForm extends StatefulWidget {
+  final String city;
   final double price;
   final String id;
   final bool isFromAirportBooking;
@@ -21,6 +22,7 @@ class RidesBookingForm extends StatefulWidget {
     required this.price,
     required this.id,
     this.isFromAirportBooking = false,
+    required this.city,
   }) : super(key: key);
 
   @override
@@ -54,6 +56,7 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
   void initState() {
     super.initState();
     isFromAirportBooking = widget.isFromAirportBooking;
+    cityController.text = widget.city; // Set the initial value of the city
   }
 
   @override
@@ -631,5 +634,3 @@ class _RidesBookingFormState extends State<RidesBookingForm> {
     );
   }
 }
-
-

@@ -5,6 +5,7 @@ import 'package:royal_falcon/view/rides/rides_booking_form.dart';
 
 class RidesMainDubaiCard extends StatelessWidget {
   final String name;
+  final String city;
   final String id;
   final String? imageUrl;
   final double price;
@@ -15,6 +16,7 @@ class RidesMainDubaiCard extends StatelessWidget {
   const RidesMainDubaiCard({
     Key? key,
     required this.name,
+    required this.city,
     this.imageUrl,
     required this.price,
     required this.baggage,
@@ -140,7 +142,7 @@ class RidesMainDubaiCard extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RidesBookingForm(price: price, id:id,),
+                                builder: (context) => RidesBookingForm(price: price, id:id,city: city,),
                               ),
                             );
                           },

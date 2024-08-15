@@ -39,7 +39,6 @@ class _NormalBookingsState extends State<NormalBookings> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return SafeArea(
@@ -111,6 +110,7 @@ class _NormalBookingsState extends State<NormalBookings> {
                                 final category = vehicles[index];
                                 print('Category Data: $category'); // Debug print
                                 return RidesMainDubaiCard(
+                                  city: selectedLocation,
                                   name: category['name'],
                                   imageUrl: category['categoryVehicleImage'],
                                   price: category['minimumAmount'].toDouble(),

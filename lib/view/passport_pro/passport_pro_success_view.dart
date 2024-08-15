@@ -33,7 +33,7 @@ class _PassportProSuccessViewState extends State<PassportProSuccessView> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image:
-                          AssetImage("images/meeting_success_background.png"),
+                          AssetImage("assets/images/meeting_success_background.png"),
                     ),
                   ),
                   child: Container(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 class HomeScreenCategories extends StatelessWidget {
   final String? categoryTitle;
@@ -37,9 +36,9 @@ class HomeScreenCategories extends StatelessWidget {
               ],
               Text(
                 categoryTitle!,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.sp,
                 ),
               ),
             ],
