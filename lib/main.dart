@@ -9,6 +9,7 @@ import 'package:royal_falcon/utils/routes/routes.dart';
 import 'package:royal_falcon/utils/routes/routes_names.dart';
 import 'package:royal_falcon/view/splash/splash_view.dart';
 import 'package:royal_falcon/view_model/airport_animation_view_model.dart';
+import 'package:royal_falcon/view_model/app_theme_vmodel.dart';
 import 'package:royal_falcon/view_model/auth_view_model.dart';
 import 'package:royal_falcon/view_model/bus_booking_view_model.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
@@ -45,10 +46,9 @@ void main() async {
   await Hive.openBox<DriverBookingData>('driverBookingDataBox');
   await Hive.openBox<Bookings>('bookingsBox');
   await Hive.openBox('vehicleCategoriesBox');
-
+  await Hive.openBox('settings');
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -57,6 +57,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => ThemeChanger()),  // Added ThemeProvider
         ChangeNotifierProvider(create: (_) => VehicleCardViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => HomeScreenViewModel()),
@@ -74,15 +75,14 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
+          final themeChanger = Provider.of<ThemeChanger>(context);
+
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'RFL',
-            theme: ThemeData.dark().copyWith(
-              scaffoldBackgroundColor: AppColors.backgroundColor,
-              textTheme:
-              GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-                  .apply(bodyColor: Colors.white),
-            ),
+            themeMode: themeChanger.themeMode,
+            theme: AppThemes.lightTheme, // Light theme
+            darkTheme: AppThemes.darkTheme,
             home: SplashScreen(),
             onGenerateRoute: Routes.generateRoute,
             initialRoute: RoutesNames.splash,

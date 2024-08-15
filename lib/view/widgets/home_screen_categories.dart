@@ -37,9 +37,9 @@ class HomeScreenCategories extends StatelessWidget {
               ],
               Text(
                 categoryTitle!,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.sp,
                 ),
               ),
             ],
