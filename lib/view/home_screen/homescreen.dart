@@ -7,20 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-// <<<<<<< dev_usama
-// import 'package:royal_falcon/config/location_permission_request.dart';
-// import 'package:royal_falcon/utils/colors.dart';
-// import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
-// import 'package:royal_falcon/view/home_screen/search_location_and_book_ride_view.dart';
-// import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
-// import 'package:royal_falcon/view/rent_a_bus/bus_booking.dart';
-// =======
-// import 'package:royal_falcon/utils/app_themes.dart';
-// import 'package:royal_falcon/utils/colors.dart';
-// import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
-// import 'package:royal_falcon/view/rent_a_bus/bus_booking.dart';
-// import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
-// >>>>>>> main
+import 'package:royal_falcon/config/location_permission_request.dart';
+import 'package:royal_falcon/utils/app_themes.dart';
+import 'package:royal_falcon/utils/colors.dart';
+import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
+import 'package:royal_falcon/view/rent_a_bus/bus_booking.dart';
+import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
 import 'package:royal_falcon/view_model/app_theme_vmodel.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
@@ -118,12 +110,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<void> _setMapStyle() async {
     if (_mapController != null) {
       final themeChanger = Provider.of<ThemeChanger>(context, listen: false);
-      final Brightness platformBrightness = View.of(context).platformDispatcher.platformBrightness;
+      final Brightness platformBrightness =
+          View.of(context).platformDispatcher.platformBrightness;
 
       if (themeChanger.themeMode == ThemeMode.dark ||
-          (themeChanger.themeMode == ThemeMode.system && platformBrightness == Brightness.dark)) {
+          (themeChanger.themeMode == ThemeMode.system &&
+              platformBrightness == Brightness.dark)) {
         // Load and apply the custom dark mode map style
-        final String style = await rootBundle.loadString('assets/map_style.json');
+        final String style =
+            await rootBundle.loadString('assets/map_style.json');
         _mapController!.setMapStyle(style);
       } else {
         // Use the default map style (no need to load any custom style)
@@ -131,7 +126,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       }
     }
   }
-
 
   @override
   void dispose() {
@@ -141,12 +135,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final RidesBookingFormViewModel model =
-        RidesBookingFormViewModel(context, 0);
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: CustomEndDrawer(),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor, // Use theme color
+      backgroundColor:
+          Theme.of(context).scaffoldBackgroundColor, // Use theme color
       body: SafeArea(
         child: FutureBuilder<void>(
           future: _initializeDataFuture,
@@ -179,13 +172,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).customContainerColor, // Use the custom color
-
-                  boxShadow:
-                  Theme.of(context).customBoxShadow
-                  ,
+                  color: Theme.of(context)
+                      .customContainerColor, // Use the custom color
+                  boxShadow: Theme.of(context).customBoxShadow,
                 ),
-                margin: EdgeInsets.only( top:20.h,bottom: 10.h),
+                margin: EdgeInsets.only(top: 20.h, bottom: 10.h),
                 height: 60.h,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -198,7 +189,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       Row(
                         children: [
                           IconButton(
-                            icon: Icon(Icons.brightness_6), // Icon representing the theme switch
+                            icon: Icon(Icons
+                                .brightness_6), // Icon representing the theme switch
                             onPressed: () => Utils.toggleTheme(context),
                           ),
                           IconButton(
@@ -206,7 +198,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               // Handle notifications button press
                             },
                             icon: Image.asset(
-                              color: Theme.of(context).iconButtonTheme.style?.iconColor?.resolve({}),
+                              color: Theme.of(context)
+                                  .iconButtonTheme
+                                  .style
+                                  ?.iconColor
+                                  ?.resolve({}),
                               'assets/images/notificaton_icon.png',
                               height: 30.h,
                               width: 30.w,
@@ -217,8 +213,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               _scaffoldKey.currentState?.openEndDrawer();
                             },
                             icon: Image.asset(
-                              color: Theme.of(context).iconButtonTheme.style?.iconColor?.resolve({}),
-
+                              color: Theme.of(context)
+                                  .iconButtonTheme
+                                  .style
+                                  ?.iconColor
+                                  ?.resolve({}),
                               'assets/images/menu_icon.png',
                               height: 30.h,
                               width: 30.w,
@@ -328,7 +327,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
 // =======
               ),
-
               Padding(
                 padding: EdgeInsets.only(right: 20.w, left: 20.w, top: 10.h),
                 child: Column(
@@ -348,13 +346,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     else
                       Consumer<VehicleViewModel>(
                         builder: (context, vehicleViewModel, child) {
-                          if (vehicleViewModel.dubaiVehicles.isEmpty && vehicleViewModel.abuDhabiVehicles.isEmpty) {
-                            return Center(child: Text('No vehicles available', style: TextStyle(color: Colors.white, fontSize: 14.sp)));
+                          if (vehicleViewModel.dubaiVehicles.isEmpty &&
+                              vehicleViewModel.abuDhabiVehicles.isEmpty) {
+                            return Center(
+                                child: Text('No vehicles available',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14.sp)));
                           } else {
-
-                            final limitedVehicles = (vehicleViewModel.dubaiVehicles + vehicleViewModel.abuDhabiVehicles)
-                                .take(6)
-                                .toList();
+                            final limitedVehicles =
+                                (vehicleViewModel.dubaiVehicles +
+                                        vehicleViewModel.abuDhabiVehicles)
+                                    .take(6)
+                                    .toList();
                             return Column(
                               children: [
                                 CarouselSlider(
@@ -365,8 +368,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     aspectRatio: 16 / 9,
                                     autoPlayCurve: Curves.fastOutSlowIn,
                                     enableInfiniteScroll: true,
-
-                                    autoPlayAnimationDuration: Duration(milliseconds: 700),
+                                    autoPlayAnimationDuration:
+                                        Duration(milliseconds: 700),
                                     viewportFraction: 1.0,
                                     onPageChanged: (index, reason) {
                                       setState(() {
@@ -377,21 +380,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   items: limitedVehicles.map<Widget>((vehicle) {
                                     return Container(
                                       width: 1.sw,
-                                      margin: EdgeInsets.symmetric(horizontal: 5.0.w),
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 5.0.w),
                                       decoration: BoxDecoration(
-
                                         color: AppColors.backgroundColor,
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(0.3),
+                                            color:
+                                                Colors.black.withOpacity(0.3),
                                             blurRadius: 10.r,
                                             spreadRadius: 2.r,
                                           ),
                                         ],
                                       ),
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                         child: Image.network(
                                           vehicle['categoryVehicleImage'],
                                           fit: BoxFit.cover,
@@ -402,12 +408,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-
-                                  children: List.generate(limitedVehicles.length, (index) {
+                                  children: List.generate(
+                                      limitedVehicles.length, (index) {
                                     return Container(
                                       width: 10.0.w,
                                       height: 6.0.h,
-                                      margin: EdgeInsets.symmetric(vertical: 10.0.h, horizontal: 2.0.w),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 10.0.h, horizontal: 2.0.w),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.rectangle,
                                         color: _current == index
@@ -428,48 +435,52 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       children: [
                         Text(
                           "Categories",
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.sp,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.sp,
+                                  ),
                         ),
-
                         GestureDetector(
                           onTap: () {
-
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AllServices()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AllServices()));
                           },
                           child: Text(
                             "See All",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp,
-                            ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.sp,
+                                    ),
                           ),
                         ),
-
                       ],
                     ),
-                    SizedBox(height: 5.h,),
+                    SizedBox(
+                      height: 5.h,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _buildAnimatedCategoryChip(
                           'Rides',
-
-                              () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Rides())),
+                          () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Rides())),
                           'assets/images/rides_icon.png',
                         ),
                         _buildAnimatedCategoryChip(
                           'Buses',
-                              () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => BusBooking())),
-
+                          () => Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => BusBooking())),
                           'assets/images/bus_icon.png',
                         ),
                         _buildAnimatedCategoryChip(
                           'Hourly Hire',
-                              () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HourlyBooking())),
-
+                          () => Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => HourlyBooking())),
                           'assets/images/rides_cover.png',
                         ),
                         _buildAnimatedCategoryChip(
@@ -500,9 +511,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       child: Text(
                         "Book Now",
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.sp,
-                        ),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.sp,
+                            ),
                       ),
                     ),
 // <<<<<<< dev_usama
@@ -677,21 +688,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               builder: (context, constraints) {
                                 return _initialCameraPosition != null
                                     ? GoogleMap(
-                                  zoomControlsEnabled: false,
-                                  myLocationEnabled: true,
-                                  onMapCreated: (controller) {
-                                    _mapController = controller;
-                                    _setMapStyle(); // Ensure the map style is set after the controller is initialized
-                                  },
-                                  initialCameraPosition: _initialCameraPosition!,
-                                  markers: _markers,
-                                  polylines: _polylines,
-                                )
+                                        zoomControlsEnabled: false,
+                                        myLocationEnabled: true,
+                                        onMapCreated: (controller) {
+                                          _mapController = controller;
+                                          _setMapStyle(); // Ensure the map style is set after the controller is initialized
+                                        },
+                                        initialCameraPosition:
+                                            _initialCameraPosition!,
+                                        markers: _markers,
+                                        polylines: _polylines,
+                                      )
                                     : Center(
-                                  child: CircularProgressIndicator(
-                                    color: Color(0xFFFFBC07),
-                                  ),
-                                );
+                                        child: CircularProgressIndicator(
+                                          color: Color(0xFFFFBC07),
+                                        ),
+                                      );
                               },
                             ),
                           ),
@@ -710,18 +722,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 height: 50.h,
                                 margin: EdgeInsets.symmetric(horizontal: 10.w),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.white.withOpacity(0.5)),
+                                  border: Border.all(
+                                      color: Colors.white.withOpacity(0.5)),
                                   color: Colors.grey.withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
-                                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w, vertical: 5.h),
                                 child: Row(
                                   children: [
                                     Icon(Icons.search, color: Colors.black),
                                     SizedBox(width: 10.w),
                                     Text(
                                       "Search Location",
-                                      style: TextStyle(color: Colors.black, fontSize: 16.sp),
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.sp),
                                     ),
                                   ],
                                 ),
@@ -731,7 +746,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -761,16 +775,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       padding: EdgeInsets.only(right: 10.0.w),
       child: GestureDetector(
         onTap: onTap,
-
         child: Column(
           children: [
             Container(
               height: 70.h,
               width: 100.w, // Adjust width as needed
               decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(18)
-              ),
+                  color: Colors.black, borderRadius: BorderRadius.circular(18)),
               child: Column(
                 children: [
                   Image.asset(
@@ -785,10 +796,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             SizedBox(height: 8.0.h),
             Text(
               label,
-               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 15.sp,
-            ),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                  ),
               textAlign: TextAlign.center,
             ),
           ],

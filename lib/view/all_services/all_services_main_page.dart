@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-// <<<<<<< dev_usama
-// import 'package:royal_falcon/view/partner_up/partner_up_view.dart';
-// =======
-// import 'package:royal_falcon/utils/app_themes.dart';
-// >>>>>>> main
+import 'package:royal_falcon/utils/app_themes.dart';
 import 'package:royal_falcon/view/passport_pro/passport_pro_view.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
-import 'package:royal_falcon/view_model/app_theme_vmodel.dart';
 import '../../utils/colors.dart';
 import '../../view_model/home_screen_view_model.dart';
 import '../Rides/Rides.dart';
@@ -69,8 +64,8 @@ class _AllServicesState extends State<AllServices>
                   height: 0.28.sh,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(
-                          'assets/images/hourly_booking_cover.png'),
+                      image:
+                          AssetImage('assets/images/hourly_booking_cover.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -80,7 +75,9 @@ class _AllServicesState extends State<AllServices>
                   child: Column(
                     children: [
                       const AppbarHourly(title: 'All Services'),
-                      SizedBox(height: 100.h), // Adjust the height as per your design
+                      SizedBox(
+                          height:
+                              100.h), // Adjust the height as per your design
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: ElevatedSearchBar(
@@ -111,7 +108,8 @@ class _AllServicesState extends State<AllServices>
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.r),
-                                  gradient: Theme.of(context).customContainerGradient,
+                                  gradient:
+                                      Theme.of(context).customContainerGradient,
                                   boxShadow: Theme.of(context).customBoxShadow,
                                 ),
                                 height: 286,
@@ -125,7 +123,7 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rides',
-                                                () => Navigator.of(context).push(
+                                            () => Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) => Rides(),
                                               ),
@@ -136,7 +134,7 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Getaway',
-                                                () {
+                                            () {
                                               // Handle Getaway tap
                                             },
                                             'assets/images/getaway.png',
@@ -145,7 +143,7 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Explore',
-                                                () {
+                                            () {
                                               // Handle Explore tap
                                             },
                                             'assets/images/explore.png',
@@ -159,9 +157,10 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Partner up',
-                                                () => Navigator.of(context).push(
+                                            () => Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) => PartnerUpView(),
+                                                builder: (context) =>
+                                                    PartnerUpView(),
                                               ),
                                             ),
                                             'assets/images/partner.png',
@@ -170,7 +169,7 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Passport pro',
-                                                () {
+                                            () {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -201,7 +200,8 @@ class _AllServicesState extends State<AllServices>
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.r),
-                                  gradient: Theme.of(context).customContainerGradient,
+                                  gradient:
+                                      Theme.of(context).customContainerGradient,
                                   boxShadow: Theme.of(context).customBoxShadow,
                                 ),
                                 height: 186,
@@ -215,7 +215,7 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Hourly Hire',
-                                                () => Navigator.of(context).push(
+                                            () => Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     HourlyBooking(),
@@ -227,9 +227,10 @@ class _AllServicesState extends State<AllServices>
                                         Expanded(
                                           child: _buildAnimatedCategory(
                                             'Rent A Bus',
-                                                () => Navigator.of(context).push(
+                                            () => Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                builder: (context) => BusBooking(),
+                                                builder: (context) =>
+                                                    BusBooking(),
                                               ),
                                             ),
                                             'assets/images/Golden_bus.png',
