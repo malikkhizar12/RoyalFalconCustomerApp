@@ -9,6 +9,7 @@ class ThemeChanger with ChangeNotifier {
   static ThemeMode _loadThemeMode() {
     final box = Hive.box('settings');
     final storedTheme = box.get('themeMode', defaultValue: 'system');
+    print(storedTheme);
     switch (storedTheme) {
       case 'light':
         return ThemeMode.light;
@@ -41,5 +42,3 @@ class ThemeChanger with ChangeNotifier {
     }
   }
 }
-
-
