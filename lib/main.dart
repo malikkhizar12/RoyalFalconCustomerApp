@@ -18,6 +18,7 @@ import 'package:royal_falcon/view_model/my_bookings_view_model.dart';
 import 'package:royal_falcon/view_model/normal_booking_view_model.dart';
 import 'package:royal_falcon/view_model/profile_screen_view_model.dart';
 import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
+import 'package:royal_falcon/view_model/search_location_book_ride_view_model.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MapsViewModel()),
         ChangeNotifierProvider(create: (_) => MyBookingsViewModel()),
         ChangeNotifierProvider(create: (_) => BusCardViewModel()),
+        ChangeNotifierProvider(create: (_) => SearchLocationBookRideViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),

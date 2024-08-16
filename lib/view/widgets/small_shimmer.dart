@@ -10,8 +10,9 @@ class SmallShimmerLoading extends StatelessWidget {
       width: 1.sw,
       color:AppColors.backgroundColor, // Set the background color to black
       child: Shimmer.fromColors(
-          baseColor: Colors.black.withOpacity(0.2),
-          highlightColor: Colors.grey.withOpacity(0.5), // Slightly lighter grey for highlight color
+        baseColor: Colors.black.withOpacity(0.2),
+        highlightColor: Colors.grey
+            .withOpacity(0.5), // Slightly lighter grey for highlight color
         child: Column(
           children: [
             // First rectangle
@@ -20,7 +21,6 @@ class SmallShimmerLoading extends StatelessWidget {
               height: 210.0.h,
               color: Colors.grey[800],
             ),
-
           ],
         ),
       ),
