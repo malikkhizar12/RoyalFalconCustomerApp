@@ -2,6 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+class AppThemes {
+  static final ThemeData lightTheme = ThemeData.light().copyWith(
+    scaffoldBackgroundColor: Colors.white,
+    primaryColor: Color(0xFFFFBC07),
+    iconButtonTheme: IconButtonThemeData(
+      style: ButtonStyle(iconColor: WidgetStateProperty.all<Color>(Colors.black)),
+    ),
+    textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme).copyWith(
+      displayLarge: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 32),
+      titleLarge: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+      bodyLarge: TextStyle(color: Colors.black, fontSize: 16),
+      bodyMedium: TextStyle(color: Colors.black, fontSize: 14),
+      titleMedium: TextStyle(color: Colors.black, fontSize: 16),
+      titleSmall: TextStyle(color: Colors.black, fontSize: 14),
+    ),
+  );
+
+  static final ThemeData darkTheme = ThemeData.dark().copyWith(
+    scaffoldBackgroundColor: Color(0xFF22262A),
+    primaryColor: Color(0xFFFFBC07),
+    iconButtonTheme: IconButtonThemeData(
+      style: ButtonStyle(iconColor: WidgetStateProperty.all<Color>(Colors.white)),
+    ),
+    textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
+      displayLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+      titleLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+      bodyLarge: TextStyle(color: Colors.white, fontSize: 16),
+      bodyMedium: TextStyle(color: Colors.white, fontSize: 14),
+      titleMedium: TextStyle(color: Colors.white, fontSize: 16),
+      titleSmall: TextStyle(color: Colors.white, fontSize: 14),
+    ),
+  );
+}
+
+
 extension CustomThemeData on ThemeData {
   Color get customContainerColor => brightness == Brightness.light
       ? Color(0xFFE0E0E0) // Light theme color
@@ -32,36 +67,3 @@ extension CustomThemeData on ThemeData {
       : null; // No shadow in light mode
 }
 
-class AppThemes {
-  static final ThemeData lightTheme = ThemeData.light().copyWith(
-    scaffoldBackgroundColor: Colors.white,
-    primaryColor: Color(0xFFFFBC07),
-    iconButtonTheme: IconButtonThemeData(
-      style: ButtonStyle(iconColor: MaterialStateProperty.all<Color>(Colors.black)),
-    ),
-    textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme).copyWith(
-      displayLarge: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 32),
-      titleLarge: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
-      bodyLarge: TextStyle(color: Colors.black, fontSize: 16),
-      bodyMedium: TextStyle(color: Colors.black, fontSize: 14),
-      titleMedium: TextStyle(color: Colors.black, fontSize: 16),
-      titleSmall: TextStyle(color: Colors.black, fontSize: 14),
-    ),
-  );
-
-  static final ThemeData darkTheme = ThemeData.dark().copyWith(
-    scaffoldBackgroundColor: Color(0xFF22262A),
-    primaryColor: Color(0xFFFFBC07),
-    iconButtonTheme: IconButtonThemeData(
-      style: ButtonStyle(iconColor: MaterialStateProperty.all<Color>(Colors.white)),
-    ),
-    textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
-      displayLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
-      titleLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-      bodyLarge: TextStyle(color: Colors.white, fontSize: 16),
-      bodyMedium: TextStyle(color: Colors.white, fontSize: 14),
-      titleMedium: TextStyle(color: Colors.white, fontSize: 16),
-      titleSmall: TextStyle(color: Colors.white, fontSize: 14),
-    ),
-  );
-}
