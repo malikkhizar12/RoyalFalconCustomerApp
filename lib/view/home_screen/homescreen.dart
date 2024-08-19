@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/config/location_permission_request.dart';
-import 'package:royal_falcon/utils/app_themes.dart';
 import 'package:royal_falcon/utils/colors.dart';
 import 'package:royal_falcon/view/all_services/all_services_main_page.dart';
 import 'package:royal_falcon/view/home_screen/animated_category_container_widget.dart';
@@ -16,7 +13,6 @@ import 'package:royal_falcon/view/home_screen/search_location_and_book_ride_view
 import 'package:royal_falcon/view/rent_a_bus/bus_booking.dart';
 import 'package:royal_falcon/view/rent_a_car/hourly_booking.dart';
 import 'package:royal_falcon/view/widgets/small_shimmer.dart';
-import 'package:royal_falcon/view_model/app_theme_vmodel.dart';
 import 'package:royal_falcon/view_model/home_screen_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
 import '../../utils/utils/utils.dart';
@@ -39,12 +35,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Future<void> _initializeDataFuture;
   late AnimationController _animationController;
   bool _isVisible = false;
-
   int _current = 0; // To track the current page
-  GoogleMapController? _mapController;
-  final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {};
-  Position? currentPosition;
+
+  void _startAnimation() {
+    Future.delayed(Duration(milliseconds: 300), () {
+      _isVisible = true;
+      setState(() {});
+      _animationController.forward();
+    });
+  }
 
   @override
   void initState() {
@@ -61,68 +60,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-
     _startAnimation();
-    _addMarkers();
     LocationPermissionRequest.getLocation();
-    getCurrentLocation();
-  }
-
-  void getCurrentLocation() async {
-    print("sadasds");
-    currentPosition = await Geolocator.getCurrentPosition();
-    print("______________________________");
-    print("dsfdjfndfjdfdakfnadfjdafnfkadnfdaj$currentPosition");
-    print("______________________________");
-  }
-
-  void _startAnimation() {
-    Future.delayed(Duration(milliseconds: 300), () {
-      setState(() {
-        _isVisible = true;
-      });
-      _animationController.forward();
-    });
-  }
-
-  void _addMarkers() {
-    setState(() {
-      _markers.add(
-        Marker(
-          markerId: MarkerId('vehicle1'),
-          position: LatLng(24.466667, 54.366669),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-        ),
-      );
-      _markers.add(
-        Marker(
-          markerId: MarkerId('vehicle2'),
-          position: LatLng(24.477667, 54.356669),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        ),
-      );
-    });
-  }
-
-  Future<void> _setMapStyle() async {
-    if (_mapController != null) {
-      final themeChanger = Provider.of<ThemeChanger>(context, listen: false);
-      final Brightness platformBrightness =
-          View.of(context).platformDispatcher.platformBrightness;
-
-      if (themeChanger.themeMode == ThemeMode.dark ||
-          (themeChanger.themeMode == ThemeMode.system &&
-              platformBrightness == Brightness.dark)) {
-        // Load and apply the custom dark mode map style
-        final String style =
-            await rootBundle.loadString('assets/map_style.json');
-        _mapController!.setMapStyle(style);
-      } else {
-        // Use the default map style (no need to load any custom style)
-        _mapController!.setMapStyle(null);
-      }
-    }
   }
 
   @override
@@ -135,34 +74,35 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       endDrawer: CustomEndDrawer(),
-      backgroundColor:
-          Theme.of(context).scaffoldBackgroundColor, // Use theme color
-      body: SafeArea(
-        child: FutureBuilder<void>(
-          future: _initializeDataFuture,
-          builder: (context, snapshot) {
-            return Container(
-              width: 1.sw,
-              height: 1.sh,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/home_background.jpg"),
-                ),
+      body: Container(
+        width: 1.sw,
+        height: 1.sh,
+        child: Stack(
+          children: [
+            Opacity(
+              opacity: 0.1,
+              child: Image.asset(
+                "assets/images/home_background.jpg",
+                fit: BoxFit.fitHeight,
+                width: 1.sw,
+                height: 1.sh,
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .customContainerColor, // Use the custom color
-                        boxShadow: Theme.of(context).customBoxShadow,
-                      ),
-                      margin: EdgeInsets.only(top: 20.h, bottom: 10.h),
-                      height: 60.h,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+            ),
+            FutureBuilder<void>(
+                future: _initializeDataFuture,
+                builder: (context, snapshot) {
+                  return Column(
+                    children: <Widget>[
+                      30.verticalSpace,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                        ),
+                        margin: EdgeInsets.only(top: 20.h, bottom: 10.h),
+                        height: 60.h,
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -211,287 +151,315 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                    ),
-                    ElevatedSearchBar(
-                      hintText: "Search Services",
-                      fillColor: Color(0xFFFFBC07),
-                      textColor: Colors.white,
-                    ),
-                    if (snapshot.connectionState == ConnectionState.waiting)
-                      Container(
-                        color: AppColors.backgroundColor,
-                        height: 210.0.h,
-                        child: SmallShimmerLoading(),
-                      )
-                    else
-                      Consumer<VehicleViewModel>(
-                        builder: (context, vehicleViewModel, child) {
-                          if (vehicleViewModel.dubaiVehicles.isEmpty &&
-                              vehicleViewModel.abuDhabiVehicles.isEmpty) {
-                            return Center(
-                                child: Text('No vehicles available',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 14.sp)));
-                          } else {
-                            final limitedVehicles =
-                                (vehicleViewModel.dubaiVehicles +
-                                        vehicleViewModel.abuDhabiVehicles)
-                                    .take(6)
-                                    .toList();
-                            return Column(
-                              children: [
-                                CarouselSlider(
-                                  options: CarouselOptions(
-                                    height: 210.0.h,
-                                    enlargeCenterPage: true,
-                                    autoPlay: true,
-                                    aspectRatio: 16 / 9,
-                                    autoPlayCurve: Curves.fastOutSlowIn,
-                                    enableInfiniteScroll: true,
-                                    autoPlayAnimationDuration:
-                                        Duration(milliseconds: 700),
-                                    viewportFraction: 1.0,
-                                    onPageChanged: (index, reason) {
-                                      setState(() {
-                                        _current = index;
-                                      });
-                                    },
-                                  ),
-                                  items: limitedVehicles.map<Widget>((vehicle) {
-                                    return Container(
-                                      width: 1.sw,
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 5.0.w),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.backgroundColor,
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.3),
-                                            blurRadius: 10.r,
-                                            spreadRadius: 2.r,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Column(
+                          children: [
+                            ElevatedSearchBar(
+                              hintText: "Search Services",
+                              fillColor: Color(0xFFFFBC07),
+                              textColor: Colors.white,
+                            ),
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting)
+                              Container(
+                                color: AppColors.backgroundColor,
+                                height: 210.0.h,
+                                child: SmallShimmerLoading(),
+                              )
+                            else
+                              Consumer<VehicleViewModel>(
+                                builder: (context, vehicleViewModel, child) {
+                                  if (vehicleViewModel.dubaiVehicles.isEmpty &&
+                                      vehicleViewModel
+                                          .abuDhabiVehicles.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                        'No vehicles available',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14.sp),
+                                      ),
+                                    );
+                                  } else {
+                                    final limitedVehicles = (vehicleViewModel
+                                                .dubaiVehicles +
+                                            vehicleViewModel.abuDhabiVehicles)
+                                        .take(6)
+                                        .toList();
+                                    print(
+                                        "SDASDSADSDSDDSDSDSDS $limitedVehicles");
+                                    return Column(
+                                      children: [
+                                        CarouselSlider(
+                                          options: CarouselOptions(
+                                            height: 210.0.h,
+                                            enlargeCenterPage: true,
+                                            autoPlay: true,
+                                            aspectRatio: 16 / 9,
+                                            autoPlayCurve: Curves.fastOutSlowIn,
+                                            enableInfiniteScroll: true,
+                                            autoPlayAnimationDuration:
+                                                Duration(milliseconds: 700),
+                                            viewportFraction: 1.0,
+                                            onPageChanged: (index, reason) {
+                                              setState(() {
+                                                _current = index;
+                                              });
+                                            },
                                           ),
-                                        ],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
-                                        child: Image.network(
-                                          vehicle['categoryVehicleImage'],
-                                          fit: BoxFit.cover,
+                                          items: limitedVehicles
+                                              .map<Widget>((vehicle) {
+                                            return Container(
+                                              width: 1.sw,
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal: 5.0.w),
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    AppColors.backgroundColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.3),
+                                                    blurRadius: 10.r,
+                                                    spreadRadius: 2.r,
+                                                  ),
+                                                ],
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                                child: Image.network(
+                                                  vehicle[
+                                                      'categoryVehicleImage'],
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
                                         ),
-                                      ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: List.generate(
+                                              limitedVehicles.length, (index) {
+                                            return Container(
+                                              width: 10.0.w,
+                                              height: 6.0.h,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 10.0.h,
+                                                  horizontal: 2.0.w),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.rectangle,
+                                                color: _current == index
+                                                    ? Color(0xFFFFBC07)
+                                                    : Color.fromRGBO(
+                                                        0, 0, 0, 0.4),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ],
                                     );
-                                  }).toList(),
+                                  }
+                                },
+                              ),
+                            SizedBox(height: 10.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Categories",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.sp,
+                                      ),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                      limitedVehicles.length, (index) {
-                                    return Container(
-                                      width: 10.0.w,
-                                      height: 6.0.h,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 10.0.h, horizontal: 2.0.w),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        color: _current == index
-                                            ? Color(0xFFFFBC07)
-                                            : Color.fromRGBO(0, 0, 0, 0.4),
-                                      ),
-                                    );
-                                  }),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AllServices()));
+                                  },
+                                  child: Text(
+                                    "See All",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.sp,
+                                        ),
+                                  ),
                                 ),
                               ],
-                            );
-                          }
-                        },
-                      ),
-                    SizedBox(height: 10.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Categories",
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.sp,
-                                  ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AllServices()));
-                          },
-                          child: Text(
-                            "See All",
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.sp,
-                                    ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AnimatedCategoryContainerWidget(
-                          isVisible: _isVisible,
-                          label: 'Rides',
-                          image: 'assets/images/rides_icon.png',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => Rides(),
-                              ),
-                            );
-                          },
-                        ),
-                        AnimatedCategoryContainerWidget(
-                          isVisible: _isVisible,
-                          label: 'Buses',
-                          image: 'assets/images/bus_icon.png',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => BusBooking(),
-                              ),
-                            );
-                          },
-                        ),
-                        AnimatedCategoryContainerWidget(
-                          isVisible: _isVisible,
-                          label: 'Hourly Hire',
-                          image: 'assets/images/rides_cover.png',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => HourlyBooking(),
-                              ),
-                            );
-                          },
-                        ),
-                        AnimatedCategoryContainerWidget(
-                          isVisible: _isVisible,
-                          label: 'Passport',
-                          image: 'assets/images/passport_icon.jpg',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => PassportProView(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20.h),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Book Now",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.sp,
                             ),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AnimatedCategoryContainerWidget(
+                                  isVisible: _isVisible,
+                                  label: 'Rides',
+                                  image: 'assets/images/rides_icon.png',
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => Rides(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                AnimatedCategoryContainerWidget(
+                                  isVisible: _isVisible,
+                                  label: 'Buses',
+                                  image: 'assets/images/bus_icon.png',
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => BusBooking(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                AnimatedCategoryContainerWidget(
+                                  isVisible: _isVisible,
+                                  label: 'Hourly Hire',
+                                  image: 'assets/images/rides_cover.png',
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => HourlyBooking(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                AnimatedCategoryContainerWidget(
+                                  isVisible: _isVisible,
+                                  label: 'Passport',
+                                  image: 'assets/images/passport_icon.jpg',
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => PassportProView(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20.h),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Book Now",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.sp,
+                                    ),
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Container(
-                      height: 210.0.h,
-                      child: Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SearchLocationAndBookRideView()), // Replace SearchLocationPage with your desired page
-                              );
-                            },
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                return currentPosition != null
+                      Consumer<HomeScreenViewModel>(
+                        builder: (BuildContext context,
+                                HomeScreenViewModel model, Widget? child) =>
+                            Container(
+                          height: 210.0.h,
+                          child: Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SearchLocationAndBookRideView()), // Replace SearchLocationPage with your desired page
+                                  );
+                                },
+                                child: model.currentPosition != null
                                     ? GoogleMap(
                                         zoomControlsEnabled: false,
                                         myLocationEnabled: true,
                                         onMapCreated: (controller) {
-                                          _mapController = controller;
-                                          _setMapStyle(); // Ensure the map style is set after the controller is initialized
+                                          model.mapController = controller;
+                                          model
+                                              .setMapStyle(); // Ensure the map style is set after the controller is initialized
                                         },
                                         initialCameraPosition: CameraPosition(
                                           target: LatLng(
-                                            currentPosition!.latitude,
-                                            currentPosition!.longitude,
+                                            model.currentPosition!.latitude,
+                                            model.currentPosition!.longitude,
                                           ),
                                           zoom: 14,
                                         ),
-                                        markers: _markers,
-                                        polylines: _polylines,
                                       )
                                     : Center(
                                         child: CircularProgressIndicator(
                                           color: Color(0xFFFFBC07),
                                         ),
-                                      );
-                              },
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 10.h,
-                            left: 10.w,
-                            right: 10.w,
-                            child: GestureDetector(
-                              onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => SearchLocationPage()), // Replace SearchLocationPage with your desired page
-                                // );
-                              },
-                              child: Container(
-                                height: 50.h,
-                                margin: EdgeInsets.symmetric(horizontal: 10.w),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.white.withOpacity(0.5)),
-                                  color: Colors.grey.withOpacity(0.9),
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w, vertical: 5.h),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.search, color: Colors.black),
-                                    SizedBox(width: 10.w),
-                                    Text(
-                                      "Search Location",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 16.sp),
+                                      ),
+                              ),
+                              Positioned(
+                                bottom: 10.h,
+                                left: 10.w,
+                                right: 10.w,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(builder: (context) => SearchLocationPage()), // Replace SearchLocationPage with your desired page
+                                    // );
+                                  },
+                                  child: Container(
+                                    height: 50.h,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 10.w),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white.withOpacity(0.5)),
+                                      color: Colors.grey.withOpacity(0.9),
+                                      borderRadius: BorderRadius.circular(10.r),
                                     ),
-                                  ],
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w, vertical: 5.h),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.search, color: Colors.black),
+                                        SizedBox(width: 10.w),
+                                        Text(
+                                          "Search Location",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16.sp),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+                    ],
+                  );
+                }),
+          ],
         ),
       ),
     );

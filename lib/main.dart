@@ -49,6 +49,7 @@ void main() async {
   await Hive.openBox('settings');
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -57,10 +58,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => ThemeChanger()),  // Added ThemeProvider
+        ChangeNotifierProvider(
+            create: (_) => ThemeChanger()), // Added ThemeProvider
         ChangeNotifierProvider(create: (_) => VehicleCardViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
-        ChangeNotifierProvider(create: (_) => HomeScreenViewModel()),
+        ChangeNotifierProvider(create: (_) => HomeScreenViewModel(context)),
         ChangeNotifierProvider(create: (_) => RidesAnimationViewModel()),
         ChangeNotifierProvider(create: (_) => CarViewModel()),
         ChangeNotifierProvider(create: (_) => AirportAnimationViewModel()),
@@ -69,7 +71,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MapsViewModel()),
         ChangeNotifierProvider(create: (_) => MyBookingsViewModel()),
         ChangeNotifierProvider(create: (_) => BusCardViewModel()),
-        ChangeNotifierProvider(create: (_) => SearchLocationBookRideViewModel()),
+        ChangeNotifierProvider(
+            create: (_) => SearchLocationBookRideViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),

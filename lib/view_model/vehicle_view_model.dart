@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:royal_falcon/utils/utils/utils.dart';
 import '../repository/vehicle_repo.dart';
 
-class VehicleViewModel with ChangeNotifier {
+class VehicleViewModel extends ChangeNotifier {
   final VehicleRepository _vehicleRepository = VehicleRepository();
 
   bool _loading = false;
@@ -29,6 +30,8 @@ class VehicleViewModel with ChangeNotifier {
       var dubaiResponse = await _fetchVehicleData('Dubai');
       if (dubaiResponse != null) {
         _dubaiVehicles = dubaiResponse;
+        print("____________");
+        print(_dubaiVehicles);
         box.put('dubai', _dubaiVehicles);
       }
 
@@ -42,12 +45,7 @@ class VehicleViewModel with ChangeNotifier {
     } catch (e) {
       setLoading(false);
       print('Error fetching vehicle categories: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error fetching vehicle categories: $e'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      Utils.errorMessage('Error fetching vehicle categories: $e', context);
     }
   }
 
