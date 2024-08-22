@@ -4,18 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/colors.dart';
-
 import '../../view_model/app_theme_vmodel.dart';
 
 class Utils {
-  static void toggleTheme(BuildContext context) {
-
-
-    final themeChanger = Provider.of<ThemeChanger>(context, listen: false);
-    themeChanger.setTheme(
-      themeChanger.themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light,
-    );
-  }
+  // Method to toggle between light and dark modes removed, as theme is now managed by the system
+  // Use the system theme settings for the app
 
   static void fieldFocusChange(
       BuildContext context, FocusNode current, FocusNode nextFocus) {
@@ -23,7 +16,7 @@ class Utils {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  static toastMessage(String message) {
+  static void toastMessage(String message) {
     Fluttertoast.showToast(
       msg: message,
       backgroundColor: Colors.black,
@@ -32,7 +25,7 @@ class Utils {
     );
   }
 
-  static flushBarMessage(String message, BuildContext context) {
+  static void flushBarMessage(String message, BuildContext context) {
     showFlushbar(
       context: context,
       flushbar: Flushbar(
@@ -41,7 +34,7 @@ class Utils {
     );
   }
 
-  static successMessage(String message, BuildContext context) {
+  static void successMessage(String message, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         message,
@@ -58,7 +51,7 @@ class Utils {
     ));
   }
 
-  static errorMessage(String title, BuildContext context) {
+  static void errorMessage(String title, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         title,
@@ -72,7 +65,6 @@ class Utils {
       backgroundColor: Colors.red,
       behavior: SnackBarBehavior.floating,
       duration: const Duration(seconds: 1),
-      // animation: ,
     ));
   }
 }

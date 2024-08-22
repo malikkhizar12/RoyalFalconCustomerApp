@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_falcon/utils/app_themes.dart';
 import 'package:royal_falcon/utils/routes/routes.dart';
@@ -21,7 +23,6 @@ import 'package:royal_falcon/view_model/rides_animation_view_model.dart';
 import 'package:royal_falcon/view_model/search_location_book_ride_view_model.dart';
 import 'package:royal_falcon/view_model/user_view_model.dart';
 import 'package:royal_falcon/view_model/vehicle_view_model.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'model/driver_booking_model.dart';
 import 'model/my_bookings_model.dart';
 
@@ -46,9 +47,9 @@ void main() async {
   await Hive.openBox<DriverBookingData>('driverBookingDataBox');
   await Hive.openBox<Bookings>('bookingsBox');
   await Hive.openBox('vehicleCategoriesBox');
-  await Hive.openBox('settings');
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -57,7 +58,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => ThemeChanger()),  // Added ThemeProvider
         ChangeNotifierProvider(create: (_) => VehicleCardViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => HomeScreenViewModel()),
@@ -70,23 +70,26 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MyBookingsViewModel()),
         ChangeNotifierProvider(create: (_) => BusCardViewModel()),
         ChangeNotifierProvider(create: (_) => SearchLocationBookRideViewModel()),
+        ChangeNotifierProvider(create: (_) => ThemeChanger()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          final themeChanger = Provider.of<ThemeChanger>(context);
-
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'RFL',
-            themeMode: themeChanger.themeMode,
-            theme: AppThemes.lightTheme, // Light theme
-            darkTheme: AppThemes.darkTheme,
-            home: SplashScreen(),
-            onGenerateRoute: Routes.generateRoute,
-            initialRoute: RoutesNames.splash,
+          return Consumer<ThemeChanger>(
+            builder: (context, themeChanger, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'RFL',
+                theme: AppThemes.lightTheme, // Define your light theme
+                darkTheme: AppThemes.darkTheme, // Define your dark theme
+                themeMode: ThemeMode.system, // Use system theme mode
+                home:  SplashScreen(),
+                onGenerateRoute: Routes.generateRoute,
+                initialRoute: RoutesNames.splash,
+              );
+            },
           );
         },
       ),

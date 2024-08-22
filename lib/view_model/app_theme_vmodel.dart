@@ -1,45 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 
 class ThemeChanger with ChangeNotifier {
   ThemeMode _themeMode;
 
-  ThemeChanger() : _themeMode = _loadThemeMode();
-
-  static ThemeMode _loadThemeMode() {
-    final box = Hive.box('settings');
-    final storedTheme = box.get('themeMode', defaultValue: 'system');
-    switch (storedTheme) {
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
-  }
+  ThemeChanger() : _themeMode = ThemeMode.system; // Default to system mode
 
   ThemeMode get themeMode => _themeMode;
 
-  void setTheme(ThemeMode themeMode) {
-    _themeMode = themeMode;
-    _saveThemeMode(themeMode);
-    notifyListeners();
-  }
-
-  void _saveThemeMode(ThemeMode themeMode) {
-    final box = Hive.box('settings');
-    switch (themeMode) {
-      case ThemeMode.light:
-        box.put('themeMode', 'light');
-        break;
-      case ThemeMode.dark:
-        box.put('themeMode', 'dark');
-        break;
-      default:
-        box.put('themeMode', 'system');
+  void updateSystemTheme(Brightness systemBrightness) {
+    if (_themeMode == ThemeMode.system) {
+      // If the current mode is system, update the theme based on the system brightness
+      _themeMode = systemBrightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+      notifyListeners(); // Notify listeners to rebuild widgets with the updated theme
     }
   }
 }
-
-
